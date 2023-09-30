@@ -5,22 +5,30 @@ namespace App\Livewire\Forms;
 use App\Models\User;
 use Livewire\Attributes\Rule;
 use Livewire\Form;
+use Validator;
 
 class UserForm extends Form
 {
 
-    public string $model = User::class;
+    public string|User $model = User::class;
 
-    #[Rule('required|min:5')]
+    #[Rule('required|string|min:3|max:50')]
     public string $name = '';
-    #[Rule('required|string|email|max:50')]
+    #[Rule('required|string|email|max:50|unique:users,email')]
     public string $email = '';
-    #[Rule('required|string|max:255')]
+    #[Rule('required|string|confirmed|max:50')]
     public string $password = '';
-    #[Rule('required|string|confirmed:confirmPassword|max:255')]
-    public string $confirmPassword = '';
+    #[Rule('required|string|max:50')]
+    public string $password_confirmation = '';
 
+    public function setup($model): void
+    {
+        $this->model = $model;
+        $this->fill($model);
+    }
     public function store() {
+
+        $this->validate();
 
         $data = $this->only(['name', 'email', 'password']);
 
@@ -29,6 +37,11 @@ class UserForm extends Form
         $model = new $this->model;
 
         return $model->create($data);
+    }
+
+    public function update()
+    {
+        return $this->model->update($this->only('name'));
     }
 
 }

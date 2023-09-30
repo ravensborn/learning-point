@@ -26,6 +26,13 @@
         .ti-custom {
             font-size: 1.25rem;
         }
+
+
+        @media (min-width: 768px) {
+            .table-responsive {
+                overflow: visible;
+            }
+        }
     </style>
 </head>
 <body>
@@ -337,7 +344,6 @@
                     </li>
 
 
-
                 </ul>
             </div>
         </div>
@@ -559,6 +565,10 @@
 
 <!-- Tabler Core -->
 <script src="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/js/tabler.min.js"></script>
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<x-livewire-alert::scripts />
 
 </body>
 </html>
