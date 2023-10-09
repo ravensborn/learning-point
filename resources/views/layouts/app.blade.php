@@ -235,7 +235,7 @@
                         <a href="#" class="dropdown-item">Feedback</a>
                         <div class="dropdown-divider"></div>
                         <a href="./settings.html" class="dropdown-item">Settings</a>
-                        <a href="./sign-in.html" class="dropdown-item">Logout</a>
+                        <a href="{{ route('logout') }}" class="dropdown-item">Logout</a>
                     </div>
                 </div>
             </div>
@@ -260,19 +260,17 @@
                         <div class="dropdown-menu show">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item @if(request()->is('*/subjects*')) active @endif" href="{{ route('dashboard.students.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-user-star"></i>
                                          </span>
                                         Students
-                                        <span class="badge badge-sm bg-warning-lt text-uppercase ms-auto">P</span>
                                     </a>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item @if(request()->is('*/subjects*')) active @endif" href="{{ route('dashboard.subjects.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-book-2"></i>
                                          </span>
                                         Subjects
-                                        <span class="badge badge-sm bg-warning-lt text-uppercase ms-auto">P</span>
                                     </a>
                                     <a class="dropdown-item" href="#">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
@@ -332,13 +330,19 @@
                         <div class="dropdown-menu show">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
-                                    <a class="dropdown-item active" href="{{ route('dashboard.users.index') }}">
+                                    <a class="dropdown-item @if(request()->is('*/users*')) active @endif" href="{{ route('dashboard.users.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-users-group"></i>
                                          </span>
                                         Users
                                     </a>
                                 </div>
+                                <a class="dropdown-item @if(request()->is('*/groups*')) active @endif" href="{{ route('dashboard.groups.index') }}">
+                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                             <i class="ti ti-custom ti-book-2"></i>
+                                         </span>
+                                    Groups
+                                </a>
                             </div>
                         </div>
                     </li>
@@ -527,7 +531,7 @@
             </div>
             <div class="collapse navbar-collapse" id="navbar-menu">
                 <div>
-                    I wonder how they see me, Ashes on wool.
+                    I wonder how they see me, ashes on wool.
                 </div>
             </div>
         </div>

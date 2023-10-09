@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Manage Users
+                        Manage Subjects
                     </h2>
                 </div>
                 <!-- Page title actions -->
@@ -20,7 +20,7 @@
                                 <path d="M12 5l0 14"/>
                                 <path d="M5 12l14 0"/>
                             </svg>
-                            New User
+                            New Subject
                         </a>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">User List</h3>
+                            <h3 class="card-title">Subject List</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -70,39 +70,29 @@
                                     <th class="w-1">No.</th>
                                     <th>
                                         Name
-                                        {{--                                        <span>--}}
-                                        {{--                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm icon-thick"--}}
-                                        {{--                                                 width="24" height="24" viewBox="0 0 24 24" stroke-width="2"--}}
-                                        {{--                                                 stroke="currentColor" fill="none" stroke-linecap="round"--}}
-                                        {{--                                                 stroke-linejoin="round">--}}
-                                        {{--                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>--}}
-                                        {{--                                                <path d="M6 15l6 -6l6 6"></path>--}}
-                                        {{--                                            </svg>--}}
-                                        {{--                                        </span>--}}
                                     </th>
-                                    <th>E-Mail Address</th>
+                                    <th>Group</th>
                                     <th>Created</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @forelse($users as $user)
-                                    <tr wire:key="{{ $user->id }}">
+                                @forelse($subjects as $subject)
+                                    <tr wire:key="{{ $subject->id }}">
 
                                         <td>
                                                 <span class="text-secondary">
-                                                    {{ ($users ->currentpage()-1) * $users ->perpage() + $loop->index + 1 }}
+                                                    {{ ($subjects->currentpage()-1) * $subjects->perpage() + $loop->index + 1 }}
                                                 </span>
                                         </td>
                                         <td>
-                                            {{ $user->name }}
+                                            {{ $subject->name }}
                                         </td>
                                         <td>
-                                            <span class="badge bg-success me-1"></span>
-                                            {{ $user->email }}
+                                            {{ $subject->group->name }}
                                         </td>
                                         <td>
-                                            {{ $user->created_at->format('Y-m-d') }}
+                                            {{ $subject->created_at->format('Y-m-d') }}
                                         </td>
 
                                         <td class="text-end">
@@ -112,9 +102,9 @@
                                                           data-bs-toggle="dropdown">Actions</button>
                                                   <div class="dropdown-menu dropdown-menu-end">
                                                     <button class="dropdown-item"
-                                                            wire:click="prepareItemEditing({{ $user->id  }})">Edit</button>
+                                                            wire:click="prepareItemEditing({{ $subject->id  }})">Edit</button>
                                                     <button class="dropdown-item"
-                                                            wire:click="prepareItemDeletion({{ $user->id }})">Delete</button>
+                                                            wire:click="prepareItemDeletion({{ $subject->id }})">Delete</button>
                                                   </div>
                                                 </span>
                                         </td>
@@ -133,15 +123,15 @@
                         <div class="card-footer d-flex align-items-center">
                             <p class="m-0 text-secondary">
                                 Showing
-                                <span>{{  $users->firstItem()  }}</span>
+                                <span>{{  $subjects->firstItem()  }}</span>
                                 to
-                                <span>{{ $users->lastItem() }}</span>
+                                <span>{{ $subjects->lastItem() }}</span>
                                 of
-                                <span> {{ $users->total() }}</span>
+                                <span> {{ $subjects->total() }}</span>
                                 entries
                             </p>
                             <div class="m-0 ms-auto">
-                                {{ $users->links() }}
+                                {{ $subjects->links() }}
                             </div>
 
                         </div>
@@ -157,7 +147,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">New User</h5>
+                    <h5 class="modal-title">New Subject</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -168,7 +158,7 @@
                                 <div>
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" wire:model="form.name" class="form-control" id="name"
-                                           placeholder="Your full name">
+                                           placeholder="Subject name">
                                     @error('form.name')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
@@ -178,38 +168,14 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <div>
-                                    <label for="email" class="form-label">E-Mail Address</label>
-                                    <input type="email" wire:model="form.email" class="form-control" id="email"
-                                           placeholder="Your email address">
-                                    @error('form.email')
-                                    <div class="text-danger mt-1">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-12 mb-3 mb-md-0">
-                                <div>
-                                    <label for="password" class="form-label">Password</label>
-                                    <input type="password" wire:model="form.password" class="form-control" id="password"
-                                           placeholder="New password">
-                                    @error('form.password')
-                                    <div class="text-danger mt-1">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-12 mb-3 mb-md-0">
-                                <div>
-                                    <label for="confirm_password" class="form-label">Confirm Password</label>
-                                    <input type="password" wire:model="form.password_confirmation" class="form-control"
-                                           id="confirm_password" placeholder="Confirm new password">
-                                    @error('form.password_confirmation')
+                                    <label for="group_id" class="form-label">Group</label>
+                                    <select wire:model="form.group_id" id="group_id" class="form-control">
+                                        <option value="">-- Select a group --</option>
+                                        @foreach($groups as $group)
+                                            <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('form.group_id')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>
@@ -248,7 +214,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Editing User {{ $form->name }} </h5>
+                    <h5 class="modal-title">Editing subject {{ $form->name }} </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -269,10 +235,14 @@
                             </div>
                             <div class="col-12 col-md-6">
                                 <div>
-                                    <label for="email" class="form-label">E-Mail Address</label>
-                                    <input type="email" wire:model="form.email" class="form-control" id="email"
-                                           placeholder="Your email address">
-                                    @error('form.email')
+                                    <label for="group_id" class="form-label">Group</label>
+                                    <select wire:model="form.group_id" id="group_id" class="form-control">
+                                        <option value="">-- Select a group --</option>
+                                        @foreach($groups as $group)
+                                            <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('form.group_id')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>

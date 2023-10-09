@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Livewire\Dashboard\Users;
+namespace App\Livewire\Dashboard\Students;
 
-use App\Models\User;
-use App\Traits\UserModalFunctions;
+use App\Models\Student;
+use App\Traits\StudentModalFunctions;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -11,31 +11,31 @@ use Livewire\WithPagination;
 class Index extends Component
 {
 
-    use WithPagination, UserModalFunctions;
+    use WithPagination, StudentModalFunctions;
 
 
-    public int $perPage = 10;
+    public int $perPage = 12;
     public string $search = '';
 
 
     #[Layout('layouts.app')]
     public function render()
     {
-        $users = User::query()->orderBy('created_at', 'desc');
+        $students = Student::query()->orderBy('created_at', 'desc');
 
         if ($this->search) {
 
             $this->resetPage();
 
-            $users->where('name', 'LIKE', '%' . $this->search . '%')
+            $students->where('name', 'LIKE', '%' . $this->search . '%')
                 ->orWhere('email', 'LIKE', '%' . $this->search . '%');
 
         }
 
-        $users = $users->paginate($this->perPage);
+        $students = $students->paginate($this->perPage);
 
-        return view('livewire.dashboard.users.index', [
-            'users' => $users
+        return view('livewire.dashboard.students.index', [
+            'students' => $students
         ]);
     }
 

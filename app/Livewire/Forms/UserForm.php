@@ -3,45 +3,69 @@
 namespace App\Livewire\Forms;
 
 use App\Models\User;
-use Livewire\Attributes\Rule;
+use Illuminate\Validation\Rule as VRule;
 use Livewire\Form;
-use Validator;
 
 class UserForm extends Form
 {
 
-    public string|User $model = User::class;
+    public $model;
 
-    #[Rule('required|string|min:3|max:50')]
     public string $name = '';
-    #[Rule('required|string|email|max:50|unique:users,email')]
     public string $email = '';
-    #[Rule('required|string|confirmed|max:50')]
     public string $password = '';
-    #[Rule('required|string|max:50')]
     public string $password_confirmation = '';
 
-    public function setup($model): void
+    public function rules(): array
     {
-        $this->model = $model;
-        $this->fill($model);
+        return [
+            'name' => ['required', 'string', 'min:3', 'max:50'],
+            'email' => ['required', 'string', 'email', 'max:50', VRule::unique('users', 'email')->ignore($this->model?->id ?? 0)],
+            'password' => ['sometimes', 'string', 'confirmed', 'max:50'],
+            'password_confirmation' => ['sometimes', 'string', 'max:50'],
+        ];
     }
-    public function store() {
 
+    public function validationAttributes(): array
+    {
+        return [
+            'name' => 'name',
+            'email' => 'email',
+            'password' => 'password',
+            'password_confirmation' => 'password confirmation'
+        ];
+    }
+
+    public function setup($id): void
+    {
+        $model = User::findOrFail($id);
+
+        $this->name = $model->name;
+        $this->email = $model->email;
+
+        $this->model = $model;
+    }
+
+    public function store()
+    {
         $this->validate();
 
         $data = $this->only(['name', 'email', 'password']);
 
         $data['password'] = bcrypt($data['password']);
 
-        $model = new $this->model;
+        $model = new User;
 
         return $model->create($data);
     }
 
     public function update()
     {
-        return $this->model->update($this->only('name'));
+        $this->validate();
+
+        return $this->model->update($this->only('name', 'email'));
     }
 
 }
+
+
