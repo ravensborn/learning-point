@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Lwwcas\LaravelCountries\Database\Seeders\LcDatabaseSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,10 +16,12 @@ class DatabaseSeeder extends Seeder
 
 
         $this->call([
+            CitySeeder::class,
             UserSeeder::class,
             GroupSeeder::class,
             SubjectSeeder::class,
             StudentSeeder::class,
+            LcDatabaseSeeder::class
         ]);
     }
 }

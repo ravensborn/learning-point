@@ -13,11 +13,8 @@ class Index extends Component
 
     use WithPagination, UserModalFunctions;
 
-
-    public int $perPage = 10;
+    public int $perPage = 12;
     public string $search = '';
-
-
     #[Layout('layouts.app')]
     public function render()
     {

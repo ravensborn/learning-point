@@ -17,5 +17,7 @@ class SubjectSeeder extends Seeder
         Subject::factory(30)->create([
             'group_id' => Group::where('model', Subject::class)->inRandomOrder()->first()
         ]);
+
+
     }
 }

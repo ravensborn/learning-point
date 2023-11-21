@@ -44,4 +44,10 @@ trait StudentModalFunctions {
         $this->dispatch('close-all-modals');
     }
 
+
+    public function startBulkItemDeletion(): void
+    {
+        $this->dispatch('toggle-modal-bulk-action-delete-confirmation');
+    }
+
 }

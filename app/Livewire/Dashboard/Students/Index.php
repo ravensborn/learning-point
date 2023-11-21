@@ -13,21 +13,24 @@ class Index extends Component
 
     use WithPagination, StudentModalFunctions;
 
-
     public int $perPage = 12;
     public string $search = '';
 
+    public array $selectedStudents = [];
 
     #[Layout('layouts.app')]
     public function render()
     {
+
         $students = Student::query()->orderBy('created_at', 'desc');
 
         if ($this->search) {
 
             $this->resetPage();
 
-            $students->where('name', 'LIKE', '%' . $this->search . '%')
+            $students->where('first_name', 'LIKE', '%' . $this->search . '%')
+                ->orWhere('middle_name', 'LIKE', '%' . $this->search . '%')
+                ->orWhere('last_name', 'LIKE', '%' . $this->search . '%')
                 ->orWhere('email', 'LIKE', '%' . $this->search . '%');
 
         }
@@ -39,6 +42,36 @@ class Index extends Component
         ]);
     }
 
+    public function isMultiSelectMode(): bool
+    {
+        return count($this->selectedStudents) > 0;
+    }
+
+    public function getNumberOfSelectedStudents($mode = null): int|string {
+
+        $count = count($this->selectedStudents);
+
+        if($mode == 'with-text') {
+            if($count == 1) {
+                return 'Selected ' . $count . ' student';
+            }
+
+            return 'Selected ' . $count . ' students';
+        }
+        return $count;
+    }
+
+    public function bulkActions($action): void
+    {
+        if($action == 'delete') {
+            Student::destroy($this->selectedStudents);
+            $this->bulkActions('clear');
+        }
+        if($action == 'clear') {
+            $this->selectedStudents = [];
+        }
+    }
+
 
     public function update(): void
     {
@@ -48,10 +81,4 @@ class Index extends Component
         $this->dispatch('toggle-modal-edit');
     }
 
-    public function store(): void
-    {
-        $this->form->store();
-
-        $this->dispatch('toggle-modal-create');
-    }
 }

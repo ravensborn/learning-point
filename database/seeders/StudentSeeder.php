@@ -14,5 +14,11 @@ class StudentSeeder extends Seeder
     public function run(): void
     {
         Student::factory(20)->create();
+
+        foreach (Student::all() as $student) {
+            $student->addMedia(public_path('images/user.png'))
+                ->preservingOriginal()
+                ->toMediaCollection('avatar');
+        }
     }
 }

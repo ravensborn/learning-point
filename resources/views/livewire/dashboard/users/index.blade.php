@@ -7,18 +7,26 @@
                     <h2 class="page-title">
                         Manage Users
                     </h2>
+                    <div class="text-secondary mt-1">{{ $users->firstItem() ?? 0  }} - {{ $users->lastItem() ?? 0  }}
+                        of {{ $users->total()  }} people
+                    </div>
                 </div>
                 <!-- Page title actions -->
-                <div class="col-auto ms-auto">
-                    <div class="btn-list">
+                <div class="col-auto ms-auto d-print-none">
+                    <div class="d-flex">
+                        <label for="search_item"></label>
+                        <input type="search" id="search_item" wire:model.live="search"
+                               class="form-control d-inline-block w-9 me-3"
+                               placeholder="Search users…">
+
                         <a href="#" class="btn btn-primary" data-bs-toggle="modal"
                            data-bs-target="#modal-create">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                  stroke-linecap="round" stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                <path d="M12 5l0 14"/>
-                                <path d="M5 12l14 0"/>
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M12 5l0 14"></path>
+                                <path d="M5 12l14 0"></path>
                             </svg>
                             New User
                         </a>
@@ -28,126 +36,75 @@
         </div>
     </div>
 
+
     <div class="page-body">
         <div class="container-xl">
-            <div class="row row-deck row-cards">
-
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">User List</h3>
-                        </div>
-                        <div class="card-body border-bottom py-3">
+            <div class="row row-cards">
+                @forelse($users as $user)
+                    <div class="col-md-6 col-lg-3" wire:key="{{ $user->id }}">
+                        <div class="card">
+                            <div class="card-body p-4 text-center">
+                                <span class="avatar avatar-xl mb-3 rounded"
+                                      style="background-image: url('{{ $user->getFirstMediaUrl('avatar') }}')"></span>
+                                <h3 class="m-0 mb-1">
+                                    <a href="#">
+                                        {{ $user->name }}
+                                    </a>
+                                </h3>
+                                <div class="text-secondary">{{ $user->email }}</div>
+                                <div class="mt-3">
+                                    @foreach($user->roles as $role)
+                                        <span class="badge bg-purple-lt">{{ ucwords($role->name) }}</span>
+                                    @endforeach
+                                </div>
+                            </div>
                             <div class="d-flex">
-                                <div class="text-secondary">
-                                    Show
-                                    <div class="mx-2 d-inline-block">
-                                        <select wire:model.live="perPage" class="form-control form-control-sm"
-                                                aria-label="Items per page">
-                                            <option value="5">5</option>
-                                            <option value="10">10</option>
-                                            <option value="20">20</option>
-                                            <option value="50">50</option>
-                                        </select>
-                                    </div>
-                                    entries
-                                </div>
-                                <div class="ms-auto text-secondary">
-                                    Search:
-                                    <div class="ms-2 d-inline-block">
-                                        <input wire:model.live="search" type="search"
-                                               class="form-control form-control-sm"
-                                               aria-label="Search items">
-                                    </div>
-                                </div>
+                                <a href="#" wire:click="prepareItemEditing({{ $user->id  }})" class="card-btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         class="icon icon-tabler icon-tabler-edit icon me-2 text-muted"
+                                         width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                         stroke="currentColor" fill="none" stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
+                                        <path
+                                            d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
+                                        <path d="M16 5l3 3"></path>
+                                    </svg>
+                                    Edit
+                                </a>
+                                <a href="#" wire:click="prepareItemDeletion({{ $user->id  }})" class="card-btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         class="icon icon-tabler icon-tabler-trash icon me-2 text-muted" width="24"
+                                         height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                         fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                        <path d="M4 7l16 0"></path>
+                                        <path d="M10 11l0 6"></path>
+                                        <path d="M14 11l0 6"></path>
+                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                                    </svg>
+                                    Remove
+                                </a>
                             </div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table card-table table-vcenter text-nowrap datatable">
-                                <thead>
-                                <tr>
-
-                                    <th class="w-1">No.</th>
-                                    <th>
-                                        Name
-                                        {{--                                        <span>--}}
-                                        {{--                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-sm icon-thick"--}}
-                                        {{--                                                 width="24" height="24" viewBox="0 0 24 24" stroke-width="2"--}}
-                                        {{--                                                 stroke="currentColor" fill="none" stroke-linecap="round"--}}
-                                        {{--                                                 stroke-linejoin="round">--}}
-                                        {{--                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>--}}
-                                        {{--                                                <path d="M6 15l6 -6l6 6"></path>--}}
-                                        {{--                                            </svg>--}}
-                                        {{--                                        </span>--}}
-                                    </th>
-                                    <th>E-Mail Address</th>
-                                    <th>Created</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @forelse($users as $user)
-                                    <tr wire:key="{{ $user->id }}">
-
-                                        <td>
-                                                <span class="text-secondary">
-                                                    {{ ($users ->currentpage()-1) * $users ->perpage() + $loop->index + 1 }}
-                                                </span>
-                                        </td>
-                                        <td>
-                                            {{ $user->name }}
-                                        </td>
-                                        <td>
-                                            <span class="badge bg-success me-1"></span>
-                                            {{ $user->email }}
-                                        </td>
-                                        <td>
-                                            {{ $user->created_at->format('Y-m-d') }}
-                                        </td>
-
-                                        <td class="text-end">
-                                                <span class="dropdown">
-                                                  <button class="btn dropdown-toggle align-text-top"
-                                                          data-bs-boundary="viewport"
-                                                          data-bs-toggle="dropdown">Actions</button>
-                                                  <div class="dropdown-menu dropdown-menu-end">
-                                                    <button class="dropdown-item"
-                                                            wire:click="prepareItemEditing({{ $user->id  }})">Edit</button>
-                                                    <button class="dropdown-item"
-                                                            wire:click="prepareItemDeletion({{ $user->id }})">Delete</button>
-                                                  </div>
-                                                </span>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="5" class="text-center">
-                                            There are no items at the moment.
-                                        </td>
-                                    </tr>
-                                @endforelse
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div class="card-footer d-flex align-items-center">
-                            <p class="m-0 text-secondary">
-                                Showing
-                                <span>{{  $users->firstItem()  }}</span>
-                                to
-                                <span>{{ $users->lastItem() }}</span>
-                                of
-                                <span> {{ $users->total() }}</span>
-                                entries
-                            </p>
-                            <div class="m-0 ms-auto">
-                                {{ $users->links() }}
-                            </div>
-
                         </div>
                     </div>
-                </div>
-
+                @empty
+                    <div class="col-md-12">
+                        <div class="empty">
+                            <div class="empty-img"><img src="{{ asset('theme/static/illustrations/undraw_space_search_re_ttoj.svg') }}" height="128" alt="">
+                            </div>
+                            <p class="empty-title">No results found</p>
+                            <p class="empty-subtitle text-secondary">
+                                Try adjusting your search or filter to find what you're looking for.
+                            </p>
+                        </div>
+                    </div>
+                @endforelse
+            </div>
+            <div class="d-flex justify-content-center mt-5">
+                {{ $users->links() }}
             </div>
         </div>
     </div>
@@ -215,6 +172,32 @@
                                     </div>
                                     @enderror
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="form-label">Gender</label>
+                                <div class="form-check">
+                                    <input type="radio" wire:model="form.gender" value="male" class="form-check-input"
+                                           id="genderMaleRadioButton">
+                                    <label class="form-check-label" for="genderMaleRadioButton">
+                                        Male
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" wire:model="form.gender" value="female" class="form-check-input"
+                                           id="genderFemaleRadioButton">
+                                    <label class="form-check-label" for="genderFemaleRadioButton">
+                                        Female
+                                    </label>
+                                </div>
+
+                                @error('form.gender')
+                                <div class="text-danger mt-1">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+
                             </div>
                         </div>
                     </form>
