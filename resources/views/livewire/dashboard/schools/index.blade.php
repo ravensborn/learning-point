@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Manage Groups
+                        Manage Schools
                     </h2>
                 </div>
                 <!-- Page title actions -->
@@ -20,7 +20,7 @@
                                 <path d="M12 5l0 14"/>
                                 <path d="M5 12l14 0"/>
                             </svg>
-                            New Group
+                            New School
                         </a>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Group List</h3>
+                            <h3 class="card-title">School List</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -72,29 +72,29 @@
                                         Name
                                     </th>
                                     <th>
-                                        Model
+                                        URL
                                     </th>
                                     <th>Created</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @forelse($groups as $group)
-                                    <tr wire:key="{{ $group->id }}">
+                                @forelse($schools as $school)
+                                    <tr wire:key="{{ $school->id }}">
 
                                         <td>
                                                 <span class="text-secondary">
-                                                    {{ ($groups->currentpage()-1) * $groups->perpage() + $loop->index + 1 }}
+                                                    {{ ($schools->currentpage()-1) * $schools->perpage() + $loop->index + 1 }}
                                                 </span>
                                         </td>
                                         <td>
-                                            {{ $group->name }}
+                                            {{ $school->name }}
                                         </td>
                                         <td>
-                                            {{ $group->model }}
+                                            {{ $school->url }}
                                         </td>
                                         <td>
-                                            {{ $group->created_at->format('Y-m-d') }}
+                                            {{ $school->created_at->format('Y-m-d') }}
                                         </td>
 
                                         <td class="text-end">
@@ -104,9 +104,9 @@
                                                           data-bs-toggle="dropdown">Actions</button>
                                                   <div class="dropdown-menu dropdown-menu-end">
                                                     <button class="dropdown-item"
-                                                            wire:click="prepareItemEditing({{ $group->id  }})">Edit</button>
+                                                            wire:click="prepareItemEditing({{ $school->id  }})">Edit</button>
                                                     <button class="dropdown-item"
-                                                            wire:click="prepareItemDeletion({{ $group->id }})">Delete</button>
+                                                            wire:click="prepareItemDeletion({{ $school->id }})">Delete</button>
                                                   </div>
                                                 </span>
                                         </td>
@@ -125,15 +125,15 @@
                         <div class="card-footer d-flex align-items-center">
                             <p class="m-0 text-secondary">
                                 Showing
-                                <span>{{  $groups->firstItem()  }}</span>
+                                <span>{{  $schools->firstItem()  }}</span>
                                 to
-                                <span>{{ $groups->lastItem() }}</span>
+                                <span>{{ $schools->lastItem() }}</span>
                                 of
-                                <span> {{ $groups->total() }}</span>
+                                <span> {{ $schools->total() }}</span>
                                 entries
                             </p>
                             <div class="m-0 ms-auto">
-                                {{ $groups->links() }}
+                                {{ $schools->links() }}
                             </div>
 
                         </div>
@@ -149,7 +149,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">New Group</h5>
+                    <h5 class="modal-title">New School</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -160,7 +160,7 @@
                                 <div>
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" wire:model="form.name" class="form-control" id="name"
-                                           placeholder="Group A">
+                                           placeholder="AB School">
                                     @error('form.name')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
@@ -168,16 +168,12 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6">
+                            <div class="col-12 col-md-6 mb-3 mb-md-0">
                                 <div>
-                                    <label for="modelName" class="form-label">Model</label>
-                                    <select wire:model="form.modelName" id="modelName" class="form-control">
-                                        <option value="">-- Select a model --</option>
-                                        @foreach($availableModels as $model)
-                                            <option value="{{ $model['model'] }}">{{ $model['name'] }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('form.modelName')
+                                    <label for="url" class="form-label">URL</label>
+                                    <input type="text" wire:model="form.url" class="form-control" id="url"
+                                           placeholder="https://example.com">
+                                    @error('form.url')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>
@@ -216,7 +212,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Editing group {{ $form->name }} </h5>
+                    <h5 class="modal-title">Editing school {{ $form->name }} </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -227,8 +223,20 @@
                                 <div>
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" wire:model="form.name" class="form-control" id="name"
-                                           placeholder="Group A">
+                                           placeholder="AB School">
                                     @error('form.name')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3 mb-md-0">
+                                <div>
+                                    <label for="url" class="form-label">URL</label>
+                                    <input type="text" wire:model="form.url" class="form-control" id="url"
+                                           placeholder="https://example.com">
+                                    @error('form.url')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>

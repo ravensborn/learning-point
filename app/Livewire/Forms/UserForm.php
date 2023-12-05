@@ -63,7 +63,6 @@ class UserForm extends Form
         $data = $this->only(['name', 'email', 'gender', 'password']);
 
         $data['password'] = bcrypt($data['password']);
-        $data['user_id'] = auth()->user()->id;
 
         $model = new User;
 

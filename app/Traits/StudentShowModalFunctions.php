@@ -1,0 +1,344 @@
+<?php
+
+namespace App\Traits;
+
+use App\Livewire\Forms\StudentForm;
+use App\Models\School;
+use App\Models\Student;
+use App\Models\StudentContact;
+use App\Models\StudentRelation;
+use Illuminate\Http\File;
+use Illuminate\Support\Collection;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Validator;
+
+trait StudentShowModalFunctions
+{
+
+    //Contacts
+    public function storeContact(): void
+    {
+        $this->studentContactForm->student_id = $this->student->id;
+        $this->studentContactForm->store();
+        $this->loadContacts();
+        $this->dispatch('close-all-modals');
+    }
+
+    public int $deletingContactId = 0;
+
+    public function deleteContact($contactId = 0): void
+    {
+        if ($this->deletingContactId == $contactId) {
+
+            $contact = $this->contacts->find($contactId);
+
+            if ($contact) {
+                $contact->delete();
+                $this->loadContacts();
+                $this->deletingContactId = 0;
+                $this->dispatch('close-all-modals');
+            }
+
+        } else {
+            $this->deletingContactId = $contactId;
+        }
+    }
+
+    public function showContactModal($contactId): void
+    {
+        $this->selectedContact = $this->contacts->find($contactId);
+        $this->dispatch('toggle-modal-show-contact');
+    }
+
+    public function showContactCreateModal(): void
+    {
+        $this->dispatch('toggle-modal-create-contact');
+    }
+
+    public function resetContactCreateModal(): void
+    {
+        $this->studentContactForm->reset();
+        $this->resetValidation();
+    }
+
+    public StudentContact $editingContactModel;
+
+    public function showContactEditModal($contactId): void
+    {
+        $this->editingContactModel = $this->contacts->find($contactId);
+        $this->studentContactForm->setup($contactId);
+        $this->dispatch('toggle-modal-edit-contact');
+    }
+
+    public function updateContact(): void
+    {
+        $this->studentContactForm->update();
+        $this->loadContacts();
+        $this->dispatch('toggle-modal-edit-contact');
+    }
+
+    public function resetContactEditModal(): void
+    {
+        $this->studentContactForm->reset();
+        $this->resetValidation();
+    }
+
+
+    //Student Information
+    public function updateStudent(): void
+    {
+        $this->studentForm->update();
+        $this->dispatch('close-all-modals');
+        $this->reloadStudent();
+    }
+
+    public function showStudentEditModal(): void
+    {
+        $this->studentForm->setup($this->student->id);
+        $this->dispatch('toggle-modal-edit-student');
+    }
+
+    public function resetStudentEditModel(): void
+    {
+        $this->studentForm->reset();
+        $this->studentForm->setup($this->student->id);
+        $this->resetValidation();
+    }
+
+
+    //School Information
+    public function showSchoolEditModal(): void
+    {
+        $this->studentForm->setup($this->student->id);
+        $this->dispatch('toggle-modal-edit-school');
+    }
+
+    private function validateStudentSchool(): void
+    {
+        $data = [
+            'student_id' => $this->studentForm->model->student_id,
+            'school_id' => $this->studentForm->school_id,
+            'grade_id' => $this->studentForm->grade_id,
+            'academic_stream' => $this->studentForm->academic_stream,
+            'school_username' => $this->studentForm->school_username,
+            'school_password' => $this->studentForm->school_password,
+        ];
+
+        $rules = [
+            'school_id' => ['required', 'integer', 'exists:schools,id'],
+            'grade_id' => ['required', 'integer', 'exists:grades,id'],
+            'academic_stream' => ['required', 'string', 'in:' . implode(',', array_keys(School::ACADEMIC_STREAMS))],
+            'school_username' => ['required', 'string', 'min:1', 'max:50'],
+            'school_password' => ['required', 'string', 'min:1', 'max:50'],
+        ];
+
+        $attributes = [
+            'school_id' => 'school',
+            'grade_id' => 'grade',
+            'academic_stream' => 'academic stream',
+            'school_username' => 'school username',
+            'school_password' => 'school password',
+        ];
+
+        $validator = Validator::make(data: $data, rules: $rules, attributes: $attributes)
+            ->validate();
+    }
+
+    public function updateSchool(): void
+    {
+        $this->validateStudentSchool();
+        $this->studentForm->user_id = auth()->user()->id;
+        $this->studentForm->update();
+        $this->dispatch('close-all-modals');
+    }
+
+    public function resetSchoolEditModal(): void
+    {
+        $this->studentForm->reset();
+        $this->studentForm->setup($this->student->id);
+        $this->resetValidation();
+    }
+
+
+    //Student Avatar
+    public function showStudentAvatarModal(): void
+    {
+        $this->studentForm->setup($this->student->id);
+        $this->dispatch('toggle-modal-show-student-avatar');
+    }
+
+    public function toggleUpdateAvatarMode(): void
+    {
+        $this->updateAvatarMode = !$this->updateAvatarMode;
+    }
+
+    public function updatedStudentFormAvatar(): void
+    {
+        $this->resetValidation();
+    }
+
+    public function saveStudentAvatar(): void
+    {
+
+        $this->validateOnly('studentForm.avatar', attributes: [
+            'studentForm.avatar' => 'avatar'
+        ]);
+
+        $this->studentForm->setProfilePicture();
+        $this->updateAvatarMode = false;
+        $this->reloadStudent();
+    }
+
+    //Student Relations
+    public string $studentRelationSearchQuery = '';
+    public $searchedStudentRelationsStudents;
+    public int $selectedStudentRelationStudentId = 0;
+
+    public function updatedStudentRelationSearchQuery(): void
+    {
+        $this->searchedStudentRelationsStudents = Student::where('first_name', 'LIKE', '%' . $this->studentRelationSearchQuery . '%')
+            ->orWhere('middle_name', 'LIKE', '%' . $this->studentRelationSearchQuery . '%')
+            ->orWhere('last_name', 'LIKE', '%' . $this->studentRelationSearchQuery . '%')
+            ->orWhere('primary_phone_number', 'LIKE', '%' . $this->studentRelationSearchQuery . '%')
+            ->orWhere('secondary_phone_number', 'LIKE', '%' . $this->studentRelationSearchQuery . '%')
+            ->orWhere('email', 'LIKE', '%' . $this->studentRelationSearchQuery . '%')
+            ->limit(4)->get();
+    }
+
+    public function selectStudentRelationStudent($id): void
+    {
+        $this->selectedStudentRelationStudentId = $id;
+        $this->studentRelationForm->related_id = $id;
+    }
+
+    public function storeStudentRelation(): void
+    {
+        $this->studentRelationForm->student_id = $this->student->id;
+        $this->studentRelationForm->store();
+        $this->loadStudentRelations();
+        $this->dispatch('close-all-modals');
+    }
+
+    public int $deletingStudentRelationId = 0;
+
+    public function deleteStudentRelation($studentRelationId = 0): void
+    {
+        if ($this->deletingStudentRelationId == $studentRelationId) {
+
+            $relation = $this->availableStudentRelations->find($studentRelationId);
+
+            if ($relation) {
+                $otherRelation = StudentRelation::where('student_id', $relation->related_id)
+                    ->where('related_id', $relation->student_id)
+                    ->first();
+                if ($otherRelation) {
+                    $otherRelation->delete();
+                }
+                $relation->delete();
+                $this->loadStudentRelations();
+                $this->deletingStudentRelationId = 0;
+                $this->dispatch('close-all-modals');
+            }
+
+        } else {
+            $this->deletingStudentRelationId = $studentRelationId;
+        }
+    }
+
+    public function showStudentRelationCreateModal(): void
+    {
+        $this->searchedStudentRelationsStudents = collect();
+        $this->studentRelationSearchQuery = '';
+        $this->selectedStudentRelationStudentId = 0;
+        $this->dispatch('toggle-modal-create-student-relation');
+    }
+
+    public function resetStudentRelationCreateModal(): void
+    {
+        $this->searchedStudentRelationsStudents = collect();
+        $this->studentRelationSearchQuery = '';
+        $this->selectedStudentRelationStudentId = 0;
+        $this->studentRelationForm->reset();
+        $this->resetValidation();
+    }
+
+    public StudentRelation $editingStudentRelation;
+
+    public function showStudentRelationEditModal($studentRelationId): void
+    {
+        $this->editingStudentRelation = $this->availableStudentRelations->find($studentRelationId);
+        $this->studentRelationForm->setup($studentRelationId);
+        $this->dispatch('toggle-modal-edit-student-relation');
+    }
+
+    public function updateStudentRelation(): void
+    {
+        $this->studentRelationForm->update();
+        $this->loadStudentRelations();
+        $this->dispatch('toggle-modal-edit-student-relation');
+    }
+
+    public function resetStudentRelationEditModal(): void
+    {
+        $this->studentRelationForm->reset();
+        $this->resetValidation();
+    }
+
+    //Upload document
+
+    public $document;
+    public string $document_name = '';
+
+    public function showDocumentUploadModal(): void
+    {
+        $this->document = null;
+        $this->document_name = '';
+        $this->dispatch('toggle-modal-upload-document');
+    }
+
+    public function saveDocument(): void
+    {
+        $this->validate([
+            'document' => 'required|file|max:' . 1024 * 8,
+            'document_name' => 'required|string|max:50',
+        ]);
+
+        $name = time() . '_' . uniqid() . '.' . pathinfo($this->document->getRealPath(), PATHINFO_EXTENSION);
+
+        $this->student->addMedia($this->document)
+            ->usingName($this->document_name)
+            ->usingFileName($name)
+            ->toMediaCollection('documents');
+
+        $this->document = null;
+        $this->document_name = '';
+
+        $this->loadDocuments();
+
+        $this->dispatch('close-all-modals');
+    }
+
+    public string $deletingDocumentUuid = '';
+
+    public function deleteDocument($uuid = ''): void
+    {
+        if ($this->deletingDocumentUuid == $uuid) {
+
+            $document = Media::where('uuid', $uuid)->first();
+
+            if ($document) {
+
+                $document->delete();
+                $this->loadDocuments();
+                $this->deletingDocumentUuid = '';
+                $this->dispatch('close-all-modals');
+            }
+
+        } else {
+
+            $this->deletingDocumentUuid = $uuid;
+        }
+    }
+
+
+}

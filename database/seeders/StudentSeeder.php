@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Student;
+use App\Models\StudentRelation;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -20,5 +21,13 @@ class StudentSeeder extends Seeder
                 ->preservingOriginal()
                 ->toMediaCollection('avatar');
         }
+
+
+        $firstStudent = Student::find(1);
+        $firstStudent->addMedia(public_path('images/user.png'))
+            ->preservingOriginal()
+            ->toMediaCollection('documents');
+
+        StudentRelation::factory(10)->create();
     }
 }

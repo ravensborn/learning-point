@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\City;
+use App\Models\School;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,10 +19,17 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'wallet' => $this->faker->randomNumber(3,true),
             'first_name' => $this->faker->firstName,
             'middle_name' => $this->faker->lastName,
             'last_name' => $this->faker->lastName,
+
+            'wallet' => $this->faker->randomNumber(3,true),
+
+            'school_id' => $this->faker->randomElement(School::all()->pluck('id')),
+            'academic_stream' => $this->faker->randomElement(array_keys(School::ACADEMIC_STREAMS)),
+            'school_username' => $this->faker->word,
+            'school_password' => $this->faker->word,
+
             'gender' => $this->faker->randomElement(['male', 'female']),
             'birthday' => $this->faker->date,
             'blood_type' => $this->faker->bloodGroup(),

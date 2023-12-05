@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -21,14 +20,32 @@ return new class extends Migration
                 ->on('users')
                 ->nullOnDelete();
 
-            $table->double('wallet', 10, 2)->default(0);
-
             $table->string('first_name');
             $table->string('middle_name');
             $table->string('last_name');
+
+            $table->double('wallet', 10, 2)->default(0);
+
+            $table->unsignedBigInteger('school_id')->nullable();
+            $table->foreign('school_id')
+                ->references('id')
+                ->on('schools')
+                ->nullOnDelete();
+
+            $table->unsignedBigInteger('grade_id')->nullable();
+            $table->foreign('grade_id')
+                ->references('id')
+                ->on('grades')
+                ->nullOnDelete();
+
+            $table->string('academic_stream')->default(\App\Models\School::ACADEMIC_STREAM_OTHER);
+            $table->string('school_username')->nullable();
+            $table->string('school_password')->nullable();
+
+
             $table->enum('gender', ['male', 'female']);
             $table->date('birthday');
-            $table->enum('blood_type', ['A+','A-','AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']);
+            $table->enum('blood_type', ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']);
             $table->string('primary_phone_number');
             $table->string('secondary_phone_number')->nullable();
             $table->string('email')->nullable();
@@ -48,6 +65,7 @@ return new class extends Migration
                 ->restrictOnDelete();
 
             $table->string('address')->nullable();
+
 
             $table->timestamps();
         });

@@ -3,6 +3,7 @@
 namespace App\Livewire\Forms;
 
 use App\Models\City;
+use App\Models\School;
 use App\Models\Student;
 use Livewire\Attributes\Rule;
 use Livewire\Form;
@@ -13,26 +14,42 @@ class StudentForm extends Form
 
     public $model;
 
+    public $user_id;
+
     public $avatar;
     public string $avatarUrl = '';
 
     public string $first_name = '';
     public string $middle_name = '';
     public string $last_name = '';
+
+    public int|null $school_id = null;
+    public int|null $grade_id = null;
+
+    public string|null $academic_stream = School::ACADEMIC_STREAM_OTHER;
+    public string|null $school_username = null;
+    public string|null $school_password = null;
+
     public string $gender = 'male';
     public string $birthday = '';
     public string $blood_type = '';
     public string $primary_phone_number = '';
-    public string $secondary_phone_number = '';
-    public string $email = '';
+    public string|null $secondary_phone_number = '';
+    public string|null $email = '';
     public string $country = 'IQ';
     public int $city_id = City::ERBIL;
-    public string $address = '';
+    public string|null $address = '';
 
     private array $attributes = [
+        'user_id',
         'first_name',
         'middle_name',
         'last_name',
+        'school_id',
+        'grade_id',
+        'academic_stream',
+        'school_username',
+        'school_password',
         'gender',
         'birthday',
         'blood_type',
@@ -47,16 +64,22 @@ class StudentForm extends Form
     public function rules(): array
     {
         return [
+            'user_id' => ['required', 'integer', 'exists:users,id'],
             'avatar' => ['nullable', 'mimes:png,jpg', 'max:' . (1024 * 5)],
             'first_name' => ['required', 'string', 'min:1', 'max:50'],
             'middle_name' => ['required', 'string', 'min:1', 'max:50'],
             'last_name' => ['required', 'string', 'min:1', 'max:50'],
+//            'school_id' => ['nullable', 'integer', 'exists:schools,id'],
+//            'grade_id' => ['sometimes', 'integer', 'exists:grades,id'],
+//            'academic_stream' => ['sometimes', 'string', 'in:' . implode(',', array_keys(School::ACADEMIC_STREAMS))],
+//            'school_username' => ['sometimes', 'string', 'min:1', 'max:50'],
+//            'school_password' => ['sometimes', 'string', 'min:1', 'max:50'],
             'gender' => ['required', 'string', 'in:male,female'],
             'birthday' => ['required', 'date'],
             'blood_type' => ['required', 'string', 'in:A+,A-,B+,B-,AB+,AB-,O+,O-'],
             'primary_phone_number' => ['required', 'string', (new Phone)->countryField('country')],
             'secondary_phone_number' => ['nullable', 'string', (new Phone)->countryField('country')],
-            'email' => ['nullable', 'string', 'email'],
+            'email' => ['nullable', 'string', 'email', 'max:50'],
             'country' => ['required', 'string', 'exists:lc_countries,iso_alpha_2'],
             'city_id' => ['required', 'integer', 'exists:cities,id'],
             'address' => ['nullable', 'string', 'min:1', 'max:100'],
@@ -66,10 +89,16 @@ class StudentForm extends Form
     public function validationAttributes(): array
     {
         return [
+            'user_id' => 'user',
             'avatar' => 'avatar',
             'first_name' => 'first name',
             'middle_name' => 'middle name',
             'last_name' => 'last name',
+            'school_id' => 'school',
+            'grade_id' => 'grade',
+            'academic_stream' => 'academic stream',
+            'school_username' => 'school username',
+            'school_password' => 'school password',
             'gender' => 'gender',
             'birthday' => 'birthday',
             'blood_type' => 'blood type',
@@ -86,7 +115,7 @@ class StudentForm extends Form
     {
         $model = Student::findOrFail($id);
 
-        if($fill) {
+        if ($fill) {
             $this->fill($model);
         }
 
@@ -97,9 +126,10 @@ class StudentForm extends Form
     {
         $this->model->clearMediaCollection('avatar');
     }
+
     public function setProfilePicture(): void
     {
-        if($this->avatar) {
+        if ($this->avatar) {
 
             $this->resetProfilePicture();
 
@@ -115,6 +145,8 @@ class StudentForm extends Form
 
     public function store()
     {
+        $this->user_id = auth()->user()->id;
+
         $this->validate();
 
         $data = $this->only($this->attributes);

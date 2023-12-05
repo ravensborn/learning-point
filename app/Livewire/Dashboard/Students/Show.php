@@ -4,36 +4,46 @@ namespace App\Livewire\Dashboard\Students;
 
 use App\Livewire\Forms\StudentContactForm;
 use App\Livewire\Forms\StudentForm;
-use App\Livewire\Forms\StudentSchoolForm;
+use App\Livewire\Forms\StudentRelationForm;
 use App\Models\City;
+use App\Models\Grade;
+use App\Models\School;
 use App\Models\Student;
 use App\Models\StudentContact;
+use App\Models\StudentRelation;
+use App\Traits\StudentShowModalFunctions;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Psy\Util\Str;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Show extends Component
 {
 
-    use WithFileUploads;
+    use WithFileUploads, StudentShowModalFunctions;
 
     public Student $student;
     public StudentForm $studentForm;
     public StudentContactForm $studentContactForm;
-    public StudentSchoolForm $studentSchoolForm;
+    public StudentRelationForm $studentRelationForm;
+    public $documents;
+
     public $contacts;
     public $availableRelations;
     public $availableAcademicStreams;
     public $availableCities;
+    public $availableSchools;
+    public $availableGrades;
+    public $availableStudentRelations;
+    public $availableStudentRelationTypes;
+
 
     public bool $showStudentSchoolAccountPassword = false;
 
     public $selectedContact;
-    public $deleteContactButtonText = 'Delete contact';
-    public int $deletingContactId = 0;
+
     public bool $updateAvatarMode = false;
-
-
 
 
     public function toggleStudentSchoolAccountPassword(): void
@@ -41,131 +51,6 @@ class Show extends Component
         $this->showStudentSchoolAccountPassword = !$this->showStudentSchoolAccountPassword;
     }
 
-    public function deleteContact($contactId = 0): void
-    {
-        if($this->deletingContactId == $contactId) {
-
-            $contact = $this->contacts->find($contactId);
-
-            if($contact) {
-                $contact->delete();
-                $this->loadContacts();
-                $this->deletingContactId = 0;
-                $this->selectedContact = null;
-                $this->dispatch('close-all-modals');
-            }
-
-        } else {
-            $this->deletingContactId = $contactId;
-            $this->deleteContactButtonText = 'Are you sure?';
-        }
-    }
-    public function resetShowContactModal(): void
-    {
-        $this->deletingContactId = 0;
-        $this->deleteContactButtonText = 'Delete contact';
-    }
-
-    public function showContactModal($contactId): void
-    {
-        $this->selectedContact = $this->contacts->find($contactId);
-        $this->dispatch('toggle-modal-show-contact');
-    }
-
-    public function showStudentUpdateModal(): void
-    {
-        $this->dispatch('toggle-modal-update-student');
-    }
-    public function prepareStudentUpdate(): void
-    {
-        $this->studentForm->setup($this->student->id);
-        $this->dispatch('toggle-modal-edit-student');
-    }
-    public function updateStudent(): void
-    {
-        $this->studentForm->update();
-        $this->dispatch('close-all-modals');
-        $this->reloadStudent();
-    }
-    public function resetStudentEditForm(): void
-    {
-        $this->studentForm->reset();
-        $this->studentForm->setup($this->student->id);
-        $this->resetValidation();
-    }
-
-    public function showContactCreateModal(): void
-    {
-        $this->dispatch('toggle-modal-create-contact');
-    }
-    public function storeContact(): void
-    {
-        $this->studentContactForm->student_id = $this->student->id;
-        $this->studentContactForm->store();
-        $this->loadContacts();
-        $this->studentContactForm->reset();
-        $this->dispatch('close-all-modals');
-    }
-
-    public function showSchoolCreateModal(): void
-    {
-        $this->dispatch('toggle-modal-create-school');
-    }
-
-    public function createSchoolEntry(): void
-    {
-        $this->student->school()->create();
-        $this->prepareSchoolUpdate();
-    }
-    public function prepareSchoolUpdate(): void
-    {
-       if($this->student->school) {
-           $this->studentSchoolForm->setup($this->student->school->id);
-           $this->dispatch('toggle-modal-edit-school');
-       }
-    }
-    public function updateSchool(): void
-    {
-        $this->studentSchoolForm->update();
-        $this->dispatch('close-all-modals');
-    }
-    public function resetSchoolEditForm(): void
-    {
-        $this->resetValidation();
-        $this->studentSchoolForm->reset();
-        $this->studentSchoolForm->setup($this->student->school->id);
-    }
-
-    public function showStudentAvatarModal(): void
-    {
-        $this->studentForm->setup($this->student->id);
-        $this->dispatch('toggle-modal-show-student-avatar');
-    }
-
-    public function toggleUpdateAvatarMode(): void
-    {
-        $this->updateAvatarMode = !$this->updateAvatarMode;
-    }
-
-    public function updatedStudentFormAvatar(): void
-    {
-//        $this->validateOnly('studentForm.avatar', attributes: [
-//            'studentForm.avatar' => 'avatar'
-//        ]);
-        $this->resetValidation();
-    }
-
-    public function saveStudentAvatar(): void
-    {
-
-        $this->validateOnly('studentForm.avatar', attributes: [
-            'studentForm.avatar' => 'avatar'
-        ]);
-
-        $this->studentForm->setProfilePicture();
-        $this->updateAvatarMode = false;
-        $this->reloadStudent();
-    }
 
     public function loadContacts(): void
     {
@@ -177,13 +62,45 @@ class Show extends Component
         $this->student = Student::findOrFail($this->student->id);
     }
 
+    public function updatingStudentFormSchoolId(): void
+    {
+        if ($this->studentForm->school_id) {
+            $this->availableGrades = Grade::where('school_id', $this->studentForm->school_id)->get();
+        }
+    }
+
+    public function loadStudentRelations(): void
+    {
+        $this->availableStudentRelations = StudentRelation::where('student_id', $this->student->id)->get();
+    }
+
+
+    public function loadDocuments(): void
+    {
+        $this->documents = Media::where('model_id', $this->student->id)
+            ->where('model_type', Student::class)
+            ->where('collection_name', 'documents')
+            ->get();
+    }
+
     public function mount(Student $student): void
     {
         $this->student = $student;
         $this->availableRelations = StudentContact::AVAILABLE_RELATIONS;
-        $this->availableAcademicStreams = Student::ACADEMIC_STREAMS;
+        $this->availableAcademicStreams = School::ACADEMIC_STREAMS;
         $this->availableCities = City::all();
         $this->loadContacts();
+        $this->availableSchools = School::all();
+
+        $this->availableGrades = collect();
+        if ($this->studentForm->school_id) {
+            $this->availableGrades = Grade::where('school_id', $this->studentForm->school_id)->get();
+        }
+
+        $this->loadStudentRelations();
+        $this->availableStudentRelationTypes = StudentRelation::AVAILABLE_RELATIONS;
+        $this->searchedStudentRelationsStudents = collect();
+        $this->loadDocuments();
     }
 
     #[Layout('layouts.app')]

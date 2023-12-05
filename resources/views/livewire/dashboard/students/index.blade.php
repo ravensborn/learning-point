@@ -38,18 +38,49 @@
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
-                                <div class="text-secondary">
-                                    Show
-                                    <div class="mx-2 d-inline-block">
-                                        <select wire:model.live="perPage" class="form-control form-control-sm"
-                                                aria-label="Items per page">
-                                            <option value="5">5</option>
-                                            <option value="10">10</option>
-                                            <option value="20">20</option>
-                                            <option value="50">50</option>
-                                        </select>
+                                <div class="d-flex justify-content-start align-items-center gap-3 text-secondary">
+                                    <div>
+                                            <span class="cursor-pointer" wire:click="toggleMultipleSelectMode()">
+                                                @if(!$multipleSelectMode)
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                         class="icon icon-tabler icon-tabler-list-check" width="24"
+                                                         height="24"
+                                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                         fill="none"
+                                                         stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                <path d="M3.5 5.5l1.5 1.5l2.5 -2.5"/>
+                                                <path d="M3.5 11.5l1.5 1.5l2.5 -2.5"/>
+                                                <path d="M3.5 17.5l1.5 1.5l2.5 -2.5"/>
+                                                <path d="M11 6l9 0"/>
+                                                <path d="M11 12l9 0"/>
+                                                <path d="M11 18l9 0"/>
+                                            </svg>
+                                                @else
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                         class="icon icon-tabler icon-tabler-clear-all" width="24"
+                                                         height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                         stroke="currentColor" fill="none" stroke-linecap="round"
+                                                         stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"
+                                                                                       fill="none"/><path d="M8 6h12"/><path
+                                                            d="M6 12h12"/><path d="M4 18h12"/></svg>
+                                                @endif
+                                        </span>
                                     </div>
-                                    entries
+                                    |
+                                    <div>
+                                        Show
+                                        <div class="mx-2 d-inline-block">
+                                            <select wire:model.live="perPage" class="form-control form-control-sm"
+                                                    aria-label="Items per page">
+                                                <option value="5">5</option>
+                                                <option value="10">10</option>
+                                                <option value="20">20</option>
+                                                <option value="50">50</option>
+                                            </select>
+                                        </div>
+                                        entries
+                                    </div>
                                 </div>
                                 <div class="ms-auto text-secondary">
                                     Search:
@@ -62,10 +93,8 @@
                             </div>
                         </div>
 
-                        @if($this->isMultiSelectMode())
+                        @if($multipleSelectMode && $this->isMultipleSelected())
                             <div class="card-body border-bottom border-top-0 py-3">
-
-
                                 <div class="d-flex flex-row justify-content-start ">
                                     <div class="me-1">
                                         {{ $this->getNumberOfSelectedStudents('with-text')  }} -
@@ -98,8 +127,14 @@
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                 <tr>
-
-                                    <th class="w-1"></th>
+                                    @if($multipleSelectMode)
+                                        <th class="w-1">
+                                            <input class="form-check-input m-0 align-middle"
+                                                   wire:model.change="selectAllStudentsCheckbox"
+                                                   type="checkbox"
+                                                   aria-label="Select all students">
+                                        </th>
+                                    @endif
                                     <th class="w-1">No.</th>
                                     <th>
                                         Name
@@ -119,13 +154,15 @@
                                 <tbody>
                                 @forelse($students as $student)
                                     <tr wire:key="{{ $student->id }}">
-                                        <td>
-                                            <input class="form-check-input m-0 align-middle"
-                                                   value="{{ $student->id }}"
-                                                   wire:model.live="selectedStudents"
-                                                   type="checkbox"
-                                                   aria-label="Select student">
-                                        </td>
+                                        @if($multipleSelectMode)
+                                            <td>
+                                                <input class="form-check-input m-0 align-middle"
+                                                       value="{{ $student->id }}"
+                                                       wire:model.live="selectedStudents"
+                                                       type="checkbox"
+                                                       aria-label="Select student">
+                                            </td>
+                                        @endif
                                         <td>
                                             <span class="text-secondary">
                                                 {{ ($students->currentpage()-1) * $students->perpage() + $loop->index + 1 }}
@@ -133,7 +170,8 @@
                                         </td>
                                         <td>
                                             <div class="d-flex py-1 align-items-center">
-                                                <span class="avatar me-2" style="background-origin: content-box; padding: 5px; background-image: url('{{ $student->avatar_url }}')"></span>
+                                                <span class="avatar me-2"
+                                                      style="background-origin: content-box; padding: 5px; background-image: url('{{ $student->avatar_url }}')"></span>
                                                 <div class="flex-fill">
                                                     <div class="font-weight-medium">{{ $student->full_name }}</div>
                                                     <div class="text-secondary">

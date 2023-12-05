@@ -89,16 +89,16 @@
                 {{--                                </div>--}}
                 {{--                                <div class="hr-text hr-text-center hr-text-spaceless">Description</div>--}}
                 {{--                                <div class="card-body text-center py-4 p-sm-5">--}}
-{{--                                                    <p class="text-secondary text-justify">--}}
-{{--                                                        The student register wizard is a streamlines the process of--}}
-{{--                                                        adding new students to the system and ensures that all necessary details are--}}
-{{--                                                        captured accurately. The user-friendly interface simplifies the data entry--}}
-{{--                                                        process, enhancing the efficiency of student--}}
-{{--                                                        management tasks. As an integral part of our website's administrative--}}
-{{--                                                        capabilities, this student register form plays a pivotal role in maintaining an--}}
-{{--                                                        organized and comprehensive student database, empowering us to provide effective--}}
-{{--                                                        support and resources to our students and faculty.--}}
-{{--                                                    </p>--}}
+                {{--                                                    <p class="text-secondary text-justify">--}}
+                {{--                                                        The student register wizard is a streamlines the process of--}}
+                {{--                                                        adding new students to the system and ensures that all necessary details are--}}
+                {{--                                                        captured accurately. The user-friendly interface simplifies the data entry--}}
+                {{--                                                        process, enhancing the efficiency of student--}}
+                {{--                                                        management tasks. As an integral part of our website's administrative--}}
+                {{--                                                        capabilities, this student register form plays a pivotal role in maintaining an--}}
+                {{--                                                        organized and comprehensive student database, empowering us to provide effective--}}
+                {{--                                                        support and resources to our students and faculty.--}}
+                {{--                                                    </p>--}}
                 {{--                                </div>--}}
                 {{--                            </div>--}}
                 {{--                            <div class="row align-items-center mt-3">--}}
@@ -290,7 +290,7 @@
                                                 wire:model="studentForm.city_id"
                                                 @class(['form-select' => true,'is-invalid' => $errors->has('studentForm.city_id')])
                                                 aria-describedby="cityId">
-                                            @foreach($cities as $city)
+                                            @foreach($availableCities as $city)
                                                 <option value="{{ $city->id }}"> {{ $city->name }} </option>
                                             @endforeach
                                         </select>
@@ -423,80 +423,82 @@
                                         </p>
                                     </div>
                                 </div>
+
                                 <div class="mb-3 row">
-                                    <label for="school_name" class="col-3 col-form-label required">School Name</label>
+                                    <label for="selected_school_id" class="col-3 col-form-label required">
+                                        Select School
+                                    </label>
                                     <div class="col">
-                                        <input type="text"
-                                               wire:model="studentSchoolForm.name"
-                                               @class(['form-control' => true,'is-invalid' => $errors->has('studentSchoolForm.name')])
-                                               id="school_name" aria-describedby="schoolName"
-                                               placeholder="AB High-school">
-                                        @error('studentSchoolForm.name')
+                                        <select id="selected_school_id"
+                                                @class(['form-select' => true,'is-invalid' => $errors->has('school_id')])
+                                                wire:model.live="studentForm.school_id">
+                                            <option value="0">-- Select an option --</option>
+                                            @foreach($availableSchools as $key => $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('school_id')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
+
                                 <div class="mb-3 row">
-                                    <label for="grade" class="col-3 col-form-label required">Grade / Level</label>
+                                    <label for="selected_grade_id" class="col-3 col-form-label required">
+                                        Select Grade
+                                    </label>
                                     <div class="col">
-                                        <input type="text"
-                                               wire:model="studentSchoolForm.grade"
-                                               @class(['form-control' => true,'is-invalid' => $errors->has('studentSchoolForm.grade')])
-                                               id="grade" aria-describedby="grade"
-                                               placeholder="Ex: 2">
-                                        @error('studentSchoolForm.grade')
+                                        <select id="selected_grade_id"
+                                                @class(['form-select' => true,'is-invalid' => $errors->has('grade_id')])
+                                                wire:model.live="studentForm.grade_id">
+                                            <option value="0">-- Select an option --</option>
+                                            @foreach($availableGrades as $key => $item)
+                                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('grade_id')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
+
                                 <div class="mb-3 row">
                                     <label for="academic_stream" class="col-3 col-form-label required">Academic
                                         Stream</label>
                                     <div class="col">
                                         <select id="academic_stream"
-                                                @class(['form-select' => true,'is-invalid' => $errors->has('studentSchoolForm.academic_stream')])
-                                                wire:model="studentSchoolForm.academic_stream">
+                                                @class(['form-select' => true,'is-invalid' => $errors->has('academic_stream')])
+                                                wire:model.live="studentForm.academic_stream">
                                             <option value="">-- Select an option --</option>
-                                            @foreach(\App\Models\Student::ACADEMIC_STREAMS as $key => $name)
-                                                <option value="{{ $key }}">{{ $name }}</option>
+                                            @foreach($availableAcademicStreams as $key => $item)
+                                                <option value="{{ $key}}">{{ $item }}</option>
                                             @endforeach
                                         </select>
-                                        @error('studentSchoolForm.academic_stream')
+                                        @error('academic_stream')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="mb-3 row">
-                                    <label for="school_url" class="col-3 col-form-label required">School URL</label>
-                                    <div class="col">
-                                        <input type="url"
-                                               wire:model="studentSchoolForm.school_url"
-                                               @class(['form-control' => true,'is-invalid' => $errors->has('studentSchoolForm.school_url')])
-                                               id="school_url" aria-describedby="schoolUrl"
-                                               placeholder="https://example-school.com">
-                                        @error('studentSchoolForm.school_url')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                </div>
+
+
                                 <div class="mb-3 row">
                                     <label for="credentials" class="col-3 col-form-label required">Credentials</label>
                                     <div class="col-md-5 col">
                                         <input type="text"
-                                               wire:model="studentSchoolForm.username"
-                                               @class(['form-control' => true,'is-invalid' => $errors->has('studentSchoolForm.username')])
+                                               wire:model="studentForm.school_username"
+                                               @class(['form-control' => true,'is-invalid' => $errors->has('school_username')])
                                                id="credentials" aria-describedby="username"
                                                placeholder="Username / E-Mail">
-                                        @error('studentSchoolForm.username')
+                                        @error('school_username')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                     <div class="col-md-4 col">
                                         <input type="text"
-                                               wire:model="studentSchoolForm.password"
-                                               @class(['form-control' => true,'is-invalid' => $errors->has('studentSchoolForm.password')])
+                                               wire:model="studentForm.school_password"
+                                               @class(['form-control' => true,'is-invalid' => $errors->has('school_password')])
                                                id="credentials" aria-describedby="password" placeholder="Password">
-                                        @error('studentSchoolForm.password')
+                                        @error('school_password')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
@@ -508,6 +510,11 @@
                 <div class="row align-items-center mt-3">
                     <div class="col">
                         <div class="btn-list d-flex justify-content-end">
+                            <a href="#"
+                               wire:click.prevent="setStep('contacts')"
+                               class="btn btn-link link-secondary">
+                                Skip
+                            </a>
                             <a wire:click.prevent="storeStudentSchool" href="#"
                                class="btn btn-primary" style="width: 150px;">
                                 <svg xmlns="http://www.w3.org/2000/svg"
@@ -660,7 +667,7 @@
                                                 <a href="#" class="col-auto">
                                                     <span class="avatar"
                                                           style="background-origin: content-box; padding: 3px; background-image: url('{{ asset('images/user-alt.png') }}')">
-                                                        <span class="badge bg-red"></span>
+                                                        <span class="badge bg-info"></span>
                                                     </span>
                                                 </a>
                                                 <div class="col text-truncate">
@@ -671,10 +678,15 @@
                                                     <div class="text-secondary text-truncate mt-n1">
                                                         {{ $contact->primary_phone_number }}
                                                     </div>
-                                                    <div class="text-danger cursor-pointer"
-                                                         wire:click.prevent="deleteStudentContact({{ $contact->id }})">
+                                                    @if($contact->secondary_phone_number)
+                                                        <div class="text-secondary text-truncate mt-n1">
+                                                            {{ $contact->secondary_phone_number }}
+                                                        </div>
+                                                    @endif
+                                                    <small class="text-danger cursor-pointer"
+                                                           wire:click.prevent="deleteStudentContact({{ $contact->id }})">
                                                         Remove contact
-                                                    </div>
+                                                    </small>
                                                 </div>
                                             </div>
                                         </div>
@@ -723,7 +735,8 @@
                                 You can now access and manage the student's information through student profile page.
                             </p>
                             <hr>
-                            <a href="{{ route('dashboard.students.show', $this->studentForm->model->id) }}" class="btn btn-primary">
+                            <a href="{{ route('dashboard.students.show', $this->studentForm->model->id) }}"
+                               class="btn btn-primary">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user"
                                      width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
                                      stroke="currentColor" fill="none" stroke-linecap="round"

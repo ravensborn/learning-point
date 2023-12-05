@@ -12,8 +12,6 @@ class Student extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
 
-    const ACADEMIC_STREAMS = ['scientific' => 'Scientific', 'literary' => 'Literary', 'not-specified' => 'Not specified'];
-
     protected
         $guarded = ['id'];
 
@@ -24,13 +22,19 @@ class Student extends Model implements HasMedia
         'birthday' => 'date:Y-m-d',
     ];
 
-
     protected
         $appends = [
         'full_name',
         'avatar_url',
         'full_address',
+        'academic_stream_name'
     ];
+
+
+    public function getAcademicStreamNameAttribute(): string
+    {
+        return School::ACADEMIC_STREAMS[$this->academic_stream];
+    }
 
     public
     function getFullNameAttribute(): string
@@ -51,9 +55,20 @@ class Student extends Model implements HasMedia
     }
 
     public
-    function school(): \Illuminate\Database\Eloquent\Relations\HasOne
+    function school(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->hasOne(StudentSchool::class);
+        return $this->belongsTo(School::class);
+    }
+
+    public
+    function grade(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Grade::class);
+    }
+
+    public function relations(): void
+    {
+        $this->hasMany(StudentRelation::class, 'student_id');
     }
 
     public
