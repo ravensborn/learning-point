@@ -2,39 +2,41 @@
 
 namespace App\Livewire\Forms;
 
-use App\Models\Group;
+use App\Models\Grade;
 use Livewire\Form;
 
-class GroupForm extends Form
+class GradeForm extends Form
 {
-
     public $model;
 
+    public int $school_id = 0;
     public string $name = '';
-    public string $modelName = '';
+    public string $cost = '';
 
     public function rules(): array
     {
         return [
+            'school_id' => ['required', 'integer', 'exists:schools,id'],
             'name' => ['required', 'string', 'min:1', 'max:50'],
-            'modelName' => ['required', 'string'],
+            'cost' => ['required', 'integer', 'min:0'],
             ];
     }
 
     public function validationAttributes(): array
     {
         return [
+            'school_id' => 'school',
             'name' => 'name',
-            'modelName' => 'model',
+            'cost' => 'cost',
         ];
     }
 
     public function setup($id): void
     {
-        $model = Group::findOrFail($id);
+        $model = Grade::findOrFail($id);
 
-        $this->name = $model->name;
-        $this->modelName = $model->model;
+        $this->fill($model);
+
         $this->model = $model;
     }
 
@@ -42,11 +44,9 @@ class GroupForm extends Form
     {
         $this->validate();
 
-        $data = $this->only(['name', 'modelName']);
+        $data = $this->only(['school_id', 'name', 'cost']);
 
-        $data['model'] = $data['modelName'];
-
-        $model = new Group;
+        $model = new Grade;
 
         return $model->create($data);
     }
@@ -54,8 +54,7 @@ class GroupForm extends Form
     public function update()
     {
         $this->validate();
-
-        return $this->model->update($this->only(['name']));
+        return $this->model->update($this->only(['school_id', 'name', 'cost']));
     }
 }
 

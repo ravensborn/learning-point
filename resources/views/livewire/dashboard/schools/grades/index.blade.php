@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Manage Groups
+                        Manage&nbsp;<a href="{{ route('dashboard.schools.index') }}">{{ $school->name }}</a>&nbsp;grades
                     </h2>
                 </div>
                 <!-- Page title actions -->
@@ -13,6 +13,7 @@
                     <div class="btn-list">
                         <a href="#" class="btn btn-primary" data-bs-toggle="modal"
                            data-bs-target="#modal-create">
+                            <!--<editor-fold desc="SVG ICON">-->
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                  stroke-linecap="round" stroke-linejoin="round">
@@ -20,7 +21,8 @@
                                 <path d="M12 5l0 14"/>
                                 <path d="M5 12l14 0"/>
                             </svg>
-                            New Group
+                            <!--</editor-fold>-->
+                            New grade
                         </a>
                     </div>
                 </div>
@@ -35,7 +37,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Group List</h3>
+                            <h3 class="card-title">Grade List</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -72,41 +74,43 @@
                                         Name
                                     </th>
                                     <th>
-                                        Model
+                                        Cost
                                     </th>
                                     <th>Created</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @forelse($groups as $group)
-                                    <tr wire:key="{{ $group->id }}">
+                                @forelse($grades as $grade)
+                                    <tr wire:key="{{ $grade->id }}">
 
                                         <td>
                                                 <span class="text-secondary">
-                                                    {{ ($groups->currentpage()-1) * $groups->perpage() + $loop->index + 1 }}
+                                                    {{ ($grades->currentpage()-1) * $grades->perpage() + $loop->index + 1 }}
                                                 </span>
                                         </td>
                                         <td>
-                                            {{ $group->name }}
+                                            {{ $grade->name }}
                                         </td>
                                         <td>
-                                            {{ $group->model }}
+                                            ${{ number_format($grade->cost, 2) }}
                                         </td>
                                         <td>
-                                            {{ $group->created_at->format('Y-m-d') }}
+                                            {{ $grade->created_at->format('Y-m-d') }}
                                         </td>
 
                                         <td class="text-end">
                                                 <span class="dropdown">
                                                   <button class="btn dropdown-toggle align-text-top"
                                                           data-bs-boundary="viewport"
-                                                          data-bs-toggle="dropdown">Actions</button>
+                                                          data-bs-toggle="dropdown">
+                                                      Actions
+                                                  </button>
                                                   <div class="dropdown-menu dropdown-menu-end">
                                                     <button class="dropdown-item"
-                                                            wire:click="prepareItemEditing({{ $group->id  }})">Edit</button>
+                                                            wire:click="prepareItemEditing({{ $grade->id  }})">Edit</button>
                                                     <button class="dropdown-item"
-                                                            wire:click="prepareItemDeletion({{ $group->id }})">Delete</button>
+                                                            wire:click="prepareItemDeletion({{ $grade->id }})">Delete</button>
                                                   </div>
                                                 </span>
                                         </td>
@@ -125,15 +129,15 @@
                         <div class="card-footer d-flex align-items-center">
                             <p class="m-0 text-secondary">
                                 Showing
-                                <span>{{  $groups->firstItem()  }}</span>
+                                <span>{{  $grades->firstItem()  }}</span>
                                 to
-                                <span>{{ $groups->lastItem() }}</span>
+                                <span>{{ $grades->lastItem() }}</span>
                                 of
-                                <span> {{ $groups->total() }}</span>
+                                <span> {{ $grades->total() }}</span>
                                 entries
                             </p>
                             <div class="m-0 ms-auto">
-                                {{ $groups->links() }}
+                                {{ $grades->links() }}
                             </div>
 
                         </div>
@@ -149,7 +153,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">New Group</h5>
+                    <h5 class="modal-title">New Grade</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -160,7 +164,7 @@
                                 <div>
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" wire:model="form.name" class="form-control" id="name"
-                                           placeholder="Group A">
+                                           placeholder="Grade 1">
                                     @error('form.name')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
@@ -168,16 +172,12 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6">
+                            <div class="col-12 col-md-6 mb-3 mb-md-0">
                                 <div>
-                                    <label for="modelName" class="form-label">Model</label>
-                                    <select wire:model="form.modelName" id="modelName" class="form-control">
-                                        <option value="">-- Select a model --</option>
-                                        @foreach($availableModels as $model)
-                                            <option value="{{ $model['model'] }}">{{ $model['name'] }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('form.modelName')
+                                    <label for="cost" class="form-label">Cost (&dollar;)</label>
+                                    <input type="text" wire:model="form.cost" class="form-control" id="cost"
+                                           placeholder="100">
+                                    @error('form.cost')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>
@@ -196,6 +196,7 @@
                     <button class="btn btn-primary ms-auto" type="submit" form="modal-create-form"
                             wire:loading.attr="disabled" wire:target="store">
 
+                        <!--<editor-fold desc="SVG ICON">-->
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
                              stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
                              stroke-linejoin="round">
@@ -203,6 +204,7 @@
                             <path d="M12 5l0 14"></path>
                             <path d="M5 12l14 0"></path>
                         </svg>
+                        <!--</editor-fold>-->
                         Save
                         <span wire:loading wire:target="store">
                             &nbsp; - Saving...
@@ -216,19 +218,31 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Editing group {{ $form->name }} </h5>
+                    <h5 class="modal-title">Editing grade {{ $form->name }} </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
                     <form id="modal-update-form" wire:submit="update">
                         <div class="row mb-3">
-                            <div class="col-12 mb-3 mb-md-0">
+                            <div class="col-12 col-md-6 mb-3 mb-md-0">
                                 <div>
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" wire:model="form.name" class="form-control" id="name"
-                                           placeholder="Group A">
+                                           placeholder="Grade 1">
                                     @error('form.name')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 mb-3 mb-md-0">
+                                <div>
+                                    <label for="cost" class="form-label">Cost ($)</label>
+                                    <input type="text" wire:model="form.cost" class="form-control" id="cost"
+                                           placeholder="100">
+                                    @error('form.cost')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>
@@ -286,9 +300,9 @@
                         undone.
                     </div>
                     @error('delete')
-                        <div class="text-danger mt-3">
-                            {{ $message }}
-                        </div>
+                    <div class="text-danger mt-3">
+                        {{ $message }}
+                    </div>
                     @enderror
                 </div>
                 <div class="modal-footer">

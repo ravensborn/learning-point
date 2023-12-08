@@ -87,6 +87,7 @@ trait StudentShowModalFunctions
     //Student Information
     public function updateStudent(): void
     {
+        $this->studentForm->user_id = $this->student->user_id;
         $this->studentForm->update();
         $this->dispatch('close-all-modals');
         $this->reloadStudent();
@@ -147,7 +148,7 @@ trait StudentShowModalFunctions
     public function updateSchool(): void
     {
         $this->validateStudentSchool();
-        $this->studentForm->user_id = auth()->user()->id;
+        $this->studentForm->user_id = $this->student->user_id;
         $this->studentForm->update();
         $this->dispatch('close-all-modals');
     }
@@ -293,13 +294,14 @@ trait StudentShowModalFunctions
     {
         $this->document = null;
         $this->document_name = '';
+        $this->resetValidation();
         $this->dispatch('toggle-modal-upload-document');
     }
 
     public function saveDocument(): void
     {
         $this->validate([
-            'document' => 'required|file|max:' . 1024 * 8,
+            'document' => 'required|file|mimes:jpg,png,pdf|max:' . 1024 * 10,
             'document_name' => 'required|string|max:50',
         ]);
 

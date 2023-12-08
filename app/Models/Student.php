@@ -27,7 +27,7 @@ class Student extends Model implements HasMedia
         'full_name',
         'avatar_url',
         'full_address',
-        'academic_stream_name'
+        'academic_stream_name',
     ];
 
 
@@ -66,9 +66,14 @@ class Student extends Model implements HasMedia
         return $this->belongsTo(Grade::class);
     }
 
-    public function relations(): void
+    public function studentRelations(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
-        $this->hasMany(StudentRelation::class, 'student_id');
+       return $this->hasMany(StudentRelation::class, 'student_id');
+    }
+
+    public function transactions(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    {
+        return $this->morphMany(Transaction::class, 'transactable');
     }
 
     public
@@ -78,6 +83,19 @@ class Student extends Model implements HasMedia
 
         return $media?->getUrl();
 
+    }
+
+    public function getLinkedWallet() {
+
+        $connections = $this->studentRelations;
+        $wallet = 0;
+
+        foreach ($connections as $relation) {
+
+            $wallet += $relation->related->wallet;
+        }
+
+        return $wallet + $this->wallet;
     }
 
     public

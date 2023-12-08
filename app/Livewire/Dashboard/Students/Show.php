@@ -12,10 +12,10 @@ use App\Models\Student;
 use App\Models\StudentContact;
 use App\Models\StudentRelation;
 use App\Traits\StudentShowModalFunctions;
+use Illuminate\Support\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use Psy\Util\Str;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Show extends Component
@@ -28,6 +28,7 @@ class Show extends Component
     public StudentContactForm $studentContactForm;
     public StudentRelationForm $studentRelationForm;
     public $documents;
+    public Collection $transactions;
 
     public $contacts;
     public $availableRelations;
@@ -62,10 +63,11 @@ class Show extends Component
         $this->student = Student::findOrFail($this->student->id);
     }
 
-    public function updatingStudentFormSchoolId(): void
+    public function updatedStudentFormSchoolId(): void
     {
-        if ($this->studentForm->school_id) {
+        if (isset($this->studentForm->school_id) && $this->studentForm->school_id) {
             $this->availableGrades = Grade::where('school_id', $this->studentForm->school_id)->get();
+            $this->studentForm->grade_id = 0;
         }
     }
 
@@ -93,14 +95,18 @@ class Show extends Component
         $this->availableSchools = School::all();
 
         $this->availableGrades = collect();
-        if ($this->studentForm->school_id) {
-            $this->availableGrades = Grade::where('school_id', $this->studentForm->school_id)->get();
+
+        if ($this->student->school_id) {
+            $this->availableGrades = Grade::where('school_id', $this->student->school_id)->get();
         }
 
         $this->loadStudentRelations();
         $this->availableStudentRelationTypes = StudentRelation::AVAILABLE_RELATIONS;
         $this->searchedStudentRelationsStudents = collect();
         $this->loadDocuments();
+
+        $this->transactions = $this->student->transactions()->orderBy('created_at', 'desc')->limit(5)->get();
+
     }
 
     #[Layout('layouts.app')]

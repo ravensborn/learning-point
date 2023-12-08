@@ -14,7 +14,7 @@ class CitySeeder extends Seeder
     public function run(): void
     {
         $cities = [
-            'IQ' => ['Erbil', 'Slemani', 'Duhok', 'Kirkuk']
+            'IQ' => ['Erbil', 'Slemani', 'Duhok', 'Kirkuk', 'Baghdad', 'Basra']
         ];
 
         foreach ($cities as $country => $extracted_cities) {

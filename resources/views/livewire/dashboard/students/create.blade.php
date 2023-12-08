@@ -204,7 +204,7 @@
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="birthday" class="col-3 col-form-label required">Birthday</label>
+                                    <label for="birthday" class="col-3 col-form-label">Birthday</label>
                                     <div class="col">
                                         <input type="date"
                                                wire:model="studentForm.birthday"
@@ -214,10 +214,11 @@
                                         @error('studentForm.birthday')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
+                                        <small class="form-hint">This field is optional.</small>
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="blood_type" class="col-3 col-form-label required">Blood Type</label>
+                                    <label for="blood_type" class="col-3 col-form-label">Blood Type</label>
                                     <div class="col">
                                         <select id="blood_type"
                                                 @class(['form-select' => true,'is-invalid' => $errors->has('studentForm.blood_type')])
@@ -232,13 +233,14 @@
                                             <option value="O+">O+</option>
                                             <option value="O-">O-</option>
                                         </select>
+                                        <small class="form-hint">This field is optional.</small>
                                         @error('studentForm.blood_type')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
                                     </div>
                                 </div>
                                 <div class="mb-3 row">
-                                    <label for="primary_phone_number" class="col-3 col-form-label required">Phone
+                                    <label for="primary_phone_number" class="col-3 col-form-label">Phone
                                         Numbers</label>
                                     <div class="col">
                                         <input type="tel"
@@ -246,6 +248,7 @@
                                                @class(['form-control' => true,'is-invalid' => $errors->has('studentForm.primary_phone_number')])
                                                id="primary_phone_number" aria-describedby="primaryPhoneNumber"
                                                placeholder="+964 750 1234567">
+                                        <small class="form-hint">This field is optional.</small>
                                         @error('studentForm.primary_phone_number')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror

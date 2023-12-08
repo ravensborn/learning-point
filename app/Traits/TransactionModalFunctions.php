@@ -2,14 +2,12 @@
 
 namespace App\Traits;
 
-use App\Livewire\Forms\SchoolForm;
-use App\Models\School;
-use App\Models\Student;
+use App\Livewire\Forms\TransactionForm;
 
-trait SchoolModalFunctions {
+trait TransactionModalFunctions {
 
 
-    public SchoolForm $form;
+    public TransactionForm $form;
 
     public function prepareItemEditing($id): void
     {
@@ -21,14 +19,7 @@ trait SchoolModalFunctions {
 
     public function startItemDeletion(): bool
     {
-        $item = School::findOrFail($this->itemToDeleteId);
-
-        if($item->students->count()) {
-
-            $this->addError('delete', 'Cannot be deleted, this school has related students.');
-
-            return false;
-        }
+        $item = TransactionForm::findOrFail($this->itemToDeleteId);
 
         $item->delete();
         $this->dispatch('toggle-modal-delete-confirmation');

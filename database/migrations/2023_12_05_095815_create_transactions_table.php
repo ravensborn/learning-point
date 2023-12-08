@@ -14,9 +14,15 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
 
+            $table->string('number');
+            $table->json('user');
+
             $table->string('type');
             $table->double('amount', 8, 2);
             $table->longText('description')->nullable();
+
+            $table->unsignedInteger('transactable_id');
+            $table->string('transactable_type');
 
             $table->timestamps();
         });

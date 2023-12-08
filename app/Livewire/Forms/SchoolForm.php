@@ -10,17 +10,14 @@ class SchoolForm extends Form
 
     public $model;
 
-    public int $student_id = 0;
-
     public string $name = '';
     public string $url = '';
 
-    private array $attributes = ['student_id', 'name', 'url'];
+    private array $attributes = ['name', 'url'];
 
     public function rules(): array
     {
         return [
-            'student_id' => ['required', 'integer', 'exists:students,id'],
             'name' => ['required', 'string', 'min:1', 'max:50'],
             'url' => ['required', 'url', 'min:1', 'max:50'],
         ];
@@ -51,7 +48,7 @@ class SchoolForm extends Form
 
         $data = $this->only($this->attributes);
 
-        $model = new StudentSchool();
+        $model = new School();
 
         return $this->model = $model->create($data);
     }

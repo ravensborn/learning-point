@@ -133,12 +133,62 @@
                 <!--</editor-fold>-->
                 <!--<editor-fold desc="Transactions">-->
                 <div class="tab-pane" id="tabs-3" role="tabpanel" wire:ignore.self>
-                    <h4>Transactions tab</h4>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium amet animi
-                        commodi dolorem eligendi enim error fugiat fugit, itaque laborum, nemo, nesciunt
-                        odit quaerat recusandae tempore totam vel voluptatibus! Fuga.
-                    </p>
+                    <h4>Transactions</h4>
+
+                    @if($transactions->count() > 0)
+                        <div>
+                            <p class="text-secondary">
+                                View recent student transactions, or click on show all to see the full list.
+                            </p>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-vcenter card-table">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Number</th>
+                                    <th>Action</th>
+                                    <th>Amount</th>
+                                    <th>User</th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($transactions as $transaction)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $transaction->number }}</td>
+                                        <td class="text-secondary">
+                                            {{ $transaction->type_name }}
+                                        </td>
+                                        <td class="text-secondary">
+                                            ${{ number_format($transaction->amount, 2)}}
+                                        </td>
+                                        <td class="text-secondary">
+                                            {{ $transaction->user->name }}
+                                        </td>
+                                        <td class="text-secondary">
+                                            {{ $transaction->created_at->format('Y-m-d / h:i A') }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center mt-5">
+                            <a href="{{ route('dashboard.student.transactions.index', $student->id) }}">Show all transactions</a>
+                        </div>
+                    @else
+                        <div class="list-group list-group-flush list-group-hoverable">
+                            <div class="list-group-item">
+                                <div class="row align-items-center text-secondary">
+                                    You haven't made any transactions, navigate to student transactions page to begin.
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+
+
                 </div>
                 <!--</editor-fold>-->
                 <!--<editor-fold desc="Relations">-->
@@ -173,7 +223,8 @@
                                         <div class="col-auto"><span class="badge bg-success"></span></div>
                                         <div class="col-auto">
                                             <a href="{{ route('dashboard.students.show', $relation->related->id) }}">
-                                                <span class="avatar">{{ substr($relation->related->first_name, 0, 1) }}</span>
+                                                <span
+                                                    class="avatar">{{ substr($relation->related->first_name, 0, 1) }}</span>
                                             </a>
                                         </div>
                                         <div class="col text-truncate">
@@ -419,7 +470,7 @@
                                     <div class="row align-items-center">
                                         <div class="col-auto"><span class="badge bg-success"></span></div>
                                         <div class="col-auto">
-                                        <span class="avatar">
+                                            <span class="avatar">
                                             <!--<editor-fold desc="SVG ICON">-->
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-file"
@@ -433,7 +484,7 @@
                                                                 <path
                                                                     d="M17 21h-10a2 2 0 0 1 -2 -2v-14a2 2 0 0 1 2 -2h7l5 5v11a2 2 0 0 1 -2 2z"/>
                                                         </svg>
-                                            <!--</editor-fold>-->
+                                                <!--</editor-fold>-->
                                         </span>
                                         </div>
                                         <div class="col text-truncate">

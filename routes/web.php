@@ -4,10 +4,12 @@ use App\Livewire\Dashboard\Home as Home;
 use App\Livewire\Dashboard\Users\Index as UsersIndex;
 use App\Livewire\Dashboard\Subjects\Index as SubjectsIndex;
 use App\Livewire\Dashboard\Groups\Index as GroupsIndex;
-//use App\Livewire\Dashboard\Schools\Index as SchoolsIndex;
+use App\Livewire\Dashboard\Schools\Index as SchoolsIndex;
+use App\Livewire\Dashboard\Schools\Grades\Index as GradesIndex;
 use App\Livewire\Dashboard\Students\Index as StudentsIndex;
 use App\Livewire\Dashboard\Students\Create as StudentsCreate;
 use App\Livewire\Dashboard\Students\Show as StudentsShow;
+use App\Livewire\Dashboard\Students\Transactions\Index as StudentTransactionIndex;
 
 
 use Illuminate\Support\Facades\Auth;
@@ -50,8 +52,10 @@ Route::middleware(['auth'])->group(function() {
         Route::get('/subjects', SubjectsIndex::class)->name('subjects.index');
         Route::get('/groups', GroupsIndex::class)->name('groups.index');
 
-//        Route::get('/schools', SchoolIndex::class)->name('schools.index');
-//        Route::get('/schools/{school}/grades', GroupsIndex::class)->name('schools.grades.index');
+        Route::get('/schools', SchoolsIndex::class)->name('schools.index');
+        Route::get('/schools/{school}/grades', GradesIndex::class)->name('grades.index');
+
+        Route::get('/students/{student}/transactions', StudentTransactionIndex::class)->name('student.transactions.index');
 
         Route::get('/students', StudentsIndex::class)->name('students.index');
         Route::get('/students/create', StudentsCreate::class)->name('students.create');

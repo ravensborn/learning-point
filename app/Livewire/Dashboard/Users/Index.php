@@ -24,8 +24,8 @@ class Index extends Component
 
             $this->resetPage();
 
-            $users->where('name', 'LIKE', '%' . $this->search . '%')
-                ->orWhere('email', 'LIKE', '%' . $this->search . '%');
+            $users->where('name', 'LIKE', '%' . trim($this->search) . '%')
+                ->orWhere('email', 'LIKE', '%' . trim($this->search) . '%');
 
         }
 

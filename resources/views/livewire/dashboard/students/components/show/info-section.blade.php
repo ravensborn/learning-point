@@ -82,7 +82,7 @@
                             <path d="M12 4l1.465 1.638a2 2 0 1 1 -3.015 .099l1.55 -1.737z"></path>
                         </svg>
                         <!--</editor-fold>-->
-                        Birth date: <strong>{{ $student->birthday->format('Y-m-d') }}</strong>
+                        Birth date: <strong>{{ $student->birthday?->format('Y-m-d') }}</strong>
                     </div>
                     <div class="mb-2">
                         <!--<editor-fold desc="SVG ICON">-->
@@ -97,7 +97,7 @@
                         <!--</editor-fold>-->
                         Blood type: <strong>{{ $student->blood_type }}</strong>
                     </div>
-                    <div class="mb-2">
+                    <div class="mb-2 text-truncate" title="{{ $student->full_address }}">
                         <!--<editor-fold desc="SVG ICON">-->
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2 text-secondary"
                              width="24" height="24" viewBox="0 0 24 24" stroke-width="2"

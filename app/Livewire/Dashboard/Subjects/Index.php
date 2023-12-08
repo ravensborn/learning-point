@@ -35,7 +35,7 @@ class Index extends Component
         if ($this->search) {
 
             $this->resetPage();
-            $subjects->where('name', 'LIKE', '%' . $this->search . '%');
+            $subjects->where('name', 'LIKE', '%' . trim($this->search) . '%');
         }
 
         $subjects = $subjects->paginate($this->perPage);

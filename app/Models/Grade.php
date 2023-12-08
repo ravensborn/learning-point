@@ -16,4 +16,10 @@ class Grade extends Model
     {
         return $this->belongsTo(School::class);
     }
+
+    public
+    function students(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Student::class);
+    }
 }

@@ -31,10 +31,10 @@ class StudentForm extends Form
     public string|null $school_password = null;
 
     public string $gender = 'male';
-    public string $birthday = '';
-    public string $blood_type = '';
-    public string $primary_phone_number = '';
-    public string|null $secondary_phone_number = '';
+    public string|null $birthday = null;
+    public string|null $blood_type = null;
+    public string|null $primary_phone_number = null;
+    public string|null $secondary_phone_number = null;
     public string|null $email = '';
     public string $country = 'IQ';
     public int $city_id = City::ERBIL;
@@ -64,7 +64,7 @@ class StudentForm extends Form
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'integer', 'exists:users,id'],
+            'user_id' => ['nullable', 'integer', 'exists:users,id'],
             'avatar' => ['nullable', 'mimes:png,jpg', 'max:' . (1024 * 5)],
             'first_name' => ['required', 'string', 'min:1', 'max:50'],
             'middle_name' => ['required', 'string', 'min:1', 'max:50'],
@@ -75,10 +75,10 @@ class StudentForm extends Form
 //            'school_username' => ['sometimes', 'string', 'min:1', 'max:50'],
 //            'school_password' => ['sometimes', 'string', 'min:1', 'max:50'],
             'gender' => ['required', 'string', 'in:male,female'],
-            'birthday' => ['required', 'date'],
-            'blood_type' => ['required', 'string', 'in:A+,A-,B+,B-,AB+,AB-,O+,O-'],
-            'primary_phone_number' => ['required', 'string', (new Phone)->countryField('country')],
-            'secondary_phone_number' => ['nullable', 'string', (new Phone)->countryField('country')],
+            'birthday' => ['nullable', 'date'],
+            'blood_type' => ['nullable', 'string', 'in:A+,A-,B+,B-,AB+,AB-,O+,O-'],
+            'primary_phone_number' => ['nullable', 'string', (new Phone)->type('mobile')->international()],
+            'secondary_phone_number' => ['nullable', 'string', (new Phone)->type('mobile')->international()],
             'email' => ['nullable', 'string', 'email', 'max:50'],
             'country' => ['required', 'string', 'exists:lc_countries,iso_alpha_2'],
             'city_id' => ['required', 'integer', 'exists:cities,id'],
@@ -145,8 +145,6 @@ class StudentForm extends Form
 
     public function store()
     {
-        $this->user_id = auth()->user()->id;
-
         $this->validate();
 
         $data = $this->only($this->attributes);

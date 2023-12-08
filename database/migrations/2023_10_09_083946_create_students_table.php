@@ -26,13 +26,15 @@ return new class extends Migration {
 
             $table->double('wallet', 10, 2)->default(0);
 
-            $table->unsignedBigInteger('school_id')->nullable();
+            $table->unsignedBigInteger('school_id')
+                ->nullable();
             $table->foreign('school_id')
                 ->references('id')
                 ->on('schools')
                 ->nullOnDelete();
 
-            $table->unsignedBigInteger('grade_id')->nullable();
+            $table->unsignedBigInteger('grade_id')
+                ->nullable();
             $table->foreign('grade_id')
                 ->references('id')
                 ->on('grades')
@@ -44,9 +46,9 @@ return new class extends Migration {
 
 
             $table->enum('gender', ['male', 'female']);
-            $table->date('birthday');
-            $table->enum('blood_type', ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-']);
-            $table->string('primary_phone_number');
+            $table->date('birthday')->nullable();
+            $table->enum('blood_type', ['A+', 'A-', 'AB+', 'AB-', 'B+', 'B-', 'O+', 'O-'])->nullable();
+            $table->string('primary_phone_number')->nullable();
             $table->string('secondary_phone_number')->nullable();
             $table->string('email')->nullable();
 

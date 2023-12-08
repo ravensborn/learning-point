@@ -38,6 +38,7 @@ class Create extends Component
 
     public function storeStudent(): void
     {
+        $this->studentForm->user_id = auth()->user()->id;
         $this->studentForm->store();
         $this->setStep('profile-picture');
     }
@@ -77,7 +78,7 @@ class Create extends Component
     {
 
         $this->validateStudentSchool();
-
+//        $this->studentForm->user_id = auth()->user()->id;
         $this->studentForm->update();
         $this->setStep('contacts');
     }

@@ -42,6 +42,7 @@
                                     <div>
                                             <span class="cursor-pointer" wire:click="toggleMultipleSelectMode()">
                                                 @if(!$multipleSelectMode)
+                                                    <!--<editor-fold desc="SVG ICON">-->
                                                     <svg xmlns="http://www.w3.org/2000/svg"
                                                          class="icon icon-tabler icon-tabler-list-check" width="24"
                                                          height="24"
@@ -56,7 +57,9 @@
                                                 <path d="M11 12l9 0"/>
                                                 <path d="M11 18l9 0"/>
                                             </svg>
+                                                    <!--</editor-fold>-->
                                                 @else
+                                                    <!--<editor-fold desc="SVG ICON">-->
                                                     <svg xmlns="http://www.w3.org/2000/svg"
                                                          class="icon icon-tabler icon-tabler-clear-all" width="24"
                                                          height="24" viewBox="0 0 24 24" stroke-width="2"
@@ -64,6 +67,7 @@
                                                          stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"
                                                                                        fill="none"/><path d="M8 6h12"/><path
                                                             d="M6 12h12"/><path d="M4 18h12"/></svg>
+                                                    <!--</editor-fold>-->
                                                 @endif
                                         </span>
                                     </div>
@@ -138,15 +142,22 @@
                                     <th class="w-1">No.</th>
                                     <th>
                                         Name
+                                        <span class="cursor-pointer" wire:click="sortByColumn('first_name')">
+                                            {!! $this->getHeaderSortIcon('first_name') !!}
+                                        </span>
                                     </th>
                                     <th>
                                         Wallet
+                                        <span class="cursor-pointer" wire:click="sortByColumn('wallet')">
+                                            {!! $this->getHeaderSortIcon('wallet') !!}
+                                        </span>
                                     </th>
-                                    <th>
-                                        Linked Wallet
-                                    </th>
+                                    <th>Linked Wallet</th>
                                     <th>
                                         Joined
+                                        <span class="cursor-pointer" wire:click="sortByColumn('created_at')">
+                                            {!! $this->getHeaderSortIcon('created_at') !!}
+                                        </span>
                                     </th>
                                     <th></th>
                                 </tr>
@@ -173,31 +184,51 @@
                                                 <span class="avatar me-2"
                                                       style="background-origin: content-box; padding: 5px; background-image: url('{{ $student->avatar_url }}')"></span>
                                                 <div class="flex-fill">
-                                                    <div class="font-weight-medium">{{ $student->full_name }}</div>
-                                                    <div class="text-secondary">
-                                                        {{ $student?->school?->name }} / {{ $student?->school?->grade }}
+                                                    <div class="font-weight-medium">
+                                                        <a href="{{ route('dashboard.students.show', $student->id) }}">{{ $student->full_name }}</a>
+                                                    </div>
+                                                    <div>
+                                                        <div class="list-inline list-inline-dots text-secondary">
+                                                            @if($student->school)
+                                                                <div class="list-inline-item">
+                                                                    {{ $student?->school?->name }}
+                                                                </div>
+                                                            @endif
+                                                            @if($student->grade)
+                                                                <div class="list-inline-item">
+                                                                    {{ $student?->grade?->name }}
+                                                                </div>
+                                                            @endif
+
+                                                        </div>
+
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>${{ number_format($student->wallet, 2) }}</td>
-                                        <td>$0</td>
+                                        <td @class(['text-danger' => ($student->wallet < 0)])>
+                                            ${{ number_format($student->wallet, 2) }}</td>
+                                        <td @class(['text-danger' => ($student->wallet < 0)])>
+                                            ${{ number_format($student->getLinkedWallet(), 2) }}</td>
                                         <td>{{ $student->created_at->format('Y-m-d') }}</td>
                                         <td class="text-end">
+                                            {{--                                            <a class="btn align-text-top"--}}
+                                            {{--                                               href="{{ route('dashboard.students.show', ['student' => $student->id]) }}">--}}
+                                            {{--                                                <!--<editor-fold desc="SVG ICON">-->--}}
+                                            {{--                                                <svg xmlns="http://www.w3.org/2000/svg"--}}
+                                            {{--                                                     class="icon icon-tabler icon-tabler-user" width="24" height="24"--}}
+                                            {{--                                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"--}}
+                                            {{--                                                     fill="none" stroke-linecap="round" stroke-linejoin="round">--}}
+                                            {{--                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>--}}
+                                            {{--                                                    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>--}}
+                                            {{--                                                    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>--}}
+                                            {{--                                                </svg>--}}
+                                            {{--                                                <!--</editor-fold>-->--}}
+                                            {{--                                                Profile--}}
+                                            {{--                                            </a>--}}
                                             <a class="btn align-text-top"
-                                               href="{{ route('dashboard.students.show', ['student' => $student->id]) }}">
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                     class="icon icon-tabler icon-tabler-user" width="24" height="24"
-                                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                                     fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                    <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>
-                                                    <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
-                                                </svg>
-                                                Profile
-                                            </a>
-                                            <a class="btn align-text-top"
-                                               href="{{ route('dashboard.students.show', ['student' => $student->id]) }}">
+                                               href="{{ route('dashboard.student.transactions.index', ['student' => $student->id]) }}">
+                                                <!--<editor-fold desc="SVG ICON">-->
                                                 <svg xmlns="http://www.w3.org/2000/svg"
                                                      class="icon icon-tabler icon-tabler-arrows-down-up" width="24"
                                                      height="24" viewBox="0 0 24 24" stroke-width="2"
@@ -209,6 +240,7 @@
                                                     <path d="M7 21l0 -18"/>
                                                     <path d="M20 6l-3 -3l-3 3"/>
                                                 </svg>
+                                                <!--</editor-fold>-->
                                                 Transactions
                                             </a>
                                             <span class="dropdown">
@@ -266,6 +298,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="modal-status bg-danger"></div>
                 <div class="modal-body text-center py-4">
+                    <!--<editor-fold desc="SVG ICON">-->
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24"
                          viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
                          stroke-linejoin="round">
@@ -275,6 +308,7 @@
                             d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"></path>
                         <path d="M12 16h.01"></path>
                     </svg>
+                    <!--</editor-fold>-->
                     <h3>Are you sure?</h3>
                     <div class="text-secondary">Do you really want to remove this item? What you've done cannot be
                         undone.
@@ -314,6 +348,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 <div class="modal-status bg-danger"></div>
                 <div class="modal-body text-center py-4">
+                    <!--<editor-fold desc="SVG ICON">-->
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24"
                          viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
                          stroke-linejoin="round">
@@ -323,6 +358,7 @@
                             d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"></path>
                         <path d="M12 16h.01"></path>
                     </svg>
+                    <!--</editor-fold>-->
                     <h3>Are you sure?</h3>
                     <div class="text-secondary">Do you really want to remove selected items? What you are about to do
                         cannot be
@@ -379,6 +415,5 @@
 
         });
     </script>
-
 
 </div>

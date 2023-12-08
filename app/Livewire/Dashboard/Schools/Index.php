@@ -27,7 +27,7 @@ class Index extends Component
         if ($this->search) {
 
             $this->resetPage();
-            $schools->where('name', 'LIKE', '%' . $this->search . '%');
+            $schools->where('name', 'LIKE', '%' . trim($this->search) . '%');
         }
 
         $schools = $schools->paginate($this->perPage);

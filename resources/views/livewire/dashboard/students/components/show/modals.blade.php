@@ -165,9 +165,8 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
                          stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
                          stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                        <path d="M12 5l0 14"></path>
-                        <path d="M5 12l14 0"></path>
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M5 12l5 5l10 -10"/>
                     </svg>
                     <!--</editor-fold>-->
                     Save
@@ -291,9 +290,8 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
                          stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
                          stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                        <path d="M12 5l0 14"></path>
-                        <path d="M5 12l14 0"></path>
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M5 12l5 5l10 -10"/>
                     </svg>
                     <!--</editor-fold>-->
                     Save
@@ -325,7 +323,7 @@
                                         @class(['form-select' => true,'is-invalid' => $errors->has('school_id')])
                                         wire:model.live="studentForm.school_id">
                                     <option value="">-- Select an option --</option>
-                                    @foreach($availableSchools as $key => $item)
+                                    @foreach($availableSchools as $item)
                                         <option value="{{ $item->id }}">{{ $item->name }}</option>
                                     @endforeach
                                 </select>
@@ -516,7 +514,7 @@
                         </div>
                         <div class="col-12 col-md-6 mb-3">
                             <div>
-                                <label for="birthday" class="form-label required">Birthday</label>
+                                <label for="birthday" class="form-label">Birthday</label>
                                 <input type="date" wire:model="studentForm.birthday"
                                        class="form-control" id="birthday">
                                 @error('studentForm.birthday')
@@ -529,7 +527,7 @@
 
                         <div class="col-12 col-md-6 mb-3">
                             <div>
-                                <label for="blood_type" class="form-label required">Blood type</label>
+                                <label for="blood_type" class="form-label">Blood type</label>
                                 <select id="blood_type" wire:model="studentForm.blood_type" class="form-control">
                                     <option>-- Select an option --</option>
                                     <option value="A+">A+</option>
@@ -550,7 +548,7 @@
                         </div>
                         <div class="col-12 col-md-6 mb-3">
                             <div>
-                                <label for="primary_phone_number" class="form-label required">Primary Phone
+                                <label for="primary_phone_number" class="form-label">Primary Phone
                                     Number</label>
                                 <input type="text" wire:model="studentForm.primary_phone_number"
                                        class="form-control" id="primary_phone_number"
@@ -569,7 +567,6 @@
                                 <input type="text" wire:model="studentForm.secondary_phone_number"
                                        class="form-control" id="secondary_phone_number"
                                        placeholder="+964 (750) 1234567">
-                                <small class="form-hint">This field is optional</small>
                                 @error('studentForm.secondary_phone_number')
                                 <div class="text-danger mt-1">
                                     {{ $message }}
@@ -583,7 +580,6 @@
                                 <input type="text" wire:model="studentForm.email" class="form-control"
                                        id="email"
                                        placeholder="name@example.com">
-                                <small class="form-hint">This field is optional</small>
                                 @error('studentForm.email')
                                 <div class="text-danger mt-1">
                                     {{ $message }}
@@ -612,7 +608,6 @@
                                 <input type="text" wire:model="studentForm.address" class="form-control"
                                        id="address"
                                        placeholder="Dream City, Erbil, KRI">
-                                <small class="form-hint">This field is optional</small>
                                 @error('studentForm.address')
                                 <div class="text-danger mt-1">
                                     {{ $message }}
@@ -632,13 +627,14 @@
                 </a>
                 <button class="btn btn-primary ms-auto" type="submit" form="modal-edit-student-form"
                         wire:loading.attr="disabled" wire:target="updateStudent">
-
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check" width="24"
-                         height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                         stroke-linecap="round" stroke-linejoin="round">
+                    <!--<editor-fold desc="SVG ICON">-->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                         stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                         stroke-linejoin="round">
                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                         <path d="M5 12l5 5l10 -10"/>
                     </svg>
+                    <!--</editor-fold>-->
                     Save
                     <span wire:loading wire:target="updateStudent">
                             &nbsp; - Saving...
@@ -692,15 +688,14 @@
                                     <div>
                                         <button wire:click.prevent="saveStudentAvatar"
                                                 class="btn btn-primary btn-sm" style="width: 150px;">
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                 class="icon icon-tabler icon-tabler-chevron-right" width="24"
-                                                 height="24"
-                                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                                 fill="none"
+                                            <!--<editor-fold desc="SVG ICON">-->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                                                  stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                                <path d="M9 6l6 6l-6 6"></path>
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                <path d="M5 12l5 5l10 -10"/>
                                             </svg>
+                                            <!--</editor-fold>-->
                                             Save
                                         </button>
                                     </div>
@@ -849,9 +844,8 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
                          stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
                          stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                        <path d="M12 5l0 14"></path>
-                        <path d="M5 12l14 0"></path>
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M5 12l5 5l10 -10"/>
                     </svg>
                     <!--</editor-fold>-->
                     Save
@@ -907,9 +901,8 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
                          stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
                          stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                        <path d="M12 5l0 14"></path>
-                        <path d="M5 12l14 0"></path>
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M5 12l5 5l10 -10"/>
                     </svg>
                     <!--</editor-fold>-->
                     Save
@@ -946,15 +939,31 @@
                             </div>
                         </div>
                         <div class="col-12 mb-3">
-                            <div>
+                            <div
+                                x-data="{ uploading: false, progress: 0 }"
+                                x-on:livewire-upload-start="uploading = true"
+                                x-on:livewire-upload-finish="uploading = false"
+                                x-on:livewire-upload-error="uploading = false"
+                                x-on:livewire-upload-progress="progress = $event.detail.progress"
+                            >
                                 <label for="document" class="form-label required">Select file</label>
-                                <input type="file" wire:model.live="document" class="form-control"
+                                <input x-show="!uploading" type="file" wire:model.live="document" class="form-control"
                                        id="document">
+                                <div x-show="uploading" class="my-2">
+                                    <progress class="progress w-100" max="100" x-bind:value="progress"></progress>
+                                </div>
+                                <div class="form-hint mt-2">
+                                    Allowed file types: jpg, png, and pdf.
+                                </div>
+                                <div class="form-hint">
+                                    Maximum allowed size per file: 10MB.
+                                </div>
                                 @error('document')
                                 <div class="text-danger mt-1">
                                     {{ $message }}
                                 </div>
                                 @enderror
+
                             </div>
                         </div>
                     </div>
@@ -972,9 +981,8 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
                          stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
                          stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                        <path d="M12 5l0 14"></path>
-                        <path d="M5 12l14 0"></path>
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M5 12l5 5l10 -10"/>
                     </svg>
                     <!--</editor-fold>-->
                     Save

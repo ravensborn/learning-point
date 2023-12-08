@@ -221,6 +221,13 @@
                                          </span>
                                     Groups
                                 </a>
+                                <a class="dropdown-item @if(request()->is('*/schools*')) active @endif"
+                                   href="{{ route('dashboard.schools.index') }}">
+                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                             <i class="ti ti-custom ti-list-letters"></i>
+                                         </span>
+                                    Schools
+                                </a>
                             </div>
                         </div>
                     </li>
