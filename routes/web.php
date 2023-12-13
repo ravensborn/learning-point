@@ -11,6 +11,9 @@ use App\Livewire\Dashboard\Students\Create as StudentsCreate;
 use App\Livewire\Dashboard\Students\Show as StudentsShow;
 use App\Livewire\Dashboard\Students\Transactions\Index as StudentTransactionIndex;
 
+use App\Livewire\Dashboard\Families\Index as FamiliesIndex;
+use App\Livewire\Dashboard\Families\Students\Index as FamilyStudentsIndex;
+
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -61,6 +64,8 @@ Route::middleware(['auth'])->group(function() {
         Route::get('/students/create', StudentsCreate::class)->name('students.create');
         Route::get('/students/{student}', StudentsShow::class)->name('students.show');
 
+        Route::get('/families', FamiliesIndex::class)->name('families.index');
+        Route::get('/families/{family}/students', FamilyStudentsIndex::class)->name('family.students.index');
     });
 
 });

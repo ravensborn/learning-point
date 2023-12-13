@@ -66,9 +66,9 @@ class Student extends Model implements HasMedia
         return $this->belongsTo(Grade::class);
     }
 
-    public function studentRelations(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function family(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-       return $this->hasMany(StudentRelation::class, 'student_id');
+        return $this->belongsTo(Family::class);
     }
 
     public function transactions(): \Illuminate\Database\Eloquent\Relations\MorphMany
@@ -87,15 +87,13 @@ class Student extends Model implements HasMedia
 
     public function getLinkedWallet() {
 
-        $connections = $this->studentRelations;
-        $wallet = 0;
+        $family = $this->family;
 
-        foreach ($connections as $relation) {
-
-            $wallet += $relation->related->wallet;
+        if($family) {
+            return $family->wallet();
         }
 
-        return $wallet + $this->wallet;
+        return 0;
     }
 
     public

@@ -68,7 +68,7 @@
                                 <tr>
 
                                     <th class="w-1">No.</th>
-                                    <th>Number</th>
+                                    <th>Series</th>
                                     <th>Action</th>
                                     <th>Amount</th>
                                     <th>Description</th>

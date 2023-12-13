@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Manage&nbsp;<a href="{{ route('dashboard.schools.index') }}">{{ $school->name }}</a>&nbsp;Grades
+                        Manage Families
                     </h2>
                 </div>
                 <!-- Page title actions -->
@@ -22,7 +22,7 @@
                                 <path d="M5 12l14 0"/>
                             </svg>
                             <!--</editor-fold>-->
-                            New grade
+                            New Family
                         </a>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Grade List</h3>
+                            <h3 class="card-title">Family List</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -71,35 +71,45 @@
 
                                     <th class="w-1">No.</th>
                                     <th>
+                                        Series
+                                    </th>
+                                    <th>
                                         Name
                                     </th>
                                     <th>
-                                        Cost
+                                        Members
                                     </th>
                                     <th>Created</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @forelse($grades as $grade)
-                                    <tr wire:key="{{ $grade->id }}">
+                                @forelse($families as $family)
+                                    <tr wire:key="{{ $family->id }}">
 
                                         <td>
                                                 <span class="text-secondary">
-                                                    {{ ($grades->currentpage()-1) * $grades->perpage() + $loop->index + 1 }}
+                                                    {{ ($families->currentpage()-1) * $families->perpage() + $loop->index + 1 }}
                                                 </span>
                                         </td>
                                         <td>
-                                            {{ $grade->name }}
+                                            {{ $family->number }}
                                         </td>
                                         <td>
-                                            ${{ number_format($grade->cost, 2) }}
+                                            {{ $family->name }}
                                         </td>
                                         <td>
-                                            {{ $grade->created_at->format('Y-m-d') }}
+                                            {{ $family->students->count() }}
+                                        </td>
+                                        <td>
+                                            {{ $family->created_at->format('Y-m-d') }}
                                         </td>
 
                                         <td class="text-end">
+                                            <a class="btn align-text-top"
+                                               href="{{ route('dashboard.family.students.index', ['family' => $family->id]) }}">
+                                                Members
+                                            </a>
                                                 <span class="dropdown">
                                                   <button class="btn dropdown-toggle align-text-top"
                                                           data-bs-boundary="viewport"
@@ -108,16 +118,16 @@
                                                   </button>
                                                   <div class="dropdown-menu dropdown-menu-end">
                                                     <button class="dropdown-item"
-                                                            wire:click="prepareItemEditing({{ $grade->id  }})">Edit</button>
+                                                            wire:click="prepareItemEditing({{ $family->id  }})">Edit</button>
                                                     <button class="dropdown-item"
-                                                            wire:click="prepareItemDeletion({{ $grade->id }})">Delete</button>
+                                                            wire:click="prepareItemDeletion({{ $family->id }})">Delete</button>
                                                   </div>
                                                 </span>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">
+                                        <td colspan="6" class="text-center">
                                             There are no items at the moment.
                                         </td>
                                     </tr>
@@ -129,15 +139,15 @@
                         <div class="card-footer d-flex align-items-center">
                             <p class="m-0 text-secondary">
                                 Showing
-                                <span>{{  $grades->firstItem()  }}</span>
+                                <span>{{  $families->firstItem()  }}</span>
                                 to
-                                <span>{{ $grades->lastItem() }}</span>
+                                <span>{{ $families->lastItem() }}</span>
                                 of
-                                <span> {{ $grades->total() }}</span>
+                                <span> {{ $families->total() }}</span>
                                 entries
                             </p>
                             <div class="m-0 ms-auto">
-                                {{ $grades->links() }}
+                                {{ $families->links() }}
                             </div>
 
                         </div>
@@ -153,31 +163,19 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">New Grade</h5>
+                    <h5 class="modal-title">New Family</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
                     <form id="modal-create-form" wire:submit="store">
                         <div class="row mb-3">
-                            <div class="col-12 col-md-6 mb-3 mb-md-0">
+                            <div class="col-12 col-md-12 mb-3 mb-md-0">
                                 <div>
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" wire:model="form.name" class="form-control" id="name"
-                                           placeholder="Grade 1">
+                                           placeholder="AB Family">
                                     @error('form.name')
-                                    <div class="text-danger mt-1">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 mb-3 mb-md-0">
-                                <div>
-                                    <label for="cost" class="form-label">Cost (&dollar;)</label>
-                                    <input type="text" wire:model="form.cost" class="form-control" id="cost"
-                                           placeholder="100">
-                                    @error('form.cost')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>
@@ -218,31 +216,19 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Editing grade {{ $form->name }} </h5>
+                    <h5 class="modal-title">Editing family {{ $form->name }} </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
                     <form id="modal-update-form" wire:submit="update">
                         <div class="row mb-3">
-                            <div class="col-12 col-md-6 mb-3 mb-md-0">
+                            <div class="col-12 col-md-12 mb-3 mb-md-0">
                                 <div>
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" wire:model="form.name" class="form-control" id="name"
-                                           placeholder="Grade 1">
+                                           placeholder="AB Family">
                                     @error('form.name')
-                                    <div class="text-danger mt-1">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 mb-3 mb-md-0">
-                                <div>
-                                    <label for="cost" class="form-label">Cost ($)</label>
-                                    <input type="text" wire:model="form.cost" class="form-control" id="cost"
-                                           placeholder="100">
-                                    @error('form.cost')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>

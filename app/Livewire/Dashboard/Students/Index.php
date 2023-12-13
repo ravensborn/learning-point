@@ -93,9 +93,12 @@ class Index extends Component
         $direction = $this->sortedColumns[$column];
 
         switch ($direction) {
-            case 'default': return $this->sort_default_icon;
-            case 'asc': return $this->sort_asc_icon;
-            case 'desc': return $this->sort_desc_icon;
+            case 'default':
+                return $this->sort_default_icon;
+            case 'asc':
+                return $this->sort_asc_icon;
+            case 'desc':
+                return $this->sort_desc_icon;
 
         }
     }
@@ -104,15 +107,15 @@ class Index extends Component
     {
         $direction = $this->sortedColumns[$column];
 
-        if($direction == 'default') {
+        if ($direction == 'default') {
             $this->sortedColumns[$column] = 'asc';
         }
 
-        if($direction == 'asc') {
+        if ($direction == 'asc') {
             $this->sortedColumns[$column] = 'desc';
         }
 
-        if($direction == 'desc') {
+        if ($direction == 'desc') {
             $this->sortedColumns[$column] = 'default';
         }
 
@@ -127,13 +130,13 @@ class Index extends Component
 
             $this->resetPage();
 
-            $students->where('first_name', 'LIKE', '%' . trim($this->search) . '%')
-                ->orWhere('middle_name', 'LIKE', '%' . trim($this->search) . '%')
-                ->orWhere('last_name', 'LIKE', '%' . trim($this->search) . '%')
+            $students->whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($this->search) . "%' ")
+                ->orWhere('primary_phone_number', 'LIKE', '%' . trim($this->search) . '%')
+                ->orWhere('secondary_phone_number', 'LIKE', '%' . trim($this->search) . '%')
                 ->orWhere('email', 'LIKE', '%' . trim($this->search) . '%');
         }
 
-        if(count($this->sortedColumns) > 0) {
+        if (count($this->sortedColumns) > 0) {
             foreach ($this->sortedColumns as $column => $direction) {
                 if ($direction != 'default') {
                     $students->orderBy($column, $direction);

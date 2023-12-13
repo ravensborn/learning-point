@@ -26,6 +26,13 @@ return new class extends Migration {
 
             $table->double('wallet', 10, 2)->default(0);
 
+            $table->unsignedBigInteger('family_id')
+                ->nullable();
+            $table->foreign('family_id')
+                ->references('id')
+                ->on('families')
+                ->nullOnDelete();
+
             $table->unsignedBigInteger('school_id')
                 ->nullable();
             $table->foreign('school_id')

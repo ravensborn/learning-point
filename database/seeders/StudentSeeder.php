@@ -29,7 +29,7 @@ class StudentSeeder extends Seeder
             ->preservingOriginal()
             ->toMediaCollection('documents');
 
-        StudentRelation::factory(10)->create();
+
         Transaction::factory(10)->create();
     }
 }

@@ -4,13 +4,11 @@ namespace App\Livewire\Dashboard\Students;
 
 use App\Livewire\Forms\StudentContactForm;
 use App\Livewire\Forms\StudentForm;
-use App\Livewire\Forms\StudentRelationForm;
 use App\Models\City;
 use App\Models\Grade;
 use App\Models\School;
 use App\Models\Student;
 use App\Models\StudentContact;
-use App\Models\StudentRelation;
 use App\Traits\StudentShowModalFunctions;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Layout;
@@ -26,7 +24,6 @@ class Show extends Component
     public Student $student;
     public StudentForm $studentForm;
     public StudentContactForm $studentContactForm;
-    public StudentRelationForm $studentRelationForm;
     public $documents;
     public Collection $transactions;
 
@@ -36,7 +33,6 @@ class Show extends Component
     public $availableCities;
     public $availableSchools;
     public $availableGrades;
-    public $availableStudentRelations;
     public $availableStudentRelationTypes;
 
 
@@ -71,11 +67,6 @@ class Show extends Component
         }
     }
 
-    public function loadStudentRelations(): void
-    {
-        $this->availableStudentRelations = StudentRelation::where('student_id', $this->student->id)->get();
-    }
-
 
     public function loadDocuments(): void
     {
@@ -100,9 +91,6 @@ class Show extends Component
             $this->availableGrades = Grade::where('school_id', $this->student->school_id)->get();
         }
 
-        $this->loadStudentRelations();
-        $this->availableStudentRelationTypes = StudentRelation::AVAILABLE_RELATIONS;
-        $this->searchedStudentRelationsStudents = collect();
         $this->loadDocuments();
 
         $this->transactions = $this->student->transactions()->orderBy('created_at', 'desc')->limit(5)->get();

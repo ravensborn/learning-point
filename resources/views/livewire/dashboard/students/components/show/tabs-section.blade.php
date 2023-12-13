@@ -67,8 +67,9 @@
                             <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                             <path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/>
                         </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M5 22v-5l-1 -1v-4a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4l-1 1v5" /><path d="M17 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M15 22v-4h-2l2 -6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1l2 6h-2v4" /></svg>
                         <!--</editor-fold>-->
-                        Relations
+                        Family
                     </a>
                 </li>
                 <li class="nav-item" role="presentation" wire:ignore>
@@ -195,7 +196,7 @@
                 <div class="tab-pane" id="tabs-4" role="tabpanel" wire:ignore.self>
                     <div class="d-flex justify-content-between">
                         <div>
-                            <h4>Relations</h4>
+                            <h4>Family Management</h4>
                         </div>
                         <div wire:click.prevent="showStudentRelationCreateModal">
                             <!--<editor-fold desc="SVG ICON">-->
@@ -217,84 +218,8 @@
                     <div>
                         <div class="list-group list-group-flush list-group-hoverable">
 
-                            @forelse($availableStudentRelations as $relation)
-                                <div class="list-group-item">
-                                    <div class="row align-items-center">
-                                        <div class="col-auto"><span class="badge bg-success"></span></div>
-                                        <div class="col-auto">
-                                            <a href="{{ route('dashboard.students.show', $relation->related->id) }}">
-                                                <span
-                                                    class="avatar">{{ substr($relation->related->first_name, 0, 1) }}</span>
-                                            </a>
-                                        </div>
-                                        <div class="col text-truncate">
-                                            <a href="{{ route('dashboard.students.show', $relation->related->id) }}"
-                                               class="text-reset d-block">{{ $relation->related->full_name }}</a>
-                                            <div class="d-block text-secondary text-truncate mt-n1">
-                                                {{ $relation->relation_name }}
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <a href="#"
-                                               wire:click.prevent="showStudentRelationEditModal({{ $relation->id }})"
-                                               class="list-group-item-actions text-decoration-none">
-                                                <!--<editor-fold desc="SVG ICON">-->
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                     class="icon icon-tabler icon-tabler-edit cursor-pointer text-secondary"
-                                                     width="24" height="24" viewBox="0 0 24 24"
-                                                     stroke-width="2" stroke="currentColor" fill="none"
-                                                     stroke-linecap="round" stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z"
-                                                          fill="none"></path>
-                                                    <path
-                                                        d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
-                                                    <path
-                                                        d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
-                                                    <path d="M16 5l3 3"></path>
-                                                </svg>
-                                                <!--</editor-fold>-->
-                                            </a>
-                                            <a href="#"
-                                               wire:click="deleteStudentRelation({{ $relation->id }})"
-                                               class="list-group-item-actions">
-                                                @if($this->deletingStudentRelationId == $relation->id)
-                                                    <!--<editor-fold desc="SVG ICON">-->
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                         class="icon icon-tabler icon-tabler-check cursor-pointer text-secondary"
-                                                         width="24" height="24" viewBox="0 0 24 24"
-                                                         stroke-width="2" stroke="currentColor"
-                                                         fill="none" stroke-linecap="round"
-                                                         stroke-linejoin="round">
-                                                        <path stroke="none" d="M0 0h24v24H0z"
-                                                              fill="none"/>
-                                                        <path d="M5 12l5 5l10 -10"/>
-                                                    </svg>
-                                                    <!--</editor-fold>-->
-                                                @else
-                                                    <!--<editor-fold desc="SVG ICON">-->
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                         class="icon icon-tabler icon-tabler-trash cursor-pointer text-secondary"
-                                                         width="24"
-                                                         height="24" viewBox="0 0 24 24"
-                                                         stroke-width="2"
-                                                         stroke="currentColor" fill="none"
-                                                         stroke-linecap="round" stroke-linejoin="round">
-                                                        <path stroke="none" d="M0 0h24v24H0z"
-                                                              fill="none"/>
-                                                        <path d="M4 7l16 0"/>
-                                                        <path d="M10 11l0 6"/>
-                                                        <path d="M14 11l0 6"/>
-                                                        <path
-                                                            d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
-                                                        <path
-                                                            d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
-                                                    </svg>
-                                                    <!--</editor-fold>-->
-                                                @endif
-                                            </a>
-                                        </div>
-                                    </div>
-                                </div>
+                            @forelse([] as $relation)
+
                             @empty
                                 <div class="list-group-item">
                                     <div class="row align-items-center text-secondary">

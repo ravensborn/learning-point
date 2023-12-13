@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
             GroupSeeder::class,
             SubjectSeeder::class,
             SchoolSeeder::class,
+            FamilySeeder::class,
             StudentSeeder::class,
             LcDatabaseSeeder::class
         ]);

@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Manage&nbsp;<a href="{{ route('dashboard.schools.index') }}">{{ $school->name }}</a>&nbsp;Grades
+                        Manage&nbsp;<a href="{{ route('dashboard.families.index') }}">{{ $family->name }}</a>&nbsp;Members
                     </h2>
                 </div>
                 <!-- Page title actions -->
@@ -22,7 +22,7 @@
                                 <path d="M5 12l14 0"/>
                             </svg>
                             <!--</editor-fold>-->
-                            New grade
+                            New member
                         </a>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Grade List</h3>
+                            <h3 class="card-title">Family Member List</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -73,30 +73,24 @@
                                     <th>
                                         Name
                                     </th>
-                                    <th>
-                                        Cost
-                                    </th>
                                     <th>Created</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @forelse($grades as $grade)
-                                    <tr wire:key="{{ $grade->id }}">
+                                @forelse($students as $student)
+                                    <tr wire:key="{{ $student->id }}">
 
                                         <td>
                                                 <span class="text-secondary">
-                                                    {{ ($grades->currentpage()-1) * $grades->perpage() + $loop->index + 1 }}
+                                                    {{ ($students->currentpage()-1) * $students->perpage() + $loop->index + 1 }}
                                                 </span>
                                         </td>
                                         <td>
-                                            {{ $grade->name }}
+                                            <a href="{{ route('dashboard.students.show', $student->id) }}">{{ $student->full_name }}</a>
                                         </td>
                                         <td>
-                                            ${{ number_format($grade->cost, 2) }}
-                                        </td>
-                                        <td>
-                                            {{ $grade->created_at->format('Y-m-d') }}
+                                            {{ $student->created_at->format('Y-m-d') }}
                                         </td>
 
                                         <td class="text-end">
@@ -108,16 +102,14 @@
                                                   </button>
                                                   <div class="dropdown-menu dropdown-menu-end">
                                                     <button class="dropdown-item"
-                                                            wire:click="prepareItemEditing({{ $grade->id  }})">Edit</button>
-                                                    <button class="dropdown-item"
-                                                            wire:click="prepareItemDeletion({{ $grade->id }})">Delete</button>
+                                                            wire:click="prepareItemDeletion({{ $student->id }})">Delete</button>
                                                   </div>
                                                 </span>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">
+                                        <td colspan="4" class="text-center">
                                             There are no items at the moment.
                                         </td>
                                     </tr>
@@ -129,15 +121,15 @@
                         <div class="card-footer d-flex align-items-center">
                             <p class="m-0 text-secondary">
                                 Showing
-                                <span>{{  $grades->firstItem()  }}</span>
+                                <span>{{  $students->firstItem()  }}</span>
                                 to
-                                <span>{{ $grades->lastItem() }}</span>
+                                <span>{{ $students->lastItem() }}</span>
                                 of
-                                <span> {{ $grades->total() }}</span>
+                                <span> {{ $students->total() }}</span>
                                 entries
                             </p>
                             <div class="m-0 ms-auto">
-                                {{ $grades->links() }}
+                                {{ $students->links() }}
                             </div>
 
                         </div>
@@ -153,37 +145,57 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">New Grade</h5>
+                    <h5 class="modal-title">New Member</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
                     <form id="modal-create-form" wire:submit="store">
                         <div class="row mb-3">
-                            <div class="col-12 col-md-6 mb-3 mb-md-0">
+                            <div class="col-12 col-md-12 mb-3 mb-md-0">
                                 <div>
                                     <label for="name" class="form-label">Name</label>
-                                    <input type="text" wire:model="form.name" class="form-control" id="name"
-                                           placeholder="Grade 1">
+                                    <input type="text" wire:model.live="memberSearchQuery" class="form-control" id="name"
+                                           placeholder="Search student name">
                                     @error('form.name')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>
                                     @enderror
                                 </div>
-                            </div>
-                            <div class="col-12 col-md-6 mb-3 mb-md-0">
-                                <div>
-                                    <label for="cost" class="form-label">Cost (&dollar;)</label>
-                                    <input type="text" wire:model="form.cost" class="form-control" id="cost"
-                                           placeholder="100">
-                                    @error('form.cost')
-                                    <div class="text-danger mt-1">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
+                                <div class="mt-3 d-flex flex-column gap-2 justify-content-start text-start">
+
+                                    @forelse($searchedMemberList as $student)
+
+                                        @if($student->id == $selectedMemberId)
+                                            <div class="badge border-success">
+                                                <!--<editor-fold desc="SVG ICON">-->
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     class="icon icon-tabler icon-tabler-check" width="24" height="24"
+                                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                     fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path
+                                                        stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                    <path
+                                                        d="M5 12l5 5l10 -10"/>
+                                                </svg>
+                                                <!--</editor-fold>-->
+                                                {{ $student->full_name }} - {{ $student->primary_phone_number }}
+                                            </div>
+                                        @else
+                                            <div class="badge"
+                                                 wire:click.prevent="selectSearchedMember({{ $student->id }})">
+                                                {{ $student->full_name }} - {{ $student->primary_phone_number }}
+                                            </div>
+                                        @endif
+                                    @empty
+                                        <div class="text-secondary">
+                                            No members to show, please adjust your search query.
+                                        </div>
+                                    @endforelse
                                 </div>
                             </div>
+
                         </div>
                     </form>
 
@@ -214,69 +226,7 @@
             </div>
         </div>
     </div>
-    <div class="modal modal-blur fade" id="modal-edit" tabindex="-1" aria-hidden="true" wire:ignore.self>
-        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Editing grade {{ $form->name }} </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
 
-                    <form id="modal-update-form" wire:submit="update">
-                        <div class="row mb-3">
-                            <div class="col-12 col-md-6 mb-3 mb-md-0">
-                                <div>
-                                    <label for="name" class="form-label">Name</label>
-                                    <input type="text" wire:model="form.name" class="form-control" id="name"
-                                           placeholder="Grade 1">
-                                    @error('form.name')
-                                    <div class="text-danger mt-1">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 mb-3 mb-md-0">
-                                <div>
-                                    <label for="cost" class="form-label">Cost ($)</label>
-                                    <input type="text" wire:model="form.cost" class="form-control" id="cost"
-                                           placeholder="100">
-                                    @error('form.cost')
-                                    <div class="text-danger mt-1">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-
-                </div>
-
-                <div class="modal-footer">
-                    <button class="btn btn-link link-secondary" wire:click="resetForm()">
-                        Cancel
-                    </button>
-                    <button class="btn btn-primary ms-auto" type="submit" form="modal-update-form"
-                            wire:loading.attr="disabled" wire:target="update">
-                        <!--<editor-fold desc="SVG ICON">-->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-check" width="44"
-                             height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#ffffff" fill="none"
-                             stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                            <path d="M5 12l5 5l10 -10"/>
-                        </svg>
-                        <!--</editor-fold>-->
-                        Update
-                        <span wire:loading wire:target="update">
-                            &nbsp; - Saving...
-                        </span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
     <div class="modal modal-blur fade" id="modal-delete" tabindex="-1" style="display: none;" aria-hidden="true"
          wire:ignore.self>
         <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
@@ -330,35 +280,23 @@
         document.addEventListener('livewire:initialized', () => {
 
 
-            document.getElementById('modal-edit').addEventListener('hidden.bs.modal', event => {
-                @this.
-                resetForm();
-            });
-
             document.getElementById('modal-create').addEventListener('hidden.bs.modal', event => {
                 @this.
                 resetForm();
             })
 
             const createModal = new bootstrap.Modal('#modal-create');
-            const editModal = new bootstrap.Modal('#modal-edit');
             const deleteModal = new bootstrap.Modal('#modal-delete');
 
             @this.
             on('close-all-modals', (event) => {
                 createModal.hide();
-                editModal.hide();
                 deleteModal.hide();
             });
 
             @this.
             on('toggle-modal-delete-confirmation', (event) => {
                 deleteModal.toggle();
-            });
-
-            @this.
-            on('toggle-modal-edit', (event) => {
-                editModal.toggle();
             });
 
             @this.

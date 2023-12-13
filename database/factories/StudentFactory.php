@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\City;
+use App\Models\Family;
 use App\Models\School;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -24,6 +25,8 @@ class StudentFactory extends Factory
             'last_name' => $this->faker->lastName,
 
             'wallet' => $this->faker->randomNumber(3,true),
+
+            'family_id' => $this->faker->randomElement(Family::all()->pluck('id')),
 
             'school_id' => $this->faker->randomElement(School::all()->pluck('id')),
             'academic_stream' => $this->faker->randomElement(array_keys(School::ACADEMIC_STREAMS)),

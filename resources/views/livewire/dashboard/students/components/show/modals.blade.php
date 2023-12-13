@@ -755,165 +755,6 @@
 </div>
 <!--</editor-fold>-->
 
-<!--<editor-fold desc="Create Student Relation">-->
-<div class="modal modal-blur fade" id="modal-create-student-relation" tabindex="-1" aria-hidden="true" wire:ignore.self>
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">New Contact</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-
-                <form id="modal-create-student-relation-form" wire:submit="storeStudentRelation">
-                    <div class="row mb-3">
-                        <div class="col-12 mb-3">
-                            <div>
-                                <label for="name" class="form-label required">Search Student</label>
-                                <input type="text" wire:model.live="studentRelationSearchQuery" class="form-control"
-                                       id="name"
-                                       placeholder="Search by name, phone number, or e-mail address.">
-                                @error('studentRelationSearchQuery')
-                                <div class="text-danger mt-1">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                                @error('studentRelationForm.related_id')
-                                <div class="text-danger mt-1">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-                            <div class="mt-3 d-flex flex-column gap-2 justify-content-start text-start">
-
-                                @foreach($searchedStudentRelationsStudents as $student)
-
-                                    @if($student->id == $selectedStudentRelationStudentId)
-                                        <div class="badge border-success">
-                                            <!--<editor-fold desc="SVG ICON">-->
-                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                 class="icon icon-tabler icon-tabler-check" width="24" height="24"
-                                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                                 fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                <path
-                                                    stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                <path
-                                                    d="M5 12l5 5l10 -10"/>
-                                            </svg>
-                                            <!--</editor-fold>-->
-                                            {{ $student->full_name }} - {{ $student->primary_phone_number }}
-                                        </div>
-                                    @else
-                                        <div class="badge"
-                                             wire:click.prevent="selectStudentRelationStudent({{ $student->id }})">
-                                            {{ $student->full_name }} - {{ $student->primary_phone_number }}
-                                        </div>
-                                    @endif
-
-                                @endforeach
-                            </div>
-                        </div>
-                        <div class="col-12 mb-3">
-                            <div>
-                                <label for="relation" class="form-label required">Relation</label>
-                                <select class="form-control" id="relation" wire:model="studentRelationForm.name">
-                                    <option value="">-- Select an option --</option>
-                                    @foreach($availableStudentRelationTypes as $relation => $name)
-                                        <option value="{{ $relation }}">{{ $name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('studentRelationForm.name')
-                                <div class="text-danger mt-1">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                </form>
-
-            </div>
-
-            <div class="modal-footer">
-                <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
-                    Cancel
-                </a>
-                <button class="btn btn-primary ms-auto" type="submit" form="modal-create-student-relation-form"
-                        wire:loading.attr="disabled" wire:target="storeStudentRelation">
-                    <!--<editor-fold desc="SVG ICON">-->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
-                         stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                         stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M5 12l5 5l10 -10"/>
-                    </svg>
-                    <!--</editor-fold>-->
-                    Save
-                    <span wire:loading wire:target="storeStudentRelation">
-                            &nbsp; - Saving...
-                        </span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<!--</editor-fold>-->
-<!--<editor-fold desc="Edit Student Relation">-->
-<div class="modal modal-blur fade" id="modal-edit-student-relation" tabindex="-1" aria-hidden="true" wire:ignore.self>
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit student relation</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-
-                <form id="modal-edit-student-relation-form" wire:submit="updateStudentRelation">
-                    <div class="row mb-3">
-                        <div class="col-12 mb-3">
-                            <div>
-                                <label for="relation" class="form-label required">Relation</label>
-                                <select class="form-control" id="relation" wire:model="studentRelationForm.name">
-                                    <option value="">-- Select an option --</option>
-                                    @foreach($availableStudentRelationTypes as $relation => $name)
-                                        <option value="{{ $relation }}">{{ $name }}</option>
-                                    @endforeach
-                                </select>
-                                @error('studentRelationForm.name')
-                                <div class="text-danger mt-1">
-                                    {{ $message }}
-                                </div>
-                                @enderror
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-
-            <div class="modal-footer">
-                <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
-                    Cancel
-                </a>
-                <button
-                    class="btn btn-primary ms-auto" type="submit" form="modal-edit-student-relation-form"
-                    wire:loading.attr="disabled" wire:target="updateStudentRelation">
-                    <!--<editor-fold desc="SVG ICON">-->
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
-                         stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                         stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                        <path d="M5 12l5 5l10 -10"/>
-                    </svg>
-                    <!--</editor-fold>-->
-                    Save
-                    <span wire:loading wire:target="updateStudentRelation">&nbsp; - Saving...</span>
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-<!--</editor-fold>-->
-
 <!--<editor-fold desc="Upload document">-->
 <div class="modal modal-blur fade" id="modal-upload-document" tabindex="-1" aria-hidden="true" wire:ignore.self>
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
@@ -1008,8 +849,6 @@
             editContactModal.hide();
             editSchoolModal.hide();
             editStudentModal.hide();
-            createStudentRelationModal.hide();
-            editStudentRelationModal.hide();
             uploadDocumentModal.hide();
         });
 
@@ -1074,31 +913,6 @@
         @this.
         on('toggle-modal-show-student-avatar', (event) => {
             showStudentAvatarModal.toggle();
-        });
-
-
-        //Student Relations
-        const createStudentRelationModal = new bootstrap.Modal('#modal-create-student-relation');
-        const editStudentRelationModal = new bootstrap.Modal('#modal-edit-student-relation');
-
-        @this.
-        on('toggle-modal-create-student-relation', (event) => {
-            createStudentRelationModal.toggle();
-        });
-
-        document.getElementById('modal-create-student-relation').addEventListener('hidden.bs.modal', event => {
-            @this.
-            resetStudentRelationCreateModal();
-        });
-
-        @this.
-        on('toggle-modal-edit-student-relation', (event) => {
-            editStudentRelationModal.toggle();
-        });
-
-        document.getElementById('modal-edit-student-relation').addEventListener('hidden.bs.modal', event => {
-            @this.
-            resetStudentRelationEditModal();
         });
 
         //Upload document

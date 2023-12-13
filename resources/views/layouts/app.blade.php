@@ -134,7 +134,7 @@
                         <div class="dropdown-menu show">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
-                                    <a class="dropdown-item @if(request()->is('*/subjects*')) active @endif"
+                                    <a class="dropdown-item @if(request()->is('*/students*')) active @endif"
                                        href="{{ route('dashboard.students.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-user-star"></i>
@@ -228,6 +228,13 @@
                                          </span>
                                     Schools
                                 </a>
+                                <a class="dropdown-item @if(request()->is('*/families*')) active @endif"
+                                   href="{{ route('dashboard.families.index') }}">
+                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                             <i class="ti ti-custom ti-friends"></i>
+                                         </span>
+                                    Families
+                                </a>
                             </div>
                         </div>
                     </li>
@@ -250,6 +257,7 @@
                             id="dark-theme-btn"
                             data-bs-toggle="tooltip"
                             data-bs-placement="bottom">
+                        <!--<editor-fold desc="SVG ICON">-->
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-moon-stars"
                              width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
                              fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -258,6 +266,7 @@
                             <path d="M17 4a2 2 0 0 0 2 2a2 2 0 0 0 -2 2a2 2 0 0 0 -2 -2a2 2 0 0 0 2 -2"/>
                             <path d="M19 11h2m-1 -1v2"/>
                         </svg>
+                        <!--</editor-fold>-->
                     </button>
                 </div>
                 <div class="nav-item dropdown">
