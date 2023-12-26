@@ -88,7 +88,7 @@
                                                 </span>
                                         </td>
                                         <td>
-                                            {{ $group->name }}
+                                            {{ ucfirst($group->name) }}
                                         </td>
                                         <td>
                                             {{ $group->model }}

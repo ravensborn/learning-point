@@ -140,7 +140,7 @@
                             <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"/>
                         </svg>
                         <!--</editor-fold>-->
-                        Created by: <strong> {{ $student->user->name }}</strong>
+                        Created by: <strong> {{ ucfirst($student->user->name) }}</strong>
                     </div>
 
                 </div>
@@ -180,7 +180,7 @@
                                 <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
                             </svg>
                             <!--</editor-fold>-->
-                            Name: <strong>{{ $student->school->name }}</strong>
+                            Name: <strong>{{ ucfirst($student->school->name) }}</strong>
                         </div>
                         <div class="mb-2">
                             <!--<editor-fold desc="SVG ICON">-->
@@ -197,7 +197,7 @@
                                     d="M12 9.817l-2.172 1.138a.392 .392 0 0 1 -.568 -.41l.415 -2.411l-1.757 -1.707a.389 .389 0 0 1 .217 -.665l2.428 -.352l1.086 -2.193a.392 .392 0 0 1 .702 0l1.086 2.193l2.428 .352a.39 .39 0 0 1 .217 .665l-1.757 1.707l.414 2.41a.39 .39 0 0 1 -.567 .411l-2.172 -1.138z"/>
                             </svg>
                             <!--</editor-fold>-->
-                            Grade: <strong>{{ $student->grade?->name }}</strong>
+                            Grade: <strong>{{ ucfirst($student->grade?->name ?? null) }}</strong>
                         </div>
                         <div class="mb-2">
                             <!--<editor-fold desc="SVG ICON">-->

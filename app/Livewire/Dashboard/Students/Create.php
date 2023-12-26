@@ -2,9 +2,11 @@
 
 namespace App\Livewire\Dashboard\Students;
 
+use App\Livewire\Forms\FamilyForm;
 use App\Livewire\Forms\StudentContactForm;
 use App\Livewire\Forms\StudentForm;
 use App\Models\City;
+use App\Models\Family;
 use App\Models\Grade;
 use App\Models\School;
 use App\Models\StudentContact;
@@ -19,6 +21,7 @@ class Create extends Component
     use WithFileUploads;
 
     public StudentForm $studentForm;
+    public FamilyForm $familyForm;
     public StudentContactForm $studentContactForm;
 
     public $availableCities;
@@ -26,6 +29,27 @@ class Create extends Component
     public $availableSchools;
     public $availableGrades;
 
+    public $studentFamilyMode = 'without-family';
+    public string $familySearchQuery = '';
+    public $availableFamilies;
+
+    public function updatedFamilySearchQuery(): void
+    {
+        if ($this->familySearchQuery) {
+
+            $this->availableFamilies = Family::where('name', 'LIKE', '%' . trim($this->familySearchQuery) . '%')
+                ->orWhere('number', 'LIKE', '%' . trim($this->familySearchQuery) . '%')
+                ->orWhereHas('students', function ($query) {
+                    $query->whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($this->familySearchQuery) . "%' ")
+                        ->orWhere('primary_phone_number', 'LIKE', '%' . trim($this->familySearchQuery) . '%')
+                        ->orWhere('secondary_phone_number', 'LIKE', '%' . trim($this->familySearchQuery) . '%')
+                        ->orWhere('email', 'LIKE', '%' . trim($this->familySearchQuery) . '%');
+                })->limit(10)->get();
+
+        } else {
+            $this->availableFamilies = Family::orderBy('created_at', 'desc')->get();
+        }
+    }
     public function updatedStudentFormSchoolId(): void
     {
         $this->availableGrades = Grade::where('school_id', $this->studentForm->school_id)->get();
@@ -40,6 +64,14 @@ class Create extends Component
     {
         $this->studentForm->user_id = auth()->user()->id;
         $this->studentForm->store();
+
+        if($this->studentFamilyMode == 'create-new') {
+            $this->familyForm->name = $this->studentForm->first_name . ' ' . $this->studentForm->last_name . "'s family";
+            $this->familyForm->store();
+            $this->studentForm->family_id = $this->familyForm->model->id;
+            $this->studentForm->update();
+        }
+
         $this->setStep('profile-picture');
     }
 
@@ -141,6 +173,8 @@ class Create extends Component
         $this->availableCities = City::all();
         $this->availableGrades = collect();
         $this->availableSchools = School::all();
+        $this->availableFamilies = Family::orderBy('created_at', 'asc')->get();
+
     }
 
     #[Layout('layouts.app')]

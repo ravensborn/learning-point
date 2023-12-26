@@ -318,6 +318,106 @@
                         </form>
                     </div>
                 </div>
+                <div class="row row-deck row-cards mt-3">
+                    <div class="col">
+                        <form class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Family Management</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <p class="text-secondary">
+                                            Please assign the student to a family, you can use the search box below to
+                                            search for a family by its name, or member details.
+                                            <br>
+                                            You can also select `create a new family` to immediately create a new family
+                                            for the student naming it after them.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <p>Available Options</p>
+                                    <div class="form-selectgroup">
+                                        <label class="form-selectgroup-item">
+                                            <input type="radio" wire:model.change="studentFamilyMode" name="family_mode"
+                                                   value="existing-family" class="form-selectgroup-input" checked="">
+                                            <span class="form-selectgroup-label">
+                                                    Existing Family
+                                                </span>
+                                        </label>
+                                        <label class="form-selectgroup-item">
+                                            <input type="radio" wire:model.change="studentFamilyMode" name="family_mode"
+                                                   value="create-new" class="form-selectgroup-input">
+                                            <span class="form-selectgroup-label">
+                                                    Create New Family
+                                                </span>
+                                        </label>
+                                        <label class="form-selectgroup-item">
+                                            <input type="radio" wire:model.change="studentFamilyMode" name="family_mode"
+                                                   value="without-family" class="form-selectgroup-input">
+                                            <span class="form-selectgroup-label">
+                                                    Without Family
+                                                </span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="row row-cards mt-3">
+                                    @if($studentFamilyMode == 'existing-family')
+
+                                        <div class="mt-3 row">
+                                            <div class="col-6">
+                                                <label for="family_id" class="form-label required">Select Family</label>
+                                                <select wire:model.change="studentForm.family_id" class="form-control"
+                                                        @class(['form-control' => true,'is-invalid' => $errors->has('studentForm.first_name')])
+                                                        id="family_id">
+                                                    <option wire:key="0" value="0">-- Select an option --</option>
+                                                    @foreach($availableFamilies as $family)
+                                                        <option wire:key="{{ $family->id }}"
+                                                                value="{{ $family->id }}">{{ $family->number }} - {{ ucfirst($family->name) }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @error('family_id')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                                @enderror
+                                            </div>
+                                            <div class="col-6">
+                                                <label for="search_family_query" class="form-label">Search Family</label>
+                                                <input type="text"
+                                                       id="search_family_query"
+                                                       class="form-control"
+                                                       wire:model.live="familySearchQuery">
+                                            </div>
+                                        </div>
+
+                                    @endif
+                                    @if($studentFamilyMode == 'create-new')
+                                        @if($studentForm->first_name && $studentForm->last_name)
+                                            <p>
+                                                A new family will be created
+                                                <span
+                                                    class="text-info">{{ $studentForm->first_name . ' '  . $studentForm->middle_name . "'s family" }}</span>.
+                                            </p>
+                                        @else
+                                            <p>
+                                                A new family will be created using students first and last name.
+                                            </p>
+                                        @endif
+                                    @endif
+                                    @if($studentFamilyMode == 'without-family')
+                                        <p>
+                                            The student will not be assigned to any family.
+                                        </p>
+                                    @endif
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <div class="row align-items-center mt-3">
                     <div class="col">
                         <div class="btn-list d-flex justify-content-end">

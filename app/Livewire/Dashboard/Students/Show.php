@@ -5,6 +5,7 @@ namespace App\Livewire\Dashboard\Students;
 use App\Livewire\Forms\StudentContactForm;
 use App\Livewire\Forms\StudentForm;
 use App\Models\City;
+use App\Models\Family;
 use App\Models\Grade;
 use App\Models\School;
 use App\Models\Student;
@@ -28,6 +29,9 @@ class Show extends Component
     public Collection $transactions;
 
     public $contacts;
+    public $family = null;
+    public $familyMembers;
+    public $availableFamilies;
     public $availableRelations;
     public $availableAcademicStreams;
     public $availableCities;
@@ -76,6 +80,16 @@ class Show extends Component
             ->get();
     }
 
+    public function loadFamily(): void
+    {
+        $this->familyMembers = collect();
+        $this->family = null;
+        if($this->student->family_id) {
+            $this->family = Family::find($this->student->family_id);
+            $this->familyMembers = $this->family->students;
+        }
+    }
+
     public function mount(Student $student): void
     {
         $this->student = $student;
@@ -84,6 +98,7 @@ class Show extends Component
         $this->availableCities = City::all();
         $this->loadContacts();
         $this->availableSchools = School::all();
+        $this->availableFamilies = Family::all();
 
         $this->availableGrades = collect();
 
@@ -92,6 +107,7 @@ class Show extends Component
         }
 
         $this->loadDocuments();
+        $this->loadFamily();
 
         $this->transactions = $this->student->transactions()->orderBy('created_at', 'desc')->limit(5)->get();
 

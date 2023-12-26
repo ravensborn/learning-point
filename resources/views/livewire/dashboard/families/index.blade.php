@@ -96,7 +96,7 @@
                                             {{ $family->number }}
                                         </td>
                                         <td>
-                                            {{ $family->name }}
+                                            {{ ucfirst($family->name) }}
                                         </td>
                                         <td>
                                             {{ $family->students->count() }}

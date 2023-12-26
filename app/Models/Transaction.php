@@ -15,18 +15,45 @@ class Transaction extends Model
         'user' => 'object'
     ];
     protected $appends = [
-        'type_name'
+        'type_name',
+        'type_color_class'
     ];
 
     const TYPE_WITHDRAW = 'withdraw';
     const TYPE_DEPOSIT = 'deposit';
     const TYPE_PURCHASE = 'purchase';
+    const TYPE_TRANSFER = 'transfer';
 
     const TYPES = [
         self::TYPE_WITHDRAW => 'Withdraw',
         self::TYPE_DEPOSIT => 'Deposit',
         self::TYPE_PURCHASE => 'Purchase',
+        self::TYPE_TRANSFER => 'Transfer',
     ];
+
+    const TYPE_COLOR_CLASSES = [
+        self::TYPE_WITHDRAW => 'text-danger',
+        self::TYPE_DEPOSIT => 'text-success',
+        self::TYPE_PURCHASE => 'text-danger',
+        self::TYPE_TRANSFER => 'text-danger',
+    ];
+    const TYPE_PREFIX_CHARACTER = [
+        self::TYPE_WITHDRAW => '-',
+        self::TYPE_DEPOSIT => '+',
+        self::TYPE_PURCHASE => '-',
+        self::TYPE_TRANSFER => '-',
+    ];
+
+
+    public function getTypeColorClassAttribute(): string
+    {
+        return self::TYPE_COLOR_CLASSES[$this->type];
+    }
+
+    public function getTypePrefixCharacterAttribute(): string
+    {
+        return self::TYPE_PREFIX_CHARACTER[$this->type];
+    }
 
     public function sync(): void
     {
@@ -44,6 +71,9 @@ class Transaction extends Model
                $wallet -= $amount;
            }
            if($this->type == self::TYPE_PURCHASE) {
+               $wallet -= $amount;
+           }
+           if($this->type == self::TYPE_TRANSFER) {
                $wallet -= $amount;
            }
 

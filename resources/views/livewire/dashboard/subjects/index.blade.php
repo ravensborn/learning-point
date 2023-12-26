@@ -86,10 +86,10 @@
                                                 </span>
                                         </td>
                                         <td>
-                                            {{ $subject->name }}
+                                            {{ ucfirst($subject->name) }}
                                         </td>
                                         <td>
-                                            {{ $subject->group->name }}
+                                            {{ ucfirst($subject->group->name) }}
                                         </td>
                                         <td>
                                             {{ $subject->created_at->format('Y-m-d') }}

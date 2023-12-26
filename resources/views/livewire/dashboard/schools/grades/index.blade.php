@@ -90,7 +90,7 @@
                                                 </span>
                                         </td>
                                         <td>
-                                            {{ $grade->name }}
+                                            {{ ucfirst($grade->name) }}
                                         </td>
                                         <td>
                                             ${{ number_format($grade->cost, 2) }}

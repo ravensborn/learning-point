@@ -48,7 +48,7 @@
                                       style="background-image: url('{{ $user->getFirstMediaUrl('avatar') }}')"></span>
                                 <h3 class="m-0 mb-1">
                                     <a href="#">
-                                        {{ $user->name }}
+                                        {{ ucfirst($user->name) }}
                                     </a>
                                 </h3>
                                 <div class="text-secondary">{{ $user->email }}</div>

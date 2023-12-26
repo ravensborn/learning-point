@@ -3,11 +3,70 @@
 namespace App\Traits;
 
 use App\Livewire\Forms\TransactionForm;
+use App\Models\Student;
 
-trait TransactionModalFunctions {
+trait TransactionModalFunctions
+{
 
 
     public TransactionForm $form;
+
+    public float $transferAmount = 0;
+    public string $transferToQuery = '';
+    public $transferToList;
+    public int $transferToId = 0;
+    public string $transferDescription = '';
+
+    public function transfer(): void
+    {
+        $this->validate([
+            'transferToId' => 'required|integer|exists:students,id',
+            'transferAmount' => 'required|numeric|gt:0',
+            'transferDescription' => 'required|string|max:10000',
+        ]);
+
+        if($this->student->wallet > 0) {
+
+            $this->form->transfer($this->student->id, $this->transferToId, $this->transferAmount, $this->transferDescription);
+            $this->dispatch('close-all-modals');
+        }
+    }
+
+    public function selectTransferTo($id): void
+    {
+        $this->transferToId = $id;
+
+        $student = Student::find($id);
+        $this->transferDescription = 'Internal transfer to student ' . $student->full_name . '.';
+    }
+    public function updatedTransferToQuery(): void
+    {
+        if ($this->transferToQuery) {
+
+            $search = trim($this->transferToQuery);
+
+            $this->transferToList = Student::where('first_name', 'LIKE', '%' . $search . '%')
+                ->orWhere('middle_name', 'LIKE', '%' . $search . '%')
+                ->orWhere('email', 'LIKE', '%' . $search . '%')
+                ->orWhere('primary_phone_number', 'LIKE', '%' . $search . '%')
+                ->limit(5)
+                ->get();
+
+        } else {
+            $this->transferToList = collect();
+        }
+    }
+
+    public function resetTransferForm(): void
+    {
+        $this->transferToQuery = '';
+        $this->transferToList = collect();
+        $this->transferDescription = '';
+        $this->transferAmount = 0;
+        $this->transferToId = 0;
+        $this->resetErrorBag();
+        $this->dispatch('close-all-modals');
+    }
 
     public function prepareItemEditing($id): void
     {

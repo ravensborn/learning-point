@@ -62,12 +62,11 @@
                              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
                              stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                            <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0"/>
-                            <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"/>
-                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                            <path d="M21 21v-2a4 4 0 0 0 -3 -3.85"/>
+                            <path d="M7 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+                            <path d="M5 22v-5l-1 -1v-4a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4l-1 1v5"/>
+                            <path d="M17 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"/>
+                            <path d="M15 22v-4h-2l2 -6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1l2 6h-2v4"/>
                         </svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M5 22v-5l-1 -1v-4a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4l-1 1v5" /><path d="M17 5m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M15 22v-4h-2l2 -6a1 1 0 0 1 1 -1h2a1 1 0 0 1 1 1l2 6h-2v4" /></svg>
                         <!--</editor-fold>-->
                         Family
                     </a>
@@ -177,7 +176,8 @@
                             </table>
                         </div>
                         <div class="text-center mt-5">
-                            <a href="{{ route('dashboard.student.transactions.index', $student->id) }}">Show all transactions</a>
+                            <a href="{{ route('dashboard.student.transactions.index', $student->id) }}">Show all
+                                transactions</a>
                         </div>
                     @else
                         <div class="list-group list-group-flush list-group-hoverable">
@@ -192,38 +192,97 @@
 
                 </div>
                 <!--</editor-fold>-->
-                <!--<editor-fold desc="Relations">-->
+                <!--<editor-fold desc="Family">-->
                 <div class="tab-pane" id="tabs-4" role="tabpanel" wire:ignore.self>
                     <div class="d-flex justify-content-between">
                         <div>
                             <h4>Family Management</h4>
                         </div>
-                        <div wire:click.prevent="showStudentRelationCreateModal">
+                        <div wire:click.prevent="showStudentFamilyEditModal()">
                             <!--<editor-fold desc="SVG ICON">-->
                             <svg xmlns="http://www.w3.org/2000/svg"
-                                 class="icon icon-tabler icon-tabler-pencil-plus text-secondary cursor-pointer"
-                                 width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-                                 stroke="currentColor" fill="none" stroke-linecap="round"
-                                 stroke-linejoin="round">
+                                 class="icon icon-tabler icon-tabler-edit text-secondary cursor-pointer" width="24"
+                                 height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                 stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                <path
-                                    d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"></path>
-                                <path d="M13.5 6.5l4 4"></path>
-                                <path d="M16 19h6"></path>
-                                <path d="M19 16v6"></path>
+                                <path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1"></path>
+                                <path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z"></path>
+                                <path d="M16 5l3 3"></path>
                             </svg>
                             <!--</editor-fold>-->
                         </div>
                     </div>
                     <div>
+
                         <div class="list-group list-group-flush list-group-hoverable">
+                            @if($family)
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col text-truncate">
+                                            <div class="d-block text-secondary text-truncate mt-n1">
+                                                <div class="list-inline list-inline-dots">
+                                                    <div class="list-inline-item text-secondary">
+                                                        <a href="{{ route('dashboard.family.students.index', $family->id) }}"
+                                                           class="text-reset d-block">
+                                                            Connected Family:
+                                                            {{ ucfirst($family->name) }} - {{ $family->number }}
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
 
-                            @forelse([] as $relation)
+                                    </div>
+                                </div>
+                            @endif
+                            @forelse($familyMembers as $student)
+                                <div class="list-group-item">
+                                    <div class="row align-items-center">
+                                        <div class="col-auto"><span class="badge bg-success"></span></div>
+                                        <div class="col-auto">
+                                            <a href="#">
+                                                <span class="avatar">{{ substr($student->first_name, 0, 1) }}</span>
+                                            </a>
+                                        </div>
+                                        <div class="col text-truncate">
+                                            <a href="{{ route('dashboard.students.show', $student->id) }}"
+                                               class="text-reset d-block">
+                                                {{ $student->full_name }}
+                                                @if($student->id == $this->student->id)
+                                                    <div class="badge">Yourself</div>
+                                                @endif
+                                            </a>
+                                            <div class="d-block text-secondary text-truncate mt-n1">
+                                                <div class="list-inline list-inline-dots">
+                                                    <div class="list-inline-item text-secondary">
+                                                        Member
+                                                    </div>
+                                                    @if($student->primary_phone_number)
+                                                        <div class="list-inline-item">
+                                                            <a class="text-secondary"
+                                                               href="tel:{{ $student->primary_phone_number }}">
+                                                                {{ $student->primary_phone_number }}
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                    @if($student->secondary_phone_number)
+                                                        <div class="list-inline-item">
+                                                            <a class="text-secondary"
+                                                               href="tel:{{ $student->secondary_phone_number }}">
+                                                                {{ $student->secondary_phone_number }}
+                                                            </a>
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
 
+                                    </div>
+                                </div>
                             @empty
                                 <div class="list-group-item">
                                     <div class="row align-items-center text-secondary">
-                                        You haven't added any relations, click on add relation icon to begin.
+                                        You haven't added this student to any family, click on add icon to begin.
                                     </div>
                                 </div>
                             @endforelse

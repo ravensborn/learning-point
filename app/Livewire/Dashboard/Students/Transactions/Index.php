@@ -23,6 +23,7 @@ class Index extends Component
     {
         $this->student = $student;
         $this->availableTransactionTypes = Transaction::TYPES;
+        $this->transferToList = collect();
     }
 
 

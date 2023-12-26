@@ -191,12 +191,12 @@
                                                         <div class="list-inline list-inline-dots text-secondary">
                                                             @if($student->school)
                                                                 <div class="list-inline-item">
-                                                                    {{ $student?->school?->name }}
+                                                                    {{ ucfirst($student?->school?->name ?? null) }}
                                                                 </div>
                                                             @endif
                                                             @if($student->grade)
                                                                 <div class="list-inline-item">
-                                                                    {{ $student?->grade?->name }}
+                                                                    {{ ucfirst($student?->grade?->name ?? null) }}
                                                                 </div>
                                                             @endif
 

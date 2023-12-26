@@ -71,6 +71,7 @@
                                 <label for="name" class="form-label required">Name</label>
                                 <input type="text" wire:model="studentContactForm.name" class="form-control"
                                        id="name"
+                                       autocomplete="off"
                                        placeholder="Full name">
                                 @error('studentContactForm.name')
                                 <div class="text-danger mt-1">
@@ -127,6 +128,7 @@
                             <div>
                                 <label for="email" class="form-label">E-Mail address</label>
                                 <input type="text" wire:model="studentContactForm.email" class="form-control"
+                                       autocomplete="off"
                                        id="email"
                                        placeholder="name@example.com">
                                 @error('studentContactForm.email')
@@ -140,6 +142,7 @@
                             <div>
                                 <label for="address" class="form-label">Address</label>
                                 <input type="text" wire:model="studentContactForm.address" class="form-control"
+                                       autocomplete="off"
                                        id="address"
                                        placeholder="Dream City, Erbil, KRI">
                                 @error('studentContactForm.address')
@@ -195,6 +198,7 @@
                             <div>
                                 <label for="name" class="form-label required">Name</label>
                                 <input type="text" wire:model="studentContactForm.name" class="form-control"
+                                       autocomplete="off"
                                        id="name"
                                        placeholder="Full name">
                                 @error('studentContactForm.name')
@@ -252,6 +256,7 @@
                             <div>
                                 <label for="email" class="form-label">E-Mail address</label>
                                 <input type="text" wire:model="studentContactForm.email" class="form-control"
+                                       autocomplete="off"
                                        id="email"
                                        placeholder="name@example.com">
                                 @error('studentContactForm.email')
@@ -265,6 +270,7 @@
                             <div>
                                 <label for="address" class="form-label">Address</label>
                                 <input type="text" wire:model="studentContactForm.address" class="form-control"
+                                       autocomplete="off"
                                        id="address"
                                        placeholder="Dream City, Erbil, KRI">
                                 @error('studentContactForm.address')
@@ -378,6 +384,7 @@
                                 <label for="username" class="form-label">Username</label>
                                 <input type="text" wire:model="studentForm.school_username"
                                        @class(['form-control' => true, 'is-invalid' => $errors->has('school_username')])
+                                       autocomplete="off"
                                        id="username"
                                        placeholder="Username / E-Mail">
                                 @error('school_username')
@@ -394,6 +401,7 @@
                                 <label for="password" class="form-label">Password</label>
                                 <input type="text" wire:model="studentForm.school_password"
                                        @class(['form-control' => true, 'is-invalid' => $errors->has('school_password')])
+                                       autocomplete="off"
                                        id="password"
                                        placeholder="Password">
                                 @error('school_password')
@@ -452,6 +460,7 @@
                                 <label for="first_name" class="form-label required">First name</label>
                                 <input type="text" wire:model="studentForm.first_name" class="form-control"
                                        id="first_name"
+                                       autocomplete="off"
                                        placeholder="First name">
                                 @error('studentForm.first_name')
                                 <div class="text-danger mt-1">
@@ -465,6 +474,7 @@
                                 <label for="middle_name" class="form-label required">Middle name</label>
                                 <input type="text" wire:model="studentForm.middle_name" class="form-control"
                                        id="middle_name"
+                                       autocomplete="off"
                                        placeholder="Middle name">
                                 @error('studentForm.middle_name')
                                 <div class="text-danger mt-1">
@@ -478,6 +488,7 @@
                                 <label for="last_name" class="form-label required">Last name</label>
                                 <input type="text" wire:model="studentForm.last_name" class="form-control"
                                        id="last_name"
+                                       autocomplete="off"
                                        placeholder="Last name">
                                 @error('studentForm.last_name')
                                 <div class="text-danger mt-1">
@@ -500,7 +511,6 @@
                                 </label>
                                 <label class="form-check form-check-inline">
                                     <input value="female"
-                                           id="gender"
                                            wire:model="studentForm.gender"
                                            @class(['form-check-input' => true, 'is-invalid' => $errors->has('gender')])
                                            type="radio"
@@ -552,6 +562,7 @@
                                     Number</label>
                                 <input type="text" wire:model="studentForm.primary_phone_number"
                                        class="form-control" id="primary_phone_number"
+                                       autocomplete="off"
                                        placeholder="+964 (750) 1234567">
                                 @error('studentForm.primary_phone_number')
                                 <div class="text-danger mt-1">
@@ -566,6 +577,7 @@
                                     Number</label>
                                 <input type="text" wire:model="studentForm.secondary_phone_number"
                                        class="form-control" id="secondary_phone_number"
+                                       autocomplete="off"
                                        placeholder="+964 (750) 1234567">
                                 @error('studentForm.secondary_phone_number')
                                 <div class="text-danger mt-1">
@@ -579,6 +591,7 @@
                                 <label for="email" class="form-label">E-Mail address</label>
                                 <input type="text" wire:model="studentForm.email" class="form-control"
                                        id="email"
+                                       autocomplete="off"
                                        placeholder="name@example.com">
                                 @error('studentForm.email')
                                 <div class="text-danger mt-1">
@@ -607,6 +620,7 @@
                                 <label for="address" class="form-label">Address</label>
                                 <input type="text" wire:model="studentForm.address" class="form-control"
                                        id="address"
+                                       autocomplete="off"
                                        placeholder="Dream City, Erbil, KRI">
                                 @error('studentForm.address')
                                 <div class="text-danger mt-1">
@@ -645,6 +659,82 @@
     </div>
 </div>
 <!--</editor-fold>-->
+
+<!--<editor-fold desc="Edit Student Family">-->
+<div class="modal modal-blur fade" id="modal-edit-student-family" tabindex="-1" aria-hidden="true" wire:ignore.self>
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Student Family</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <form id="modal-edit-student-family-form" wire:submit="updateStudentFamily">
+                    <div class="row mb-3">
+                        <div class="col-12 mb-3">
+                            <div>
+                                <label for="search_family_query" class="form-label">Search Family</label>
+                                <input type="text" wire:model.live="searchFamilyQuery" class="form-control"
+                                       id="search_family_query"
+                                       autocomplete="off"
+                                       placeholder="Search by family name, number, or member names and phone numbers">
+                                @error('studentForm.first_name')
+                                <div class="text-danger mt-1">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-12 mb-3">
+                            <div>
+                                <label for="family_id" class="form-label required">Family</label>
+                                <select id="family_id" wire:model.live="studentForm.family_id"
+                                        class="form-control"
+                                        autocomplete="off">
+                                    <option value="">-- Unassigned --</option>
+                                    @foreach($availableFamilies as $family)
+                                        <option wire:key="{{ $family->id }}" value="{{ $family->id }}">{{ $family->number }} - {{ $family->name }}</option>
+                                    @endforeach
+                                </select>
+                                @error('family_id')
+                                <div class="text-danger mt-1">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+
+            </div>
+
+            <div class="modal-footer">
+                <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </a>
+                <button class="btn btn-primary ms-auto" type="submit" form="modal-edit-student-family-form"
+                        wire:loading.attr="disabled" wire:target="updateStudentFamily">
+                    <!--<editor-fold desc="SVG ICON">-->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                         stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                        <path d="M5 12l5 5l10 -10"/>
+                    </svg>
+                    <!--</editor-fold>-->
+                    Save
+                    <span wire:loading wire:target="updateStudentFamily">
+                            &nbsp; - Saving...
+                        </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--</editor-fold>-->
+
 
 <!--<editor-fold desc="Student Profile Picture">-->
 <div class="modal modal-blur fade" id="modal-show-student-avatar" tabindex="-1" aria-hidden="true" wire:ignore.self>
@@ -771,7 +861,8 @@
                             <div>
                                 <label for="document_name" class="form-label required">Name</label>
                                 <input type="text" wire:model="document_name" class="form-control"
-                                       id="document">
+                                       autocomplete="off"
+                                       id="document_name">
                                 @error('document_name')
                                 <div class="text-danger mt-1">
                                     {{ $message }}
@@ -849,6 +940,7 @@
             editContactModal.hide();
             editSchoolModal.hide();
             editStudentModal.hide();
+            editStudentFamilyModal.hide();
             uploadDocumentModal.hide();
         });
 
@@ -905,6 +997,18 @@
         document.getElementById('modal-edit-student').addEventListener('hidden.bs.modal', event => {
             @this.
             resetStudentEditModel();
+        });
+
+        //Student Family
+
+        const editStudentFamilyModal = new bootstrap.Modal('#modal-edit-student-family');
+        @this.
+        on('toggle-modal-edit-student-family', (event) => {
+            editStudentFamilyModal.toggle();
+        });
+        document.getElementById('modal-edit-student-family').addEventListener('hidden.bs.modal', event => {
+            @this.
+            resetStudentFamilyEditModel();
         });
 
         //Profile Picture

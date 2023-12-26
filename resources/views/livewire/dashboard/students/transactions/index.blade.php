@@ -12,6 +12,27 @@
                 <div class="col-auto ms-auto">
                     <div class="btn-list">
                         <a href="#" class="btn btn-primary" data-bs-toggle="modal"
+                           data-bs-target="#modal-transfer">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon"
+                                 width="24"
+                                 height="24"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor"
+                                 fill="none"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M7 21v-6"/>
+                                <path d="M20 6l-3 -3l-3 3"/>
+                                <path d="M17 3v18"/>
+                                <path d="M10 18l-3 3l-3 -3"/>
+                                <path d="M7 3v2"/>
+                                <path d="M7 9v2"/>
+                            </svg>
+                            Transfer
+                        </a>
+                        <a href="#" class="btn btn-primary" data-bs-toggle="modal"
                            data-bs-target="#modal-create">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -35,7 +56,13 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Transaction List</h3>
+                            <div class="d-flex justify-content-between w-100">
+                                <h3 class="card-title">Transaction List</h3>
+                                <div @class(['text-danger' => ($student->wallet < 0)])>
+                                    Wallet:
+                                    ${{ number_format($student->wallet, 2) }}
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -87,7 +114,10 @@
                                         </td>
                                         <td>{{ $transaction->number }}</td>
                                         <td>{{ $transaction->type_name }}</td>
-                                        <td>${{ number_format($transaction->amount, 2) }}</td>
+                                        <td class="{{ $transaction->type_color_class }}">
+                                            {{ $transaction->type_prefix_character }}
+                                            ${{ number_format($transaction->amount, 2) }}
+                                        </td>
                                         <td class="text-wrap">{{ $transaction->description }}</td>
                                         <td>{{ ucfirst($transaction->user->name) }}</td>
                                         <td>{{ $transaction->created_at->format('Y-m-d / h:i A') }}</td>
@@ -207,6 +237,120 @@
             </div>
         </div>
     </div>
+    <div class="modal modal-blur fade" id="modal-transfer" tabindex="-1" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Transfer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    @if($student->wallet > 0)
+                        <form id="modal-transfer-form" wire:submit="transfer">
+                            <div class="row mb-3">
+                                <div class="col-12 mb-3">
+                                    <div>
+                                        <label for="transfer_to_query" class="form-label required">To</label>
+                                        <input type="text" wire:model.live="transferToQuery" class="form-control"
+                                               id="transfer_to_query"
+                                               placeholder="Search students...">
+                                        @error('transferToQuery')
+                                        <div class="text-danger mt-1">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                        @error('transferToId')
+                                        <div class="text-danger mt-1">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                    <div class="d-flex flex-column gap-2 mt-3 justify-center">
+                                        @forelse($transferToList as $student)
+                                            @if($student->id == $transferToId)
+                                                <div class="badge cursor-pointer border-success">
+                                                    {{ $student->full_name }}
+                                                </div>
+                                            @else
+                                                <div class="badge cursor-pointer"
+                                                     wire:click="selectTransferTo({{ $student->id }})">
+                                                    {{ $student->full_name }}
+                                                </div>
+                                            @endif
+                                        @empty
+                                            <div class="text-secondary">
+                                                No members to show, please adjust your search query.
+                                            </div>
+                                        @endforelse
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
+                                    <div>
+                                        <label for="transfer_amount" class="form-label required">Amount
+                                            (&dollar;)</label>
+                                        <input type="text" wire:model="transferAmount" class="form-control"
+                                               id="transfer_amount"
+                                               placeholder="100">
+                                        @error('transferAmount')
+                                        <div class="text-danger mt-1">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3 mb-md-0">
+                                    <div>
+                                        <label for="transfer_description"
+                                               class="form-label required">Description</label>
+                                        <textarea id="transfer_description" wire:model="transferDescription"
+                                                  class="form-control"
+                                                  cols="30" rows="10"></textarea>
+                                        @error('transferDescription')
+                                        <div class="text-danger mt-1">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    @else
+                        <div>
+                            Student has insufficient wallet amount.
+                        </div>
+                    @endif
+
+                </div>
+
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </a>
+                    @if($student->wallet > 0)
+                        <button class="btn btn-primary ms-auto" type="submit" form="modal-transfer-form"
+                                wire:loading.attr="disabled" wire:target="transfer">
+
+                            <!--<editor-fold desc="SVG ICON">-->
+                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                                <path d="M12 5l0 14"></path>
+                                <path d="M5 12l14 0"></path>
+                            </svg>
+                            <!--</editor-fold>-->
+                            Save
+                            <span wire:loading wire:target="transfer">
+                            &nbsp; - Saving...
+                        </span>
+                        </button>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('livewire:initialized', () => {
@@ -214,13 +358,19 @@
             document.getElementById('modal-create').addEventListener('hidden.bs.modal', event => {
                 @this.
                 resetForm();
+            });
+            document.getElementById('modal-transfer').addEventListener('hidden.bs.modal', event => {
+                @this.
+                resetTransferForm();
             })
 
             const createModal = new bootstrap.Modal('#modal-create');
+            const transferModal = new bootstrap.Modal('#modal-transfer');
 
             @this.
             on('close-all-modals', (event) => {
                 createModal.hide();
+                transferModal.hide();
             });
 
             @this.
@@ -229,7 +379,10 @@
 
             });
 
-
+            @this.
+            on('toggle-modal-transfer', (event) => {
+                transferModal.toggle();
+            });
         });
     </script>
 

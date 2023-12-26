@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Manage&nbsp;<a href="{{ route('dashboard.families.index') }}">{{ $family->name }}</a>&nbsp;Members
+                        Manage&nbsp;<a href="{{ route('dashboard.families.index') }}">{{ $family->number }} / {{ ucfirst($family->name) }}</a>&nbsp;Members
                     </h2>
                 </div>
                 <!-- Page title actions -->
@@ -22,7 +22,7 @@
                                 <path d="M5 12l14 0"/>
                             </svg>
                             <!--</editor-fold>-->
-                            New member
+                            New Member
                         </a>
                     </div>
                 </div>
@@ -82,9 +82,9 @@
                                     <tr wire:key="{{ $student->id }}">
 
                                         <td>
-                                                <span class="text-secondary">
-                                                    {{ ($students->currentpage()-1) * $students->perpage() + $loop->index + 1 }}
-                                                </span>
+                                            <span class="text-secondary">
+                                                {{ ($students->currentpage()-1) * $students->perpage() + $loop->index + 1 }}
+                                            </span>
                                         </td>
                                         <td>
                                             <a href="{{ route('dashboard.students.show', $student->id) }}">{{ $student->full_name }}</a>

@@ -16,4 +16,9 @@ class Subject extends Model
         return $this->belongsTo(Group::class)
             ->where('model', Subject::class);
     }
+
+    public function subjectRates(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(SubjectRate::class);
+    }
 }

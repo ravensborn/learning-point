@@ -39,7 +39,7 @@ class Student extends Model implements HasMedia
     public
     function getFullNameAttribute(): string
     {
-        return $this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name;
+        return ucfirst($this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name);
     }
 
     public
@@ -74,6 +74,11 @@ class Student extends Model implements HasMedia
     public function transactions(): \Illuminate\Database\Eloquent\Relations\MorphMany
     {
         return $this->morphMany(Transaction::class, 'transactable');
+    }
+
+    public function studentRates(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(StudentRate::class);
     }
 
     public

@@ -23,6 +23,7 @@ class StudentForm extends Form
     public string $middle_name = '';
     public string $last_name = '';
 
+    public int|null $family_id = null;
     public int|null $school_id = null;
     public int|null $grade_id = null;
 
@@ -45,6 +46,7 @@ class StudentForm extends Form
         'first_name',
         'middle_name',
         'last_name',
+        'family_id',
         'school_id',
         'grade_id',
         'academic_stream',
@@ -69,6 +71,7 @@ class StudentForm extends Form
             'first_name' => ['required', 'string', 'min:1', 'max:50'],
             'middle_name' => ['required', 'string', 'min:1', 'max:50'],
             'last_name' => ['required', 'string', 'min:1', 'max:50'],
+//            'family_id' => ['nullable', 'integer', 'exists:families,id'],
 //            'school_id' => ['nullable', 'integer', 'exists:schools,id'],
 //            'grade_id' => ['sometimes', 'integer', 'exists:grades,id'],
 //            'academic_stream' => ['sometimes', 'string', 'in:' . implode(',', array_keys(School::ACADEMIC_STREAMS))],
@@ -77,8 +80,8 @@ class StudentForm extends Form
             'gender' => ['required', 'string', 'in:male,female'],
             'birthday' => ['nullable', 'date'],
             'blood_type' => ['nullable', 'string', 'in:A+,A-,B+,B-,AB+,AB-,O+,O-'],
-            'primary_phone_number' => ['nullable', 'string', (new Phone)->type('mobile')->international()],
-            'secondary_phone_number' => ['nullable', 'string', (new Phone)->type('mobile')->international()],
+            'primary_phone_number' => ['nullable', 'string', (new Phone)->international()],
+            'secondary_phone_number' => ['nullable', 'string', (new Phone)->international()],
             'email' => ['nullable', 'string', 'email', 'max:50'],
             'country' => ['required', 'string', 'exists:lc_countries,iso_alpha_2'],
             'city_id' => ['required', 'integer', 'exists:cities,id'],
@@ -94,6 +97,7 @@ class StudentForm extends Form
             'first_name' => 'first name',
             'middle_name' => 'middle name',
             'last_name' => 'last name',
+            'family_id' => 'family',
             'school_id' => 'school',
             'grade_id' => 'grade',
             'academic_stream' => 'academic stream',

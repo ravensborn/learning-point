@@ -88,7 +88,7 @@
                                                 </span>
                                         </td>
                                         <td>
-                                            {{ $school->name }}
+                                            {{ ucfirst($school->name) }}
                                         </td>
                                         <td>
                                             {{ $school->url }}

@@ -39,8 +39,8 @@ class StudentContactForm extends Form
             'student_id' => ['required', 'integer', 'exists:students,id'],
             'name' => ['required', 'string', 'min:1', 'max:50'],
             'relation' => ['required', 'string', 'in:' . implode(',', array_keys(StudentContact::AVAILABLE_RELATIONS))],
-            'primary_phone_number' => ['nullable', 'string', (new Phone)->type('mobile')->international()],
-            'secondary_phone_number' => ['nullable', 'string', (new Phone)->type('mobile')->international()],
+            'primary_phone_number' => ['nullable', 'string', (new Phone)->international()],
+            'secondary_phone_number' => ['nullable', 'string', (new Phone)->international()],
             'email' => ['nullable', 'email', 'min:1', 'max:50'],
             'address' => ['nullable', 'string', 'min:1', 'max:100'],
         ];

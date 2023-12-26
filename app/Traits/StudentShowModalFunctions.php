@@ -2,13 +2,9 @@
 
 namespace App\Traits;
 
-use App\Livewire\Forms\StudentForm;
+use App\Models\Family;
 use App\Models\School;
-use App\Models\Student;
 use App\Models\StudentContact;
-use App\Models\StudentRelation;
-use Illuminate\Http\File;
-use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Validator;
 
@@ -106,6 +102,68 @@ trait StudentShowModalFunctions
         $this->resetValidation();
     }
 
+    //Student Family
+
+    public string $searchFamilyQuery = '';
+
+    public function updatedSearchFamilyQuery(): void
+    {
+        if ($this->searchFamilyQuery) {
+
+            $this->availableFamilies = Family::where('name', 'LIKE', '%' . trim($this->searchFamilyQuery) . '%')
+                ->orWhere('number', 'LIKE', '%' . trim($this->searchFamilyQuery) . '%')
+                ->orWhereHas('students', function ($query) {
+                    $query->whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($this->searchFamilyQuery) . "%' ")
+                        ->orWhere('primary_phone_number', 'LIKE', '%' . trim($this->searchFamilyQuery) . '%')
+                        ->orWhere('secondary_phone_number', 'LIKE', '%' . trim($this->searchFamilyQuery) . '%')
+                        ->orWhere('email', 'LIKE', '%' . trim($this->searchFamilyQuery) . '%');
+                })->limit(10)->get();
+
+        } else {
+            $this->availableFamilies = Family::orderBy('created_at', 'desc')->get();
+        }
+    }
+    private function validateStudentFamily(): void
+    {
+
+        $data = [
+            'family_id' => $this->studentForm->family_id,
+        ];
+
+        $rules = [
+            'family_id' => ['nullable', 'integer', 'exists:families,id'],
+        ];
+
+        $attributes = [
+            'family_id' => 'family',
+        ];
+
+        $validator = Validator::make(data: $data, rules: $rules, attributes: $attributes)
+            ->validate();
+    }
+    public function updateStudentFamily(): void
+    {
+        $this->validateStudentFamily();
+        $this->studentForm->user_id = $this->student->user_id;
+        $this->studentForm->update();
+        $this->dispatch('close-all-modals');
+        $this->reloadStudent();
+        $this->loadFamily();
+    }
+
+    public function showStudentFamilyEditModal(): void
+    {
+        $this->studentForm->setup($this->student->id);
+        $this->dispatch('toggle-modal-edit-student-family');
+    }
+
+    public function resetStudentFamilyEditModel(): void
+    {
+        $this->searchFamilyQuery = '';
+        $this->studentForm->reset();
+        $this->studentForm->setup($this->student->id);
+        $this->resetValidation();
+    }
 
     //School Information
     public function showSchoolEditModal(): void
