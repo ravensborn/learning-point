@@ -19,11 +19,12 @@ class UserSeeder extends Seeder
             'name' => 'system user'
         ]);
 
-        User::factory(10)->create();
+//        User::factory(10)->create();
 
         User::factory()->create([
             'name' => 'Yad Hoshyar',
             'email' => 'yad@gmail.com',
+            'gender' => 'male'
         ]);
 
 

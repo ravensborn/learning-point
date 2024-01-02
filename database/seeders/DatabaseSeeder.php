@@ -18,11 +18,11 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CitySeeder::class,
             UserSeeder::class,
-            GroupSeeder::class,
-            SubjectSeeder::class,
-            SchoolSeeder::class,
-            FamilySeeder::class,
-            StudentSeeder::class,
+//            GroupSeeder::class,
+//            SubjectSeeder::class,
+//            SchoolSeeder::class,
+//            FamilySeeder::class,
+//            StudentSeeder::class,
             LcDatabaseSeeder::class
         ]);
     }
