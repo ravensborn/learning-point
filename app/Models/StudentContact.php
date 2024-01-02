@@ -27,6 +27,8 @@ class StudentContact extends Model
         'aunt' => 'Aunt',
         'nephew' => 'Nephew',
         'niece' => 'Niece',
+        'driver' => 'Driver',
+        'other' => 'Other',
     ];
 
     public function getRelationNameAttribute(): string

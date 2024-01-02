@@ -2,25 +2,25 @@
     <div class="card">
         <div class="card-header" style="overflow: hidden;">
             <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs" role="tablist">
+{{--                <li class="nav-item" role="presentation" wire:ignore>--}}
+{{--                    <a href="#tabs-1" class="nav-link active" data-bs-toggle="tab"--}}
+{{--                       aria-selected="false" role="tab">--}}
+{{--                        <!--<editor-fold desc="SVG ICON">-->--}}
+{{--                        <svg xmlns="http://www.w3.org/2000/svg"--}}
+{{--                             class="icon me-2" width="24" height="24"--}}
+{{--                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"--}}
+{{--                             stroke-linecap="round" stroke-linejoin="round">--}}
+{{--                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>--}}
+{{--                            <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/>--}}
+{{--                            <path d="M12 9h.01"/>--}}
+{{--                            <path d="M11 12h1v4h1"/>--}}
+{{--                        </svg>--}}
+{{--                        <!--</editor-fold>-->--}}
+{{--                        Overview--}}
+{{--                    </a>--}}
+{{--                </li>--}}
                 <li class="nav-item" role="presentation" wire:ignore>
-                    <a href="#tabs-1" class="nav-link active" data-bs-toggle="tab"
-                       aria-selected="false" role="tab">
-                        <!--<editor-fold desc="SVG ICON">-->
-                        <svg xmlns="http://www.w3.org/2000/svg"
-                             class="icon me-2" width="24" height="24"
-                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                             stroke-linecap="round" stroke-linejoin="round">
-                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                            <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/>
-                            <path d="M12 9h.01"/>
-                            <path d="M11 12h1v4h1"/>
-                        </svg>
-                        <!--</editor-fold>-->
-                        Overview
-                    </a>
-                </li>
-                <li class="nav-item" role="presentation" wire:ignore>
-                    <a href="#tabs-2" class="nav-link" data-bs-toggle="tab"
+                    <a href="#tabs-2" class="nav-link active" data-bs-toggle="tab"
                        aria-selected="false" role="tab">
                         <!--<editor-fold desc="SVG ICON">-->
                         <svg xmlns="http://www.w3.org/2000/svg"
@@ -109,20 +109,35 @@
                         Documents
                     </a>
                 </li>
+                <li class="nav-item" role="presentation" wire:ignore>
+                    <a href="#tabs-7" class="nav-link" data-bs-toggle="tab"
+                       aria-selected="false" role="tab">
+                        <!--<editor-fold desc="SVG ICON">-->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M9 15l6 -6" />
+                            <circle cx="9.5" cy="9.5" r=".5" fill="currentColor" />
+                            <circle cx="14.5" cy="14.5" r=".5" fill="currentColor" />
+                            <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                        </svg>
+                        <!--</editor-fold>-->
+                        Price Exceptions
+                    </a>
+                </li>
             </ul>
         </div>
         <div class="card-body">
             <div class="tab-content" wire:ignore.self>
-                <div class="tab-pane show active" id="tabs-1" role="tabpanel" wire:ignore.self>
-                    <h4>Overview tab</h4>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium amet animi
-                        commodi dolorem eligendi enim error fugiat fugit, itaque laborum, nemo, nesciunt
-                        odit quaerat recusandae tempore totam vel voluptatibus! Fuga.
-                    </p>
-                </div>
+{{--                <div class="tab-pane show active" id="tabs-1" role="tabpanel" wire:ignore.self>--}}
+{{--                    <h4>Overview tab</h4>--}}
+{{--                    <p>--}}
+{{--                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium amet animi--}}
+{{--                        commodi dolorem eligendi enim error fugiat fugit, itaque laborum, nemo, nesciunt--}}
+{{--                        odit quaerat recusandae tempore totam vel voluptatibus! Fuga.--}}
+{{--                    </p>--}}
+{{--                </div>--}}
                 <!--<editor-fold desc="Sessions">-->
-                <div class="tab-pane" id="tabs-2" role="tabpanel" wire:ignore.self>
+                <div class="tab-pane show active" id="tabs-2" role="tabpanel" wire:ignore.self>
                     <h4>Sessions tab</h4>
                     <p>
                         Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium amet animi
@@ -176,19 +191,21 @@
                             </table>
                         </div>
                         <div class="text-center mt-5">
-                            <a href="{{ route('dashboard.student.transactions.index', $student->id) }}">Show all
-                                transactions</a>
+                            <a href="{{ route('dashboard.student.transactions.index', $student->id) }}">
+                                Manage all student transactions.
+                            </a>
                         </div>
                     @else
                         <div class="list-group list-group-flush list-group-hoverable">
                             <div class="list-group-item">
-                                <div class="row align-items-center text-secondary">
-                                    You haven't made any transactions, navigate to student transactions page to begin.
+                                <div class="row text-secondary">
+                                    <div class="col-12">
+                                        You haven't made any transactions. <a href="{{ route('dashboard.student.transactions.index', $student->id) }}">Manage student transactions</a>.
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     @endif
-
 
                 </div>
                 <!--</editor-fold>-->
@@ -449,8 +466,8 @@
                     <div>
                         <div class="list-group list-group-flush list-group-hoverable">
 
-                            @forelse($documents as $file)
-                                <div class="list-group-item">
+                            @forelse($this->loadDocuments() as $file)
+                                <div class="list-group-item" wire:key="{{ $file->id }}">
                                     <div class="row align-items-center">
                                         <div class="col-auto"><span class="badge bg-success"></span></div>
                                         <div class="col-auto">
@@ -547,6 +564,16 @@
                     </div>
                 </div>
                 <!--</editor-fold>-->
+                <!--<editor-fold desc="Price Exepctions">-->
+                <div class="tab-pane" id="tabs-7" role="tabpanel" wire:ignore.self>
+                    <h4>Price Exceptions</h4>
+
+                    <p><a href="{{ route('dashboard.student.rates.index', $student->id) }}">
+                            Manage student price rates through price management section.
+                        </a></p>
+                </div>
+                <!--</editor-fold>-->
+
             </div>
         </div>
     </div>

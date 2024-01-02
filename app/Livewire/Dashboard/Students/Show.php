@@ -71,14 +71,16 @@ class Show extends Component
         }
     }
 
-
-    public function loadDocuments(): void
+    public function loadDocuments(): array|\Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection
     {
-        $this->documents = Media::where('model_id', $this->student->id)
+        return $this->documents = Media::where('model_id', $this->student->id)
             ->where('model_type', Student::class)
             ->where('collection_name', 'documents')
+            ->orderBy('created_at', 'desc')
             ->get();
+
     }
+
 
     public function loadFamily(): void
     {
@@ -106,7 +108,7 @@ class Show extends Component
             $this->availableGrades = Grade::where('school_id', $this->student->school_id)->get();
         }
 
-        $this->loadDocuments();
+//        $this->loadDocuments();
         $this->loadFamily();
 
         $this->transactions = $this->student->transactions()->orderBy('created_at', 'desc')->limit(5)->get();

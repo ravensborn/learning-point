@@ -42,6 +42,7 @@ class StudentFactory extends Factory
             'country' => 'IQ',
             'city_id' => City::ERBIL,
             'address' => $this->faker->streetAddress,
+            'health_and_conditions' => $this->faker->paragraph(10),
         ];
     }
 }

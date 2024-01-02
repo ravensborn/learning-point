@@ -187,8 +187,8 @@ trait StudentShowModalFunctions
             'school_id' => ['required', 'integer', 'exists:schools,id'],
             'grade_id' => ['required', 'integer', 'exists:grades,id'],
             'academic_stream' => ['required', 'string', 'in:' . implode(',', array_keys(School::ACADEMIC_STREAMS))],
-            'school_username' => ['required', 'string', 'min:1', 'max:50'],
-            'school_password' => ['required', 'string', 'min:1', 'max:50'],
+            'school_username' => ['nullable', 'string', 'min:1', 'max:50'],
+            'school_password' => ['nullable', 'string', 'min:1', 'max:50'],
         ];
 
         $attributes = [
@@ -262,6 +262,7 @@ trait StudentShowModalFunctions
         $this->dispatch('toggle-modal-upload-document');
     }
 
+    public int $uploadInputIteration = 0;
     public function saveDocument(): void
     {
         $this->validate([
@@ -279,7 +280,8 @@ trait StudentShowModalFunctions
         $this->document = null;
         $this->document_name = '';
 
-        $this->loadDocuments();
+//        $this->loadDocuments();
+        $this->uploadInputIteration++;
 
         $this->dispatch('close-all-modals');
     }
@@ -295,7 +297,7 @@ trait StudentShowModalFunctions
             if ($document) {
 
                 $document->delete();
-                $this->loadDocuments();
+//                $this->loadDocuments();
                 $this->deletingDocumentUuid = '';
                 $this->dispatch('close-all-modals');
             }

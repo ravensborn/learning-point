@@ -629,6 +629,21 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="col-12 mb-3">
+                            <div>
+                                <label for="health_and_conditions" class="form-label">Health & Conditions</label>
+                                <textarea type="text" wire:model="studentForm.health_and_conditions" class="form-control"
+                                          id="health_and_conditions"
+                                          autocomplete="off"
+                                          placeholder="" rows="3">
+                                </textarea>
+                                @error('studentForm.health_and_conditions')
+                                <div class="text-danger mt-1">
+                                    {{ $message }}
+                                </div>
+                                @enderror
+                            </div>
+                        </div>
 
                     </div>
                 </form>
@@ -694,7 +709,9 @@
                                         autocomplete="off">
                                     <option value="">-- Unassigned --</option>
                                     @foreach($availableFamilies as $family)
-                                        <option wire:key="{{ $family->id }}" value="{{ $family->id }}">{{ $family->number }} - {{ $family->name }}</option>
+                                        <option wire:key="{{ $family->id }}"
+                                                value="{{ $family->id }}">{{ $family->number }}
+                                            - {{ $family->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('family_id')
@@ -850,7 +867,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Upload document</h5>
+                <h5 class="modal-title">Upload Document</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -878,9 +895,11 @@
                                 x-on:livewire-upload-error="uploading = false"
                                 x-on:livewire-upload-progress="progress = $event.detail.progress"
                             >
-                                <label for="document" class="form-label required">Select file</label>
+
+                                <label for="document_{{ $uploadInputIteration }}" class="form-label required">Select file</label>
                                 <input x-show="!uploading" type="file" wire:model.live="document" class="form-control"
-                                       id="document">
+                                       id="document_{{ $uploadInputIteration }}">
+
                                 <div x-show="uploading" class="my-2">
                                     <progress class="progress w-100" max="100" x-bind:value="progress"></progress>
                                 </div>

@@ -90,8 +90,8 @@ class Create extends Component
             'school_id' => ['required', 'integer', 'exists:schools,id'],
             'grade_id' => ['required', 'integer', 'exists:grades,id'],
             'academic_stream' => ['required', 'string', 'in:' . implode(',', array_keys(School::ACADEMIC_STREAMS))],
-            'school_username' => ['required', 'string', 'min:1', 'max:50'],
-            'school_password' => ['required', 'string', 'min:1', 'max:50'],
+            'school_username' => ['nullable', 'string', 'min:1', 'max:50'],
+            'school_password' => ['nullable', 'string', 'min:1', 'max:50'],
         ];
 
         $attributes = [

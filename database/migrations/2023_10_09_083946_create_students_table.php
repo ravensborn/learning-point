@@ -75,6 +75,8 @@ return new class extends Migration {
 
             $table->string('address')->nullable();
 
+            $table->longText('health_and_conditions')->nullable();
+
 
             $table->timestamps();
         });

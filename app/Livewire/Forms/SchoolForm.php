@@ -19,7 +19,7 @@ class SchoolForm extends Form
     {
         return [
             'name' => ['required', 'string', 'min:1', 'max:50'],
-            'url' => ['required', 'url', 'min:1', 'max:50'],
+            'url' => ['nullable', 'url', 'min:1', 'max:50'],
         ];
     }
 

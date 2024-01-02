@@ -314,6 +314,23 @@
                                         @enderror
                                     </div>
                                 </div>
+                                <div class="mb-3 row">
+                                    <label for="health_and_conditions" class="col-3 col-form-label">Health & Conditions</label>
+                                    <div class="col">
+                                        <textarea wire:model="studentForm.health_and_conditions"
+                                                  @class(['form-control' => true,'is-invalid' => $errors->has('studentForm.health_and_conditions')])
+                                                  id="health_and_conditions" aria-describedby="healthAndConditions"
+                                                  placeholder=""
+                                                  cols="30"
+                                                  rows="5">
+                                        </textarea>
+                                        <small class="form-hint">Maximum 10,000 characters.</small>
+                                        <small class="form-hint">This field is optional.</small>
+                                        @error('studentForm.health_and_conditions')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                         </form>
                     </div>
@@ -585,7 +602,7 @@
 
 
                                 <div class="mb-3 row">
-                                    <label for="credentials" class="col-3 col-form-label required">Credentials</label>
+                                    <label for="credentials" class="col-3 col-form-label">Credentials</label>
                                     <div class="col-md-5 col">
                                         <input type="text"
                                                wire:model="studentForm.school_username"

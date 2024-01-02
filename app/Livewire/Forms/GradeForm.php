@@ -18,7 +18,7 @@ class GradeForm extends Form
         return [
             'school_id' => ['required', 'integer', 'exists:schools,id'],
             'name' => ['required', 'string', 'min:1', 'max:50'],
-            'cost' => ['required', 'integer', 'min:0'],
+            'cost' => ['required', 'integer', 'gt:0', 'regex:/^[0-9]+(\.[0-9]{1,2})?$/'],
             ];
     }
 

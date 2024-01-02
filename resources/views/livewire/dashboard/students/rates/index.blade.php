@@ -5,7 +5,8 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Manage&nbsp;<a href="{{ route('dashboard.schools.index') }}">{{ $school->name }}</a>&nbsp;Grades
+                        Manage&nbsp;<a
+                            href="{{ route('dashboard.subjects.index') }}">{{ ucfirst($student->full_name) }}</a>&nbsp;Rates
                     </h2>
                 </div>
                 <!-- Page title actions -->
@@ -22,7 +23,7 @@
                                 <path d="M5 12l14 0"/>
                             </svg>
                             <!--</editor-fold>-->
-                            New Grade
+                            New Rate
                         </a>
                     </div>
                 </div>
@@ -37,7 +38,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Grade List</h3>
+                            <h3 class="card-title">Subject {{ ucfirst($student->full_name) }} Rate List</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -70,33 +71,36 @@
                                 <tr>
 
                                     <th class="w-1">No.</th>
-                                    <th>
-                                        Name
-                                    </th>
-                                    <th>
-                                        Cost
-                                    </th>
+                                    <th>Subject Group</th>
+                                    <th>Subject</th>
+                                    <th># of students</th>
+                                    <th>Rate Per Hour (&dollar;)</th>
                                     <th>Created</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                @forelse($grades as $grade)
-                                    <tr wire:key="{{ $grade->id }}">
-
+                                @forelse($rates as $rate)
+                                    <tr wire:key="{{ $rate->id }}">
                                         <td>
-                                                <span class="text-secondary">
-                                                    {{ ($grades->currentpage()-1) * $grades->perpage() + $loop->index + 1 }}
-                                                </span>
+                                            <span class="text-secondary">
+                                                {{ ($rates->currentpage()-1) * $rates->perpage() + $loop->index + 1 }}
+                                            </span>
                                         </td>
                                         <td>
-                                            {{ ucfirst($grade->name) }}
+                                            {{ ucfirst($rate->subject->group->name)  }}
                                         </td>
                                         <td>
-                                            ${{ number_format($grade->cost, 2) }}
+                                            {{ ucfirst($rate->subject->name)  }}
                                         </td>
                                         <td>
-                                            {{ $grade->created_at->format('Y-m-d') }}
+                                            {{ ucfirst($rate->number_of_students) }}
+                                        </td>
+                                        <td>
+                                            ${{ number_format($rate->rate, 2) }}
+                                        </td>
+                                        <td>
+                                            {{ $rate->created_at->format('Y-m-d') }}
                                         </td>
 
                                         <td class="text-end">
@@ -108,9 +112,9 @@
                                                   </button>
                                                   <div class="dropdown-menu dropdown-menu-end">
                                                     <button class="dropdown-item"
-                                                            wire:click="prepareItemEditing({{ $grade->id  }})">Edit</button>
+                                                            wire:click="prepareItemEditing({{ $rate->id  }})">Edit</button>
                                                     <button class="dropdown-item"
-                                                            wire:click="prepareItemDeletion({{ $grade->id }})">Delete</button>
+                                                            wire:click="prepareItemDeletion({{ $rate->id }})">Delete</button>
                                                   </div>
                                                 </span>
                                         </td>
@@ -129,15 +133,15 @@
                         <div class="card-footer d-flex align-items-center">
                             <p class="m-0 text-secondary">
                                 Showing
-                                <span>{{  $grades->firstItem()  }}</span>
+                                <span>{{  $rates->firstItem()  }}</span>
                                 to
-                                <span>{{ $grades->lastItem() }}</span>
+                                <span>{{ $rates->lastItem() }}</span>
                                 of
-                                <span> {{ $grades->total() }}</span>
+                                <span> {{ $rates->total() }}</span>
                                 entries
                             </p>
                             <div class="m-0 ms-auto">
-                                {{ $grades->links() }}
+                                {{ $rates->links() }}
                             </div>
 
                         </div>
@@ -153,19 +157,27 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">New Grade</h5>
+                    <h5 class="modal-title">New Student Rate</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
                     <form id="modal-create-form" wire:submit="store">
                         <div class="row mb-3">
-                            <div class="col-12 col-md-6 mb-3 mb-md-0">
+                            <div class="col-12 mb-3">
                                 <div>
-                                    <label for="name" class="form-label">Name</label>
-                                    <input type="text" wire:model="form.name" class="form-control" id="name"
-                                           placeholder="Grade 1">
-                                    @error('form.name')
+                                    <label for="subject_id" class="form-label">Subject</label>
+                                    <select wire:model="form.subject_id" class="form-control" id="subject_id">
+                                        <option value="">-- Select Subject --</option>
+                                        @foreach($availableSubjects as $indexGroup => $subjectGroup)
+                                            <optgroup label="{{ $subjectGroup->name }}">
+                                                @foreach($subjectGroup->subjects as $subject)
+                                                    <option value="{{ $subject->id }}">{{ $subject->name }}</option>
+                                                @endforeach
+                                            </optgroup>
+                                        @endforeach
+                                    </select>
+                                    @error('form.subject_id')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>
@@ -174,10 +186,23 @@
                             </div>
                             <div class="col-12 col-md-6 mb-3 mb-md-0">
                                 <div>
-                                    <label for="cost" class="form-label">Cost (&dollar;)</label>
-                                    <input type="text" wire:model="form.cost" class="form-control" id="cost"
-                                           placeholder="100">
-                                    @error('form.cost')
+                                    <label for="number_of_students" class="form-label">Number of Students</label>
+                                    <input type="text" wire:model="form.number_of_students" class="form-control"
+                                           id="number_of_students"
+                                           placeholder="1">
+                                    @error('form.number_of_students')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 mb-3 mb-md-0">
+                                <div>
+                                    <label for="rate" class="form-label">Rate Per Hour (&dollar;)</label>
+                                    <input type="text" wire:model="form.rate" class="form-control" id="rate"
+                                           placeholder="2">
+                                    @error('form.rate')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>
@@ -218,19 +243,26 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Editing grade {{ $form->name }} </h5>
+                    <h5 class="modal-title">Editing Subject {{ ucfirst($student->full_name) }} Rate </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
                     <form id="modal-update-form" wire:submit="update">
                         <div class="row mb-3">
-                            <div class="col-12 col-md-6 mb-3 mb-md-0">
+                            <div class="col-12 mb-3">
                                 <div>
-                                    <label for="name" class="form-label">Name</label>
-                                    <input type="text" wire:model="form.name" class="form-control" id="name"
-                                           placeholder="Grade 1">
-                                    @error('form.name')
+                                    <label for="subject_id" class="form-label">Subject</label>
+                                    <select wire:model="form.subject_id" class="form-control" id="subject_id">
+                                        @foreach($availableSubjects as $indexGroup => $subjectGroup)
+                                            <optgroup label="{{ $subjectGroup->name }}">
+                                                @foreach($subjectGroup->subjects as $subject)
+                                                    <option value="{{ $subject->id }}">{{ $subject->name }}</option>
+                                                @endforeach
+                                            </optgroup>
+                                        @endforeach
+                                    </select>
+                                    @error('form.subject_id')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>
@@ -239,10 +271,23 @@
                             </div>
                             <div class="col-12 col-md-6 mb-3 mb-md-0">
                                 <div>
-                                    <label for="cost" class="form-label">Cost ($)</label>
-                                    <input type="text" wire:model="form.cost" class="form-control" id="cost"
-                                           placeholder="100">
-                                    @error('form.cost')
+                                    <label for="number_of_students" class="form-label">Number of Students</label>
+                                    <input type="text" wire:model="form.number_of_students" class="form-control"
+                                           id="number_of_students"
+                                           placeholder="1">
+                                    @error('form.number_of_students')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-6 mb-3 mb-md-0">
+                                <div>
+                                    <label for="rate" class="form-label">Rate Per Hour (&dollar;)</label>
+                                    <input type="text" wire:model="form.rate" class="form-control" id="rate"
+                                           placeholder="2">
+                                    @error('form.rate')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>

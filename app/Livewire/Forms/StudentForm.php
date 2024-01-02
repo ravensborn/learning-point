@@ -40,6 +40,7 @@ class StudentForm extends Form
     public string $country = 'IQ';
     public int $city_id = City::ERBIL;
     public string|null $address = '';
+    public string|null $health_and_conditions = '';
 
     private array $attributes = [
         'user_id',
@@ -60,7 +61,8 @@ class StudentForm extends Form
         'email',
         'country',
         'city_id',
-        'address'
+        'address',
+        'health_and_conditions',
     ];
 
     public function rules(): array
@@ -86,6 +88,7 @@ class StudentForm extends Form
             'country' => ['required', 'string', 'exists:lc_countries,iso_alpha_2'],
             'city_id' => ['required', 'integer', 'exists:cities,id'],
             'address' => ['nullable', 'string', 'min:1', 'max:100'],
+            'health_and_conditions' => ['nullable', 'string', 'min:1', 'max:10000'],
         ];
     }
 
@@ -112,6 +115,7 @@ class StudentForm extends Form
             'country' => 'country',
             'city_id' => 'city',
             'address' => 'address',
+            'health_and_conditions' => 'Health & Conditions',
         ];
     }
 

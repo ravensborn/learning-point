@@ -72,6 +72,7 @@
                                         Name
                                     </th>
                                     <th>Group</th>
+                                    <th>Price Rates</th>
                                     <th>Created</th>
                                     <th></th>
                                 </tr>
@@ -92,10 +93,17 @@
                                             {{ ucfirst($subject->group->name) }}
                                         </td>
                                         <td>
+                                            {{ $subject->subjectRates->count() }}
+                                        </td>
+                                        <td>
                                             {{ $subject->created_at->format('Y-m-d') }}
                                         </td>
 
                                         <td class="text-end">
+                                            <a class="btn align-text-top"
+                                               href="{{ route('dashboard.subjects.rates.index', ['subject' => $subject->id]) }}">
+                                                Rates
+                                            </a>
                                                 <span class="dropdown">
                                                   <button class="btn dropdown-toggle align-text-top"
                                                           data-bs-boundary="viewport"

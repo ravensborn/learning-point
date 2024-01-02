@@ -113,6 +113,29 @@
                     </div>
                     <div class="mb-2">
                         <!--<editor-fold desc="SVG ICON">-->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2 text-secondary" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9.314l-2.343 -2.344a3.314 3.314 0 0 0 -4.686 4.686l2.343 2.344l4.686 4.686l7.03 -7.03a3.314 3.314 0 0 0 -4.687 -4.685l-7.03 7.029" /></svg>
+                        <!--</editor-fold>-->
+                        Health & Conditions:
+                        @if($student->health_and_conditions)
+                            <div class="d-inline" x-data="{ show: false }">
+                            <span class="text-secondary" style="display:none" x-show="show">
+                                {{ $student->health_and_conditions }}
+                            </span>
+                                <span class="cursor-pointer" x-show="!show" @click="show = !show">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                         viewBox="0 0 24 24" stroke-width="2" stroke="#6698CA" fill="none"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M6 10l6 6l6 -6h-12"/></svg>
+                                </span>
+                            </div>
+                        @else
+                            No complications
+                        @endif
+
+                    </div>
+                    <div class="mb-2">
+                        <!--<editor-fold desc="SVG ICON">-->
                         <svg xmlns="http://www.w3.org/2000/svg"
                              class="icon me-2 text-secondary" width="24" height="24"
                              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -228,9 +251,10 @@
                             <!--</editor-fold>-->
                             Website:
                             <span>
-                                <a target="_blank" href="{{ $student->school->url }}">
+                                @if($student->school->url)
+                                    <a target="_blank" href="{{ $student->school->url }}">
                                     Visit Site
-                                    <!--<editor-fold desc="SVG ICON">-->
+                                        <!--<editor-fold desc="SVG ICON">-->
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon"
                                          width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
                                          stroke="currentColor" fill="none" stroke-linecap="round"
@@ -241,8 +265,11 @@
                                         <path d="M11 13l9 -9"/>
                                         <path d="M15 4h5v5"/>
                                     </svg>
-                                    <!--</editor-fold>-->
+                                        <!--</editor-fold>-->
                                 </a>
+                                @else
+                                    Not specified
+                                @endif
                             </span>
                         </div>
                         <div class="mb-2">
@@ -258,7 +285,11 @@
                                 <path d="M8 11v-4a4 4 0 1 1 8 0v4"/>
                             </svg>
                             <!--</editor-fold>-->
-                            Username: <strong>{{ $student->school_username }}</strong>
+                            Username: @if(!$student->school_username)
+                                Not specified
+                            @else
+                                <strong>{{ $student->school_username }}</strong>
+                            @endif
                         </div>
                         <div class="mb-2">
                             <!--<editor-fold desc="SVG ICON">-->
@@ -275,12 +306,13 @@
                             <!--</editor-fold>-->
                             Password:
                             <span>
-                                @if($showStudentSchoolAccountPassword)
-                                    <span class="fst-italic">{{ $student->school_password }}</span>
-                                @else
-                                    <span>******</span>
-                                    <a href="#"
-                                       wire:click.prevent="toggleStudentSchoolAccountPassword()">
+                                 @if($student->school_password)
+                                    @if($showStudentSchoolAccountPassword)
+                                        <span class="fst-italic">{{ $student->school_password }}</span>
+                                    @else
+                                        <span>******</span>
+                                        <a href="#"
+                                           wire:click.prevent="toggleStudentSchoolAccountPassword()">
                                         <!--<editor-fold desc="SVG ICON">-->
                                                    <svg xmlns="http://www.w3.org/2000/svg"
                                                         class="icon icon-tabler icon-tabler-lock-off" width="24"
@@ -292,8 +324,11 @@
                                                            d="M11 16a1 1 0 1 0 2 0a1 1 0 0 0 -2 0"/><path
                                                            d="M8 11v-3m.719 -3.289a4 4 0 0 1 7.281 2.289v4"/><path
                                                            d="M3 3l18 18"/></svg>
-                                        <!--</editor-fold>-->
+                                            <!--</editor-fold>-->
                                     </a>
+                                    @endif
+                                @else
+                                    Not specified
                                 @endif
                             </span>
                         </div>
