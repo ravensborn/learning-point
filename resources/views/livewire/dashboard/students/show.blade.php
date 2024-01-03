@@ -11,7 +11,7 @@
                     <div class="ms-3">
                         <h1 class="fw-bold mb-0">{{ $student->full_name }}</h1>
                         <div class="list-inline list-inline-dots text-secondary">
-                            @if($student->secondary_phone_number)
+                            @if($student->primary_phone_number)
                                 <div class="list-inline-item">
                                     <!--<editor-fold desc="SVG ICON">-->
                                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-inline"

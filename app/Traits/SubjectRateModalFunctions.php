@@ -2,13 +2,13 @@
 
 namespace App\Traits;
 
-use App\Livewire\Forms\StudentRateForm;
+use App\Livewire\Forms\SubjectRateForm;
 use App\Models\SubjectRate;
 
 trait SubjectRateModalFunctions {
 
 
-    public StudentRateForm $form;
+    public SubjectRateForm $form;
 
     public function prepareItemEditing($id): void
     {

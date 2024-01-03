@@ -11,26 +11,11 @@ trait TransactionModalFunctions
 
     public TransactionForm $form;
 
-    public float $transferAmount = 0;
+    public string $transferAmount = '';
     public string $transferToQuery = '';
     public $transferToList;
     public int $transferToId = 0;
     public string $transferDescription = '';
-
-    public function transfer(): void
-    {
-        $this->validate([
-            'transferToId' => 'required|integer|exists:students,id',
-            'transferAmount' => 'required|numeric|gt:0',
-            'transferDescription' => 'required|string|max:10000',
-        ]);
-
-        if($this->student->wallet > 0) {
-
-            $this->form->transfer($this->student->id, $this->transferToId, $this->transferAmount, $this->transferDescription);
-            $this->dispatch('close-all-modals');
-        }
-    }
 
     public function selectTransferTo($id): void
     {

@@ -327,26 +327,20 @@
                     <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
                         Cancel
                     </a>
-                    @if($student->wallet > 0)
-                        <button class="btn btn-primary ms-auto" type="submit" form="modal-transfer-form"
-                                wire:loading.attr="disabled" wire:target="transfer">
-
-                            <!--<editor-fold desc="SVG ICON">-->
-                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                 viewBox="0 0 24 24"
-                                 stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
-                                 stroke-linejoin="round">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                                <path d="M12 5l0 14"></path>
-                                <path d="M5 12l14 0"></path>
-                            </svg>
-                            <!--</editor-fold>-->
-                            Save
-                            <span wire:loading wire:target="transfer">
-                            &nbsp; - Saving...
-                        </span>
-                        </button>
-                    @endif
+                    <button class="btn btn-primary ms-auto" type="submit" form="modal-transfer-form"
+                            wire:loading.attr="disabled">
+                        <!--<editor-fold desc="SVG ICON">-->
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                             viewBox="0 0 24 24"
+                             stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M12 5l0 14"></path>
+                            <path d="M5 12l14 0"></path>
+                        </svg>
+                        <!--</editor-fold>-->
+                        Transfer
+                    </button>
                 </div>
             </div>
         </div>

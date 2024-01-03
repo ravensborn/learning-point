@@ -34,6 +34,23 @@ class Index extends Component
         $this->dispatch('toggle-modal-edit');
     }
 
+    public function transfer(): void
+    {
+        $this->validate([
+            'transferToId' => 'required|integer|exists:students,id',
+            'transferAmount' => ['required', 'numeric', 'gt:0', 'regex:/^[0-9]+(\.[0-9]{1,2})?$/'],
+            'transferDescription' => 'required|string|max:10000',
+        ]);
+
+        if($this->student->wallet > 0) {
+
+            $this->form->transfer($this->student->id, $this->transferToId, $this->transferAmount, $this->transferDescription);
+            $this->student = Student::find($this->student->id);
+            $this->dispatch('close-all-modals');
+
+        }
+    }
+
     public function store(): void
     {
         $this->form->transactable_id = $this->student->id;
