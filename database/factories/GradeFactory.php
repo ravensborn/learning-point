@@ -19,8 +19,7 @@ class GradeFactory extends Factory
     {
         return [
             'school_id' => $this->faker->randomElement(School::all()->pluck('id')),
-            'name' => $this->faker->word,
-            'cost' => $this->faker->numberBetween(100,200)
+            'name' => $this->faker->word
         ];
     }
 }

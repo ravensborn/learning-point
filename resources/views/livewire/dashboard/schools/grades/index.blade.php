@@ -73,9 +73,6 @@
                                     <th>
                                         Name
                                     </th>
-                                    <th>
-                                        Cost
-                                    </th>
                                     <th>Created</th>
                                     <th></th>
                                 </tr>
@@ -91,9 +88,6 @@
                                         </td>
                                         <td>
                                             {{ ucfirst($grade->name) }}
-                                        </td>
-                                        <td>
-                                            ${{ number_format($grade->cost, 2) }}
                                         </td>
                                         <td>
                                             {{ $grade->created_at->format('Y-m-d') }}
@@ -160,24 +154,12 @@
 
                     <form id="modal-create-form" wire:submit="store">
                         <div class="row mb-3">
-                            <div class="col-12 col-md-6 mb-3 mb-md-0">
+                            <div class="col-12 mb-3 mb-md-0">
                                 <div>
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" wire:model="form.name" class="form-control" id="name"
                                            placeholder="Grade 1">
                                     @error('form.name')
-                                    <div class="text-danger mt-1">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 mb-3 mb-md-0">
-                                <div>
-                                    <label for="cost" class="form-label">Cost (&dollar;)</label>
-                                    <input type="text" wire:model="form.cost" class="form-control" id="cost"
-                                           placeholder="100">
-                                    @error('form.cost')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>
@@ -225,24 +207,12 @@
 
                     <form id="modal-update-form" wire:submit="update">
                         <div class="row mb-3">
-                            <div class="col-12 col-md-6 mb-3 mb-md-0">
+                            <div class="col-12 mb-3 mb-md-0">
                                 <div>
                                     <label for="name" class="form-label">Name</label>
                                     <input type="text" wire:model="form.name" class="form-control" id="name"
                                            placeholder="Grade 1">
                                     @error('form.name')
-                                    <div class="text-danger mt-1">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-6 mb-3 mb-md-0">
-                                <div>
-                                    <label for="cost" class="form-label">Cost ($)</label>
-                                    <input type="text" wire:model="form.cost" class="form-control" id="cost"
-                                           placeholder="100">
-                                    @error('form.cost')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>

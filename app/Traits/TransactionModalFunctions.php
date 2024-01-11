@@ -4,11 +4,10 @@ namespace App\Traits;
 
 use App\Livewire\Forms\TransactionForm;
 use App\Models\Student;
+use App\Models\Transaction;
 
 trait TransactionModalFunctions
 {
-
-
     public TransactionForm $form;
 
     public string $transferAmount = '';
@@ -30,10 +29,10 @@ trait TransactionModalFunctions
 
             $search = trim($this->transferToQuery);
 
-            $this->transferToList = Student::where('first_name', 'LIKE', '%' . $search . '%')
-                ->orWhere('middle_name', 'LIKE', '%' . $search . '%')
-                ->orWhere('email', 'LIKE', '%' . $search . '%')
-                ->orWhere('primary_phone_number', 'LIKE', '%' . $search . '%')
+            $this->transferToList = Student::whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($search) . "%' ")
+                ->orWhere('primary_phone_number', 'LIKE', '%' . trim($search) . '%')
+                ->orWhere('secondary_phone_number', 'LIKE', '%' . trim($search) . '%')
+                ->orWhere('email', 'LIKE', '%' . trim($search) . '%')
                 ->limit(5)
                 ->get();
 
@@ -63,9 +62,10 @@ trait TransactionModalFunctions
 
     public function startItemDeletion(): bool
     {
-        $item = TransactionForm::findOrFail($this->itemToDeleteId);
-
+        $item = Transaction::findOrFail($this->itemToDeleteId);
+        $item->sync(true);
         $item->delete();
+        $this->student = Student::find($this->student->id);
         $this->dispatch('toggle-modal-delete-confirmation');
 
         return true;

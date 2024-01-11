@@ -8,6 +8,8 @@ use App\Traits\TransactionModalFunctions;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Illuminate\Validation\ValidationException;
+
 
 class Index extends Component
 {
@@ -43,6 +45,11 @@ class Index extends Component
         ]);
 
         if($this->student->wallet > 0) {
+
+            if($this->transferAmount > $this->student->wallet) {
+
+                throw ValidationException::withMessages(['transferAmount' => 'Amount must be less than or equal to current wallet.']);
+            }
 
             $this->form->transfer($this->student->id, $this->transferToId, $this->transferAmount, $this->transferDescription);
             $this->student = Student::find($this->student->id);

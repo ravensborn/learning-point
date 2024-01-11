@@ -6,7 +6,7 @@
                 <div class="col">
                     <h2 class="page-title">
                         Manage&nbsp;<a
-                            href="{{ route('dashboard.subjects.index') }}">{{ ucfirst($student->full_name) }}</a>&nbsp;Rates
+                            href="{{ route('dashboard.students.show', $student->id) }}">{{ ucfirst($student->full_name) }}</a>&nbsp;Rates
                     </h2>
                 </div>
                 <!-- Page title actions -->
@@ -38,7 +38,7 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Subject {{ ucfirst($student->full_name) }} Rate List</h3>
+                            <h3 class="card-title">Student {{ ucfirst($student->full_name) }} Rate List</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">

@@ -10,8 +10,10 @@ use App\Livewire\Dashboard\Schools\Grades\Index as GradesIndex;
 use App\Livewire\Dashboard\Students\Index as StudentsIndex;
 use App\Livewire\Dashboard\Students\Create as StudentsCreate;
 use App\Livewire\Dashboard\Students\Show as StudentsShow;
-use App\Livewire\Dashboard\Students\Transactions\Index as StudentTransactionIndex;
+use App\Livewire\Dashboard\Students\Transactions\Index as StudentTransactionsIndex;
 use App\Livewire\Dashboard\Students\Rates\Index as StudentsRateIndex;
+
+use App\Livewire\Dashboard\Transactions\PrintTransaction as TransactionsPrint;
 
 use App\Livewire\Dashboard\Families\Index as FamiliesIndex;
 use App\Livewire\Dashboard\Families\Students\Index as FamilyStudentsIndex;
@@ -62,8 +64,12 @@ Route::middleware(['auth'])->group(function() {
         Route::get('/schools', SchoolsIndex::class)->name('schools.index');
         Route::get('/schools/{school}/grades', GradesIndex::class)->name('grades.index');
 
-        Route::get('/students/{student}/transactions', StudentTransactionIndex::class)->name('student.transactions.index');
+        Route::get('/students/{student}/transactions', StudentTransactionsIndex::class)->name('student.transactions.index');
         Route::get('/students/{student}/rates', StudentsRateIndex::class)->name('student.rates.index');
+
+        Route::get('/transaction/{transaction}/print', TransactionsPrint::class)->name('transactions.print');
+
+
 
 
         Route::get('/students', StudentsIndex::class)->name('students.index');

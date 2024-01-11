@@ -38,10 +38,10 @@ class Transaction extends Model
         self::TYPE_TRANSFER => 'text-danger',
     ];
     const TYPE_PREFIX_CHARACTER = [
-        self::TYPE_WITHDRAW => '-',
-        self::TYPE_DEPOSIT => '+',
-        self::TYPE_PURCHASE => '-',
-        self::TYPE_TRANSFER => '-',
+        self::TYPE_WITHDRAW => '▼',
+        self::TYPE_DEPOSIT => '▲',
+        self::TYPE_PURCHASE => '▼',
+        self::TYPE_TRANSFER => '▼',
     ];
 
 
@@ -55,7 +55,7 @@ class Transaction extends Model
         return self::TYPE_PREFIX_CHARACTER[$this->type];
     }
 
-    public function sync(): void
+    public function sync($reversed = false): void
     {
 
        if($this->transactable_type == Student::class) {
@@ -63,6 +63,10 @@ class Transaction extends Model
            $model = Student::find($this->transactable_id);
            $wallet = $model->getAttribute('wallet');
            $amount = $this->amount;
+
+           if($reversed) {
+               $amount = $amount * -1;
+           }
 
            if($this->type == self::TYPE_DEPOSIT) {
               $wallet += $amount;

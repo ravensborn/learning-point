@@ -101,12 +101,12 @@
                                     <th>Description</th>
                                     <th>User</th>
                                     <th>Date</th>
+                                    <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 @forelse($transactions as $transaction)
                                     <tr wire:key="{{ $transaction->id }}">
-
                                         <td>
                                             <span class="text-secondary">
                                                 {{ ($transactions->currentpage()-1) * $transactions->perpage() + $loop->index + 1 }}
@@ -121,6 +121,25 @@
                                         <td class="text-wrap">{{ $transaction->description }}</td>
                                         <td>{{ ucfirst($transaction->user->name) }}</td>
                                         <td>{{ $transaction->created_at->format('Y-m-d / h:i A') }}</td>
+
+                                        <td class="text-end">
+                                            <a class="btn align-text-top"
+                                               href="{{ route('dashboard.transactions.print', ['transaction' => $transaction->id]) }}">
+                                                Print
+                                            </a>
+                                            <span class="dropdown">
+                                                  <button class="btn dropdown-toggle align-text-top"
+                                                          data-bs-boundary="viewport"
+                                                          data-bs-toggle="dropdown">
+                                                      Actions
+                                                  </button>
+                                                  <div class="dropdown-menu dropdown-menu-end">
+                                                    <button class="dropdown-item"
+                                                            wire:click="prepareItemDeletion({{ $transaction->id }})">Delete</button>
+                                                  </div>
+                                                </span>
+                                        </td>
+
                                     </tr>
                                 @empty
                                     <tr>
@@ -345,6 +364,54 @@
             </div>
         </div>
     </div>
+    <div class="modal modal-blur fade" id="modal-delete" tabindex="-1" style="display: none;" aria-hidden="true"
+         wire:ignore.self>
+        <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-status bg-danger"></div>
+                <div class="modal-body text-center py-4">
+                    <!--<editor-fold desc="SVG ICON">-->
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon mb-2 text-danger icon-lg" width="24" height="24"
+                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                        <path d="M12 9v4"></path>
+                        <path
+                            d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"></path>
+                        <path d="M12 16h.01"></path>
+                    </svg>
+                    <!--</editor-fold>-->
+                    <h3>Are you sure?</h3>
+                    <div class="text-secondary">Do you really want to remove this item? What you've done cannot be
+                        undone.
+                    </div>
+                    @error('delete')
+                    <div class="text-danger mt-3">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+                <div class="modal-footer">
+                    <div class="w-100">
+                        <div class="row">
+                            <div class="col">
+                                <button class="btn w-100" wire:click="resetItemDeletion()">
+                                    Cancel
+                                </button>
+                            </div>
+                            <div class="col">
+                                <a class="btn btn-danger w-100"
+                                   wire:click.prevent="startItemDeletion()">
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
         document.addEventListener('livewire:initialized', () => {
@@ -360,11 +427,18 @@
 
             const createModal = new bootstrap.Modal('#modal-create');
             const transferModal = new bootstrap.Modal('#modal-transfer');
+            const deleteModal = new bootstrap.Modal('#modal-delete');
 
             @this.
             on('close-all-modals', (event) => {
                 createModal.hide();
                 transferModal.hide();
+                deleteModal.hide();
+            });
+
+            @this.
+            on('toggle-modal-delete-confirmation', (event) => {
+                deleteModal.toggle();
             });
 
             @this.

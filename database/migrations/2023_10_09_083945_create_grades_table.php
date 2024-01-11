@@ -21,7 +21,6 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->string('name');
-            $table->double('cost')->default(0);
             $table->timestamps();
         });
     }

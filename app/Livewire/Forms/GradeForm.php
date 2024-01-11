@@ -11,14 +11,12 @@ class GradeForm extends Form
 
     public int $school_id = 0;
     public string $name = '';
-    public string $cost = '';
 
     public function rules(): array
     {
         return [
             'school_id' => ['required', 'integer', 'exists:schools,id'],
             'name' => ['required', 'string', 'min:1', 'max:50'],
-            'cost' => ['required', 'integer', 'gt:0', 'regex:/^[0-9]+(\.[0-9]{1,2})?$/'],
             ];
     }
 
@@ -27,7 +25,6 @@ class GradeForm extends Form
         return [
             'school_id' => 'school',
             'name' => 'name',
-            'cost' => 'cost',
         ];
     }
 
@@ -44,7 +41,7 @@ class GradeForm extends Form
     {
         $this->validate();
 
-        $data = $this->only(['school_id', 'name', 'cost']);
+        $data = $this->only(['school_id', 'name']);
 
         $model = new Grade;
 
@@ -54,7 +51,7 @@ class GradeForm extends Form
     public function update()
     {
         $this->validate();
-        return $this->model->update($this->only(['school_id', 'name', 'cost']));
+        return $this->model->update($this->only(['school_id', 'name']));
     }
 }
 

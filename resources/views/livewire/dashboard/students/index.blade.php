@@ -250,6 +250,9 @@
                                                       Actions
                                                   </button>
                                                   <div class="dropdown-menu dropdown-menu-end">
+                                                    <a class="dropdown-item" href="{{ route('dashboard.student.rates.index', $student->id) }}">
+                                                        Price Management
+                                                    </a>
                                                     <button class="dropdown-item"
                                                             wire:click="prepareItemDeletion({{ $student->id }})">
                                                         Delete
