@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Livewire\Dashboard\Students\Transactions;
+namespace App\Livewire\Dashboard\Teachers\Transactions;
 
-use App\Models\Student;
+use App\Models\Teacher;
 use App\Models\Transaction;
-use App\Traits\TransactionModalFunctions;
+use App\Traits\TeacherTransactionModalFunctions;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -13,17 +13,17 @@ use Illuminate\Validation\ValidationException;
 
 class Index extends Component
 {
-    use WithPagination, TransactionModalFunctions;
+    use WithPagination, TeacherTransactionModalFunctions;
 
-    public $student;
+    public $teacher;
     public array $availableTransactionTypes = [];
     public int $perPage = 10;
     public string $search = '';
 
 
-    public function mount(Student $student): void
+    public function mount(Teacher $teacher): void
     {
-        $this->student = $student;
+        $this->teacher = $teacher;
         $this->availableTransactionTypes = Transaction::TYPES;
         $this->transferToList = collect();
     }
@@ -39,20 +39,20 @@ class Index extends Component
     public function transfer(): void
     {
         $this->validate([
-            'transferToId' => 'required|integer|exists:students,id',
+            'transferToId' => 'required|integer|exists:teachers,id',
             'transferAmount' => ['required', 'numeric', 'gt:0', 'regex:/^[0-9]+(\.[0-9]{1,2})?$/'],
             'transferDescription' => 'required|string|max:10000',
         ]);
 
-        if($this->student->wallet > 0) {
+        if($this->teacher->wallet > 0) {
 
-            if($this->transferAmount > $this->student->wallet) {
+            if($this->transferAmount > $this->teacher->wallet) {
 
                 throw ValidationException::withMessages(['transferAmount' => 'Amount must be less than or equal to current wallet.']);
             }
 
-            $this->form->transfer(Student::class, $this->student->id, $this->transferToId, $this->transferAmount, $this->transferDescription);
-            $this->student = Student::find($this->student->id);
+            $this->form->transfer(Teacher::class, $this->teacher->id, $this->transferToId, $this->transferAmount, $this->transferDescription);
+            $this->teacher = Teacher::find($this->teacher->id);
             $this->dispatch('close-all-modals');
 
         }
@@ -60,8 +60,8 @@ class Index extends Component
 
     public function store(): void
     {
-        $this->form->transactable_id = $this->student->id;
-        $this->form->store(Student::class);
+        $this->form->transactable_id = $this->teacher->id;
+        $this->form->store(Teacher::class);
         $this->form->model->sync();
 
         $this->dispatch('toggle-modal-create');
@@ -70,7 +70,7 @@ class Index extends Component
     #[Layout('layouts.app')]
     public function render()
     {
-        $transactions = $this->student->transactions()->orderBy('created_at', 'desc');
+        $transactions = $this->teacher->transactions()->orderBy('created_at', 'desc');
 
         if ($this->search) {
 
@@ -81,7 +81,7 @@ class Index extends Component
 
         $transactions = $transactions->paginate($this->perPage);
 
-        return view('livewire.dashboard.students.transactions.index', [
+        return view('livewire.dashboard.teachers.transactions.index', [
             'transactions' => $transactions
         ]);
     }

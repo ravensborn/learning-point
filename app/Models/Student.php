@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Propaganistas\LaravelPhone\Casts\E164PhoneNumberCast;
+use Propaganistas\LaravelPhone\Casts\RawPhoneNumberCast;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
@@ -17,8 +18,8 @@ class Student extends Model implements HasMedia
 
     protected
         $casts = [
-        'primary_phone_number' => E164PhoneNumberCast::class . ':country',
-        'secondary_phone_number' => E164PhoneNumberCast::class . ':country',
+//        'primary_phone_number' => RawPhoneNumberCast::class,
+//        'secondary_phone_number' => RawPhoneNumberCast::class,
         'birthday' => 'date:Y-m-d',
     ];
 

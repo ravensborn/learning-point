@@ -171,12 +171,17 @@
                         <div class="dropdown-menu show">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item @if(request()->is('*/employees*')) active @endif" href="{{ route('dashboard.employees.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                             <i class="ti ti-custom ti-users"></i>
+                                             <i class="ti ti-custom ti-list-details"></i>
                                          </span>
                                         Employees
-                                        <span class="badge badge-sm bg-warning-lt text-uppercase ms-auto">P</span>
+                                    </a>
+                                    <a class="dropdown-item @if(request()->is('*/teachers*')) active @endif" href="{{ route('dashboard.teachers.index') }}">
+                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                             <i class="ti ti-custom ti-school"></i>
+                                         </span>
+                                        Teachers
                                     </a>
                                     <a class="dropdown-item" href="#">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">

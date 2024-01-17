@@ -23,7 +23,9 @@ class DatabaseSeeder extends Seeder
             SchoolSeeder::class,
             FamilySeeder::class,
             StudentSeeder::class,
-            LcDatabaseSeeder::class
+            LcDatabaseSeeder::class,
+            TeacherSeeder::class,
+            EmployeeSeeder::class,
         ]);
     }
 }

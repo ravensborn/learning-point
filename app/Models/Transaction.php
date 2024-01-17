@@ -58,9 +58,9 @@ class Transaction extends Model
     public function sync($reversed = false): void
     {
 
-       if($this->transactable_type == Student::class) {
+       if( in_array($this->transactable_type, [Student::class, Teacher::class, Employee::class])) {
 
-           $model = Student::find($this->transactable_id);
+           $model = $this->transactable_type::find($this->transactable_id);
            $wallet = $model->getAttribute('wallet');
            $amount = $this->amount;
 

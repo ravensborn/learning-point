@@ -45,25 +45,25 @@ class TransactionForm extends Form
         $this->model = $model;
     }
 
-    public function transfer($fromId, $toId, $amount, $description): void
+    public function transfer($transactableModel, $fromId, $toId, $amount, $description): void
     {
         //Deduct from sender
         $this->transactable_id = $fromId;
         $this->type = Transaction::TYPE_TRANSFER;
         $this->amount = $amount;
         $this->description = $description;
-        $this->store();
+        $this->store($transactableModel);
         $this->model->sync();
 
         //Add to receiver
         $this->transactable_id = $toId;
         $this->type = Transaction::TYPE_DEPOSIT;
         $this->amount = $amount;
-        $this->description = 'Internal Transfer, reference: ' . $this->model->number . '.';
-        $this->store();
+        $this->description = 'Internal Transfer, reference: ' . $fromId . ' - ' . $this->model->number . '.';
+        $this->store($transactableModel);
         $this->model->sync();
     }
-    public function store()
+    public function store($transactableModel)
     {
         $this->validate();
 
@@ -71,7 +71,7 @@ class TransactionForm extends Form
         $data['number'] = Transaction::generateNumber();
         $data['user'] = auth()->user();
         $data['transactable_id'] = $this->transactable_id;
-        $data['transactable_type'] = Student::class;
+        $data['transactable_type'] = $transactableModel;
 
         $model = new Transaction;
         $this->model = $model->create($data);
