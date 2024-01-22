@@ -89,7 +89,7 @@
                         <div class="card-body">
                             @if($session->status == \App\Models\Session::STATUS_PENDING)
                                 <div class="mt-2">
-                                    <button class="btn btn-primary" wire:click="complete">
+                                    <button class="btn btn-outline-primary" wire:click="complete">
                                         <svg xmlns="http://www.w3.org/2000/svg"
                                              class="icon icon-tabler icon-tabler-checks" width="24" height="24"
                                              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -98,7 +98,28 @@
                                             <path d="M7 12l5 5l10 -10"/>
                                             <path d="M2 12l5 5m5 -5l5 -5"/>
                                         </svg>
-                                        Complete $ {{ number_format($total, 2) }}
+                                        @if($proceedToComplete)
+                                            Proceed? $ {{ number_format($total, 2) }}}
+                                        @else
+                                            Complete $ {{ number_format($total, 2) }}
+                                        @endif
+                                    </button>
+                                </div>
+                                <div class="mt-2">
+                                    <button class="btn btn-ghost-danger" wire:click="cancel">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x"
+                                             width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
+                                             stroke="currentColor" fill="none" stroke-linecap="round"
+                                             stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <path d="M18 6l-12 12"/>
+                                            <path d="M6 6l12 12"/>
+                                        </svg>
+                                        @if($proceedToCancel)
+                                            Proceed?
+                                        @else
+                                            Cancel Session
+                                        @endif
                                     </button>
                                 </div>
                             @endif
@@ -232,7 +253,7 @@
                                 <div>
                                     <label for="description" class="form-label required">Item</label>
                                     <input type="text" wire:model="description" class="form-control"
-                                           id="item description"
+                                           id="description"
                                            placeholder="Item description">
                                     @error('description')
                                     <div class="text-danger mt-1">

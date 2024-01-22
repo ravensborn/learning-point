@@ -21,6 +21,9 @@ class Manage extends Component
 
     public string $total = '';
 
+    public bool $proceedToComplete = false;
+    public bool $proceedToCancel = false;
+
     public function mount(Session $session): void
     {
         $this->session = $session;
@@ -44,6 +47,7 @@ class Manage extends Component
 
         $this->total = $sum;
     }
+
     public function storeChargeItem(): void
     {
 
@@ -70,21 +74,59 @@ class Manage extends Component
         $this->dispatch('close-all-modals');
     }
 
+    public function cancel(): void
+    {
+
+        $this->proceedToComplete = false;
+
+        if ($this->proceedToCancel) {
+
+            foreach ($this->session->students as $studentId => $student) {
+
+                $this->makeSessionCancelTransaction($studentId);
+            }
+
+        } else {
+            $this->proceedToCancel = true;
+        }
+
+    }
+
+    public function makeSessionCancelTransaction($studentId): void
+    {
+        $this->transactionForm->transactable_id = $studentId;
+        $this->transactionForm->type = Transaction::TYPE_PURCHASE;
+        $this->transactionForm->amount = 50;
+        $this->transactionForm->description = 'Session Cancellation Fee - ' . $this->session->id;
+        $this->transactionForm->store(Student::class);
+        $this->transactionForm->model->sync();
+
+        $this->session->update([
+            'status' => Session::STATUS_CANCELLED,
+        ]);
+    }
+
     public function complete(): void
     {
 
-        foreach ($this->session->students as $studentId => $student) {
+        $this->proceedToCancel = false;
 
-            $studentSum = 0;
+        if ($this->proceedToComplete) {
+            foreach ($this->session->students as $studentId => $student) {
 
-            foreach ($student['charge_list'] as $item) {
+                $studentSum = 0;
 
-                $studentSum += $item['amount'];
+                foreach ($student['charge_list'] as $item) {
+
+                    $studentSum += $item['amount'];
+                }
+
+                if ($studentSum > 0) {
+                    $this->makeTransaction($studentId, $studentSum);
+                }
             }
-
-            if($studentSum > 0) {
-                $this->makeTransaction($studentId, $studentSum);
-            }
+        } else {
+            $this->proceedToComplete = true;
         }
 
     }
@@ -96,6 +138,7 @@ class Manage extends Component
         $this->transactionForm->amount = $amount;
         $this->transactionForm->description = 'Session Purchase - ' . $this->session->id;
         $this->transactionForm->store(Student::class);
+        $this->transactionForm->model->sync();
 
         $this->session->update([
             'status' => Session::STATUS_COMPLETED,
