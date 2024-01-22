@@ -149,12 +149,11 @@
                                          </span>
                                         Subjects
                                     </a>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item @if(request()->is('*/sessions*')) active @endif" href="{{ route('dashboard.sessions.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-chalkboard"></i>
                                          </span>
                                         Sessions
-                                        <span class="badge badge-sm bg-warning-lt text-uppercase ms-auto">P</span>
                                     </a>
                                 </div>
                             </div>

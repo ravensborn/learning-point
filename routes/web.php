@@ -5,6 +5,10 @@ use App\Livewire\Dashboard\Users\Index as UsersIndex;
 
 use App\Livewire\Dashboard\Subjects\Index as SubjectsIndex;
 
+use App\Livewire\Dashboard\Sessions\Index as SessionsIndex;
+use App\Livewire\Dashboard\Sessions\Create as SessionsCreate;
+use App\Livewire\Dashboard\Sessions\Manage as SessionsManage;
+
 use App\Livewire\Dashboard\Teachers\Index as TeachersIndex;
 use App\Livewire\Dashboard\Teachers\Transactions\Index as TeacherTransactionsIndex;
 
@@ -41,7 +45,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
 Auth::routes([
     'register' => false,
     'logout' => false,
@@ -67,6 +70,10 @@ Route::middleware(['auth'])->group(function() {
 
         Route::get('/subjects', SubjectsIndex::class)->name('subjects.index');
 
+        Route::get('/sessions', SessionsIndex::class)->name('sessions.index');
+        Route::get('/sessions/create', SessionsCreate::class)->name('sessions.create');
+        Route::get('/sessions/{session}/manage', SessionsManage::class)->name('sessions.manage');
+
         Route::get('/teachers', TeachersIndex::class)->name('teachers.index');
         Route::get('/teachers/{teacher}/transactions', TeacherTransactionsIndex::class)->name('teacher.transactions.index');
 
@@ -84,9 +91,6 @@ Route::middleware(['auth'])->group(function() {
         Route::get('/students/{student}/rates', StudentsRateIndex::class)->name('student.rates.index');
 
         Route::get('/transaction/{transaction}/print', TransactionsPrint::class)->name('transactions.print');
-
-
-
 
         Route::get('/students', StudentsIndex::class)->name('students.index');
         Route::get('/students/create', StudentsCreate::class)->name('students.create');

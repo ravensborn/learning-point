@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+
 use Illuminate\Database\Seeder;
 use Lwwcas\LaravelCountries\Database\Seeders\LcDatabaseSeeder;
 
@@ -13,19 +14,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-
-
         $this->call([
             CitySeeder::class,
             UserSeeder::class,
-            GroupSeeder::class,
-            SubjectSeeder::class,
-            SchoolSeeder::class,
-            FamilySeeder::class,
-            StudentSeeder::class,
+            GroupSeeder::class, //Fake
+            SubjectSeeder::class, //Fake
+            SchoolSeeder::class, //Fake
+            FamilySeeder::class, //Fake
+            StudentSeeder::class, //Fake
+            TeacherSeeder::class, //Fake
+            EmployeeSeeder::class, //Fake
+            SessionSeeder::class, //Fake
             LcDatabaseSeeder::class,
-            TeacherSeeder::class,
-            EmployeeSeeder::class,
         ]);
     }
 }

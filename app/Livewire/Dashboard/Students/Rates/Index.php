@@ -5,6 +5,7 @@ namespace App\Livewire\Dashboard\Students\Rates;
 use App\Models\Group;
 use App\Models\Student;
 use App\Models\StudentRate;
+use App\Models\Subject;
 use App\Traits\StudentRateModalFunctions;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
@@ -25,7 +26,7 @@ class Index extends Component
     public function mount(Student $student): void
     {
         $this->student = $student;
-        $this->availableSubjects = Group::with('subjects')->get()->filter(function ($group){
+        $this->availableSubjects = Group::with('subjects')->where('model', Subject::class)->get()->filter(function ($group){
             if($group->subjects->count()) {
                 return $group;
             }

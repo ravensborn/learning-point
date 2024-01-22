@@ -14,26 +14,38 @@ return new class extends Migration
         Schema::create('sessions', function (Blueprint $table) {
             $table->id();
 
-//            $table->unsignedBigInteger('user_id')
-//                ->nullable();
-//            $table->foreign('user_id')
-//                ->references('id')
-//                ->on('users')
-//                ->nullOnDelete();
-//
-//            $table->unsignedBigInteger('teacher_id')
-//                ->nullable();
-//            $table->foreign('teacher_id')
-//                ->references('id')
-//                ->on('teachers')
-//                ->nullOnDelete();
-//
-//            $table->unsignedBigInteger('teacher_id')
-//                ->nullable();
-//            $table->foreign('teacher_id')
-//                ->references('id')
-//                ->on('teachers')
-//                ->nullOnDelete();
+            $table->unsignedBigInteger('user_id')
+                ->nullable();
+            $table->foreign('user_id')
+                ->references('id')
+                ->on('users')
+                ->nullOnDelete();
+
+            $table->unsignedBigInteger('teacher_id')
+                ->nullable();
+            $table->foreign('teacher_id')
+                ->references('id')
+                ->on('teachers')
+                ->nullOnDelete();
+
+            $table->unsignedBigInteger('subject_id')
+                ->nullable();
+            $table->foreign('subject_id')
+                ->references('id')
+                ->on('subjects')
+                ->nullOnDelete();
+
+            $table->string('type');
+            $table->string('status');
+
+            $table->json('students');
+
+            $table->dateTime('time_in');
+            $table->dateTime('time_out');
+
+//            $table->double('rate', 10, 2)->default(0)->comment('per hour');
+
+            $table->longText('note')->nullable();
 
 
             $table->timestamps();
