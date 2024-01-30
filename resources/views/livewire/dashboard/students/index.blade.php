@@ -141,6 +141,9 @@
                                     @endif
                                     <th class="w-1">No.</th>
                                     <th>
+                                        Series
+                                    </th>
+                                    <th>
                                         Name
                                         <span class="cursor-pointer" wire:click="sortByColumn('first_name')">
                                             {!! $this->getHeaderSortIcon('first_name') !!}
@@ -178,6 +181,9 @@
                                             <span class="text-secondary">
                                                 {{ ($students->currentpage()-1) * $students->perpage() + $loop->index + 1 }}
                                             </span>
+                                        </td>
+                                        <td class="text-secondary">
+                                            {{ $student->number }}
                                         </td>
                                         <td>
                                             <div class="d-flex py-1 align-items-center">
@@ -250,7 +256,8 @@
                                                       Actions
                                                   </button>
                                                   <div class="dropdown-menu dropdown-menu-end">
-                                                    <a class="dropdown-item" href="{{ route('dashboard.student.rates.index', $student->id) }}">
+                                                    <a class="dropdown-item"
+                                                       href="{{ route('dashboard.student.rates.index', $student->id) }}">
                                                         Price Management
                                                     </a>
                                                     <button class="dropdown-item"

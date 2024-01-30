@@ -18,12 +18,12 @@ class SessionFactory extends Factory
     public function definition(): array
     {
         return [
+            'number' => 'SESH-000' . $this->faker->randomNumber(3, true),
             'user_id' => 1,
             'teacher_id' => 1,
             'subject_id' => 1,
             'status' => Session::STATUS_PENDING,
             'type' => $this->faker->randomElement([Session::TYPE_THEORETICAL, Session::TYPE_PRACTICAL]),
-            'students' => [],
             'time_in' => now(),
             'time_out' => now()->addHour()->addMinutes(30),
 //            'rate' => $this->faker->randomNumber(2, true),

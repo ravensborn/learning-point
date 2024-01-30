@@ -50,8 +50,11 @@ class TeacherForm extends Form
         $this->validate();
 
         $data = $this->only(['name', 'email', 'phone_number', 'address']);
+        $data['number'] = Teacher::generateNumber();
 
         $model = new Teacher;
+
+
 
         return $model->create($data);
     }

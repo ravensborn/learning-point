@@ -127,7 +127,7 @@
                                             {{ ucfirst($session->subject?->name ?? '-') }}
                                         </td>
                                         <td>
-                                            {{ count($session->students) }}
+                                            {{ $session->attendees->count() }}
                                         </td>
                                         <td>
                                             <div>

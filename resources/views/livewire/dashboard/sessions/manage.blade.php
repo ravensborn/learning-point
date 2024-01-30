@@ -10,9 +10,7 @@
                 </div>
                 <!-- Page title actions -->
                 <div class="col-auto ms-auto">
-                    <div class="btn-list">
 
-                    </div>
                 </div>
             </div>
         </div>
@@ -21,13 +19,41 @@
     <div class="page-body">
         <div class="container-xl">
 
-
             <div class="row row-deck row-cards">
 
-                <div class="col-9">
+                <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
+                        <div class="card-header d-flex justify-content-between">
                             <h3 class="card-title">Session Details</h3>
+                            <div class="d-flex">
+                                <div class="dropdown me-2">
+                                    <a href="#" class="btn dropdown-toggle" data-bs-toggle="dropdown">Actions</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                           data-bs-target="#modal-add-student">
+                                            Add Student
+                                        </a>
+                                        <a class="dropdown-item" href="#" wire:click="showAddChargeModal('all')">
+                                            Bulk Charge
+                                        </a>
+                                        <a class="dropdown-item" href="#"
+                                           wire:click="showAddChargeModal('all-cancellation')">
+                                            Bulk Cancellation Charge
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="dropdown me-2">
+                                    <a href="#" class="btn dropdown-toggle" data-bs-toggle="dropdown">Session</a>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">
+                                            Complete Session
+                                        </a>
+                                        <a class="dropdown-item" href="#">
+                                            Cancel Session
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="datagrid">
@@ -59,12 +85,27 @@
                                         class="datagrid-content">{{ $session->time_out->format('Y-m-d / h:i A') }}</div>
                                 </div>
                                 <div class="datagrid-item">
+                                    <div class="datagrid-title">Duration</div>
+                                    <div
+                                        class="datagrid-content">{{ $duration }}h
+                                    </div>
+                                </div>
+                                <div class="datagrid-item">
                                     <div class="datagrid-title">Type</div>
-                                    <div class="datagrid-content">{{ $session->type_name }}</div>
+                                    <div class="datagrid-content">
+                                                                                  <span class="badge text-body">
+                                                                                        {{ $session->type_name }}
+                                                                                    </span>
+                                    </div>
                                 </div>
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Status</div>
-                                    <div class="datagrid-content">{{ $session->status_name }}</div>
+                                    <div class="datagrid-content">
+                                                                                  <span
+                                                                                      class="badge text-white {{ $session->status_color_class }}">
+                                                                                        {{ $session->status_name }}
+                                                                                    </span>
+                                    </div>
                                 </div>
                                 @if($session->note)
                                     <div class="datagrid-item">
@@ -78,72 +119,80 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-3">
+                {{--                <div class="col-3">--}}
+
+                {{--                    <div class="card">--}}
+                {{--                        <div class="card-header">--}}
+                {{--                            <h3 class="card-title">Session options</h3>--}}
+                {{--                        </div>--}}
+                {{--                        <div class="list-group list-group-flush">--}}
+                {{--                            <a href="#"--}}
+                {{--                               class="list-group-item list-group-item-action" aria-current="true">--}}
+                {{--                                Complete Session--}}
+                {{--                            </a>--}}
+                {{--                            <a href="#" wire:click="showAddChargeModal('all')"--}}
+                {{--                               class="list-group-item list-group-item-action" aria-current="true">--}}
+                {{--                                Bulk Charge--}}
+                {{--                            </a>--}}
+                {{--                            <a href="#" wire:click="showAddChargeModal('all-cancellation')"--}}
+                {{--                               class="list-group-item list-group-item-action" aria-current="true">--}}
+                {{--                                Bulk Cancellation Charge--}}
+                {{--                            </a>--}}
+                {{--                            <a href="#" class="list-group-item list-group-item-action" aria-current="true">--}}
+                {{--                                Cancel Session--}}
+                {{--                            </a>--}}
+                {{--                            <a href="{{ route('dashboard.sessions.edit', $session->id) }}"--}}
+                {{--                               class="list-group-item list-group-item-action" aria-current="true">--}}
+                {{--                                Edit Session--}}
+                {{--                            </a>--}}
+                {{--                            <a href="#"--}}
+                {{--                               data-bs-toggle="modal"--}}
+                {{--                               data-bs-target="#modal-add-student"--}}
+                {{--                               class="list-group-item list-group-item-action" aria-current="true">--}}
+                {{--                                Add Student--}}
+                {{--                            </a>--}}
+                {{--                        </div>--}}
+                {{--                    </div>--}}
+
+                {{--                </div>--}}
+            </div>
+
+            @foreach($session->attendees as $attendee)
+
+                <div class="row row-deck row-cards mt-3">
 
                     <div class="card">
                         <div class="card-header">
                             <div class="d-flex justify-content-between w-100">
-                                <h3 class="card-title">Actions</h3>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            @if($session->status == \App\Models\Session::STATUS_PENDING)
-                                <div class="mt-2">
-                                    <button class="btn btn-outline-primary" wire:click="complete">
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                             class="icon icon-tabler icon-tabler-checks" width="24" height="24"
-                                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                             stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                            <path d="M7 12l5 5l10 -10"/>
-                                            <path d="M2 12l5 5m5 -5l5 -5"/>
-                                        </svg>
-                                        @if($proceedToComplete)
-                                            Proceed? $ {{ number_format($total, 2) }}}
-                                        @else
-                                            Complete $ {{ number_format($total, 2) }}
-                                        @endif
-                                    </button>
+                                <div class="d-flex justify-content-start align-items-center">
+                                    <div class="me-3">
+                                        <h3 class="card-title">{{ $attendee->student->full_name }}</h3>
+                                    </div>
+                                    <div class="me-3">
+                                        <label class="form-check form-switch mb-0">
+                                            <input wire:change="toggleStudentAttending({{ $attendee->id }})"
+                                                   @if($attendee->attending) checked="" @endif
+                                                   class="form-check-input"
+                                                   type="checkbox">
+                                            <span class="form-check-label">Attending</span>
+                                        </label>
+                                    </div>
+                                    <div class="me-3">
+                                        <label class="form-check form-switch mb-0">
+                                            <input class="form-check-input"
+                                                   wire:change="toggleStudentCharged({{ $attendee->id }})"
+                                                   @if($attendee->charged) checked="" @endif
+                                                   type="checkbox">
+                                            <span class="form-check-label">Charged</span>
+                                        </label>
+                                    </div>
                                 </div>
-                                <div class="mt-2">
-                                    <button class="btn btn-ghost-danger" wire:click="cancel">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-x"
-                                             width="24" height="24" viewBox="0 0 24 24" stroke-width="2"
-                                             stroke="currentColor" fill="none" stroke-linecap="round"
-                                             stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                            <path d="M18 6l-12 12"/>
-                                            <path d="M6 6l12 12"/>
-                                        </svg>
-                                        @if($proceedToCancel)
-                                            Proceed?
-                                        @else
-                                            Cancel Session
-                                        @endif
-                                    </button>
+                                <div>
+
                                 </div>
-                            @endif
-
-                            @if($session->status == \App\Models\Session::STATUS_COMPLETED)
-                                <span class="text-secondary">
-                                    There are no actions at the moment.
-                                </span>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row row-deck row-cards mt-3">
-
-                <div class="card">
-                    <div class="card-header">
-                        <div class="d-flex justify-content-between w-100">
-                            <h3 class="card-title">Charge List</h3>
-                            <div>
-                                @if($session->status == \App\Models\Session::STATUS_PENDING)
-                                    <a href="#" class="btn btn-primary" data-bs-toggle="modal"
-                                       data-bs-target="#modal-create">
+                                <div>
+                                    <a href="#" class="btn btn-sm btn-ghost-primary"
+                                       wire:click.prevent="showAddChargeModal({{ $attendee->id }})">
                                         <!--<editor-fold desc="SVG ICON">-->
                                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                              viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -153,140 +202,243 @@
                                             <path d="M5 12l14 0"/>
                                         </svg>
                                         <!--</editor-fold>-->
-                                        New Item
+                                        Add Charge
                                     </a>
-                                @endif
+                                    <button class="btn btn-sm btn-ghost-danger"
+                                            wire:click.prevent="removeStudent({{ $attendee->student_id }})">
+                                        <!--<editor-fold desc="SVG ICON">-->
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                             class="icon icon-tabler icon-tabler-trash" width="24" height="24"
+                                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                             stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <path d="M4 7l16 0"/>
+                                            <path d="M10 11l0 6"/>
+                                            <path d="M14 11l0 6"/>
+                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
+                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
+                                        </svg>
+                                        <!--</editor-fold>-->
+                                        @if($removingStudentId == $attendee->student_id)
+                                            Are you sure?
+                                        @else
+                                            Remove Student
+                                        @endif
+                                    </button>
+                                </div>
                             </div>
                         </div>
+                        <div class="card-body">
+
+
+                            @if(!$attendee->charged)
+                                <div class="text-secondary">
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                         class="icon icon-tabler icon-tabler-info-circle" width="24" height="24"
+                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                         stroke-linecap="round" stroke-linejoin="round">
+                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                        <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/>
+                                        <path d="M12 9h.01"/>
+                                        <path d="M11 12h1v4h1"/>
+                                    </svg>
+                                    Student will not be charged.
+                                </div>
+
+                            @else
+
+                                @if($attendee->attending)
+
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tbody>
+                                            @forelse($attendee->charge_list as $index => $item)
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $item['name'] }}</td>
+                                                    <td>{{ $item['rated'] ? 'Rated' : 'Unrated' }}</td>
+                                                    @if($item['rated'])
+                                                        <td>{{ '$' . number_format($item['amount'], 2) . ' x ' . $duration . ' = ' . '$' . number_format(($item['amount'] * $duration), 2)}}</td>
+                                                    @else
+                                                        <td>{{ '$' . number_format($item['amount'], 2) }}</td>
+                                                    @endif
+                                                    <td>{{ $item['note'] }}</td>
+                                                    <td>
+                                                        <a href="#" class="btn btn-sm btn-ghost-warning"
+                                                           wire:click.prevent="showEditChargeModal({{ $attendee->id }}, {{ $index }})">
+                                                            <!--<editor-fold desc="SVG ICON">-->
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                 class="icon icon-tabler icon-tabler-pencil" width="24"
+                                                                 height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                                 stroke="currentColor" fill="none"
+                                                                 stroke-linecap="round" stroke-linejoin="round">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                                <path
+                                                                    d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/>
+                                                                <path d="M13.5 6.5l4 4"/>
+                                                            </svg>
+                                                            <!--</editor-fold>-->
+                                                            Edit Charge
+                                                        </a>
+                                                        <a href="#" class="btn btn-sm btn-ghost-danger"
+                                                           wire:click.prevent="removeCharge({{ $attendee->id }}, {{ $index }})">
+                                                            <!--<editor-fold desc="SVG ICON">-->
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                 class="icon icon-tabler icon-tabler-trash" width="24"
+                                                                 height="24"
+                                                                 viewBox="0 0 24 24" stroke-width="2"
+                                                                 stroke="currentColor" fill="none"
+                                                                 stroke-linecap="round" stroke-linejoin="round">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                                <path d="M4 7l16 0"/>
+                                                                <path d="M10 11l0 6"/>
+                                                                <path d="M14 11l0 6"/>
+                                                                <path
+                                                                    d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
+                                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
+                                                            </svg>
+                                                            <!--</editor-fold>-->
+                                                            @if($index == $removingChargeListIndex && $attendee->id == $removingChargeListAttendeeId)
+                                                                Are you sure?
+                                                            @else
+                                                                Remove Charge
+                                                            @endif
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+
+                                                </tr>
+                                            @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @else
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tbody>
+                                            @forelse($attendee->cancellation_charge_list as $index => $item)
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $item['name'] }}</td>
+                                                    <td>{{ $item['rated'] ? 'Rated' : 'Unrated' }}</td>
+                                                    @if($item['rated'])
+                                                        <td>{{ '$' . number_format($item['amount'], 2) . ' x ' . $duration . ' = ' . '$' . number_format(($item['amount'] * $duration), 2)}}</td>
+                                                    @else
+                                                        <td>{{ '$' . number_format($item['amount'], 2) }}</td>
+                                                    @endif
+                                                    <td>{{ $item['note'] }}</td>
+                                                    <td>
+                                                        <a href="#" class="btn btn-sm btn-ghost-warning"
+                                                           wire:click.prevent="showEditChargeModal({{ $attendee->id }}, {{ $index }})">
+                                                            <!--<editor-fold desc="SVG ICON">-->
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                 class="icon icon-tabler icon-tabler-pencil" width="24"
+                                                                 height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                                 stroke="currentColor" fill="none"
+                                                                 stroke-linecap="round" stroke-linejoin="round">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                                <path
+                                                                    d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/>
+                                                                <path d="M13.5 6.5l4 4"/>
+                                                            </svg>
+                                                            <!--</editor-fold>-->
+                                                            Edit Charge
+                                                        </a>
+                                                        <a href="#" class="btn btn-sm btn-ghost-danger"
+                                                           wire:click.prevent="removeCharge({{ $attendee->id }}, {{ $index }})">
+                                                            <!--<editor-fold desc="SVG ICON">-->
+                                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                                 class="icon icon-tabler icon-tabler-trash" width="24"
+                                                                 height="24"
+                                                                 viewBox="0 0 24 24" stroke-width="2"
+                                                                 stroke="currentColor" fill="none"
+                                                                 stroke-linecap="round" stroke-linejoin="round">
+                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                                <path d="M4 7l16 0"/>
+                                                                <path d="M10 11l0 6"/>
+                                                                <path d="M14 11l0 6"/>
+                                                                <path
+                                                                    d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
+                                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
+                                                            </svg>
+                                                            <!--</editor-fold>-->
+                                                            @if($index == $removingChargeListIndex && $attendee->id == $removingChargeListAttendeeId)
+                                                                Are you sure?
+                                                            @else
+                                                                Remove Charge
+                                                            @endif
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+
+                                                </tr>
+                                            @endforelse
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                @endif
+
+                            @endif
+
+
+                        </div>
                     </div>
-                    <div class="card-body">
 
-                        @foreach($session->students as $studentId => $student)
-                            <h3>{{ $student['name'] }}</h3>
-                            <table class="table">
-                                <thead>
-                                <tr>
-                                    <th class="w-1">#</th>
-                                    <th>Item</th>
-                                    <th class="w-1">Amount</th>
-                                    <th>Note</th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                @forelse($student['charge_list'] as $index => $item)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $item['name'] }}</td>
-                                        <td>${{ number_format($item['amount'], 2) }}</td>
-                                        <td>{{ $item['note'] }}</td>
-                                        <td class="text-end">
-                                            @if($session->status == \App\Models\Session::STATUS_PENDING)
-                                                <button class="btn btn-sm btn-danger"
-                                                        wire:click="removeItem({{ $studentId }}, {{ $index }})">
-                                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                                         class="icon icon-tabler icon-tabler-trash" width="24"
-                                                         height="24"
-                                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
-                                                         fill="none" stroke-linecap="round" stroke-linejoin="round">
-                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                        <path d="M4 7l16 0"/>
-                                                        <path d="M10 11l0 6"/>
-                                                        <path d="M14 11l0 6"/>
-                                                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
-                                                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
-                                                    </svg>
-                                                    Remove
-                                                </button>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr class="text-center text-secondary">
-                                        <td colspan="5">There are no items at the moment.</td>
-                                    </tr>
-                                @endforelse
-                                </tbody>
-                            </table>
-                        @endforeach
-
-
-                    </div>
                 </div>
 
-            </div>
+            @endforeach
 
         </div>
     </div>
 
 
-    <div class="modal modal-blur fade" id="modal-create" tabindex="-1" aria-hidden="true" wire:ignore.self>
+    <div class="modal modal-blur fade" id="modal-add-student" tabindex="-1" aria-hidden="true" wire:ignore.self>
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">New Charge</h5>
+                    <h5 class="modal-title">Add Student</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
 
-                    <form id="modal-create-form" wire:submit="storeChargeItem">
+                    <form id="modal-add-student-form" wire:submit="addStudent">
                         <div class="row mb-3">
                             <div class="col-12 mb-3">
                                 <div>
-                                    <label for="student_id" class="form-label required">Student</label>
-                                    <select wire:model="student_id" class="form-control" id="student_id">
-                                        <option value="">-- Select Student --</option>
-                                        @foreach($session->students as $studentId => $student)
-                                            <option value="{{ $studentId }}">
-                                                {{ $student['name'] }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                    @error('student_id')
+                                    <label for="search_student" class="form-label">Search</label>
+                                    <input type="text" wire:model.live="searchStudentQuery" class="form-control"
+                                           id="search_student"
+                                           placeholder="Search by name, email, or phone number.">
+                                    @error('form.name')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>
                                     @enderror
-                                </div>
-                            </div>
-                            <div class="col-12 mb-3">
-                                <div>
-                                    <label for="description" class="form-label required">Item</label>
-                                    <input type="text" wire:model="description" class="form-control"
-                                           id="description"
-                                           placeholder="Item description">
-                                    @error('description')
-                                    <div class="text-danger mt-1">
-                                        {{ $message }}
+                                    <div class="d-flex flex-column gap-2 mt-3 justify-center">
+                                        @forelse($foundStudents as $student)
+                                            @if($student->id == $selectedStudentId)
+                                                <div class="badge cursor-pointer border-success">
+                                                    {{ $student->full_name }}
+                                                </div>
+                                            @else
+                                                <div class="badge cursor-pointer"
+                                                     wire:click="selectStudent({{ $student->id }})">
+                                                    {{ $student->full_name }}
+                                                </div>
+                                            @endif
+                                        @empty
+                                            <div class="text-secondary">
+                                                No students to show, please adjust your search query.
+                                            </div>
+                                        @endforelse
                                     </div>
-                                    @enderror
                                 </div>
                             </div>
-                            <div class="col-12 mb-3">
-                                <div>
-                                    <label for="amount" class="form-label required">Amount</label>
-                                    <input type="text" wire:model="amount" class="form-control" id="amount"
-                                           placeholder="10">
-                                    @error('amount')
-                                    <div class="text-danger mt-1">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="col-12 mb-3">
-                                <div>
-                                    <label for="note" class="form-label">Note</label>
-                                    <input type="text" wire:model="note" class="form-control"
-                                           id="note"
-                                           placeholder="Note">
-                                    @error('note')
-                                    <div class="text-danger mt-1">
-                                        {{ $message }}
-                                    </div>
-                                    @enderror
-                                </div>
-                            </div>
+
                         </div>
                     </form>
 
@@ -296,10 +448,9 @@
                     <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
                         Cancel
                     </a>
-                    <button class="btn btn-primary ms-auto" type="submit" form="modal-create-form"
-                            wire:loading.attr="disabled" wire:target="storeChargeItem">
+                    <button class="btn btn-primary ms-auto" type="submit" form="modal-add-student-form"
+                            wire:loading.attr="disabled" wire:target="addStudent">
 
-                        <!--<editor-fold desc="SVG ICON">-->
                         <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
                              stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
                              stroke-linejoin="round">
@@ -307,10 +458,206 @@
                             <path d="M12 5l0 14"></path>
                             <path d="M5 12l14 0"></path>
                         </svg>
-                        <!--</editor-fold>-->
-                        Save
-                        <span wire:loading wire:target="storeChargeItem">
-                            &nbsp; - Saving...
+                        Add
+                        <span wire:loading wire:target="addStudent">
+                            &nbsp; - Adding...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal modal-blur fade" id="modal-add-charge" tabindex="-1" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Charge</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <form id="modal-add-charge-form" wire:submit="addCharge">
+                        <div class="row mb-3">
+                            <div class="col-12 mb-3">
+                                <div>
+                                    <label for="attendeeChargeName" class="form-label">Name</label>
+                                    <input type="text" wire:model="attendeeChargeName"
+                                           class="form-control"
+                                           id="attendeeChargeName"
+                                           placeholder="AB Charge">
+                                    @error('attendeeChargeName')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div>
+                                    <label for="attendeeChargeAmount" class="form-label">Amount (&dollar;)</label>
+                                    <input type="text" wire:model="attendeeChargeAmount"
+                                           class="form-control"
+                                           id="attendeeChargeAmount"
+                                           placeholder="100">
+                                    @error('attendeeChargeAmount')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div>
+                                    <label for="attendeeChargeType" class="form-label">Type</label>
+                                    <select id="attendeeChargeType"
+                                            class="form-control">
+                                        <option value="rated">Rated</option>
+                                        <option value="unrated">Unrated</option>
+                                    </select>
+
+                                    @error('attendeeChargeType')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div>
+                                    <label for="attendeeChargeNote" class="form-label">Note</label>
+                                    <input type="text" wire:model="attendeeChargeNote"
+                                           class="form-control"
+                                           id="attendeeChargeNote"
+                                           placeholder="Write charge description">
+                                    @error('attendeeChargeNote')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </a>
+                    <button class="btn btn-primary ms-auto" type="submit" form="modal-add-charge-form"
+                            wire:loading.attr="disabled" wire:target="addCharge">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                             stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M12 5l0 14"></path>
+                            <path d="M5 12l14 0"></path>
+                        </svg>
+                        Add
+                        <span wire:loading wire:target="addCharge">
+                            &nbsp; - Adding...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal modal-blur fade" id="modal-edit-charge" tabindex="-1" aria-hidden="true" wire:ignore.self>
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Charge</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                    <form id="modal-edit-charge-form" wire:submit="updateCharge">
+                        <div class="row mb-3">
+                            <div class="col-12 mb-3">
+                                <div>
+                                    <label for="attendeeChargeName" class="form-label">Name</label>
+                                    <input type="text" wire:model="attendeeChargeName"
+                                           class="form-control"
+                                           id="attendeeChargeName"
+                                           placeholder="AB Charge">
+                                    @error('attendeeChargeName')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div>
+                                    <label for="attendeeChargeAmount" class="form-label">Amount (&dollar;)</label>
+                                    <input type="text" wire:model="attendeeChargeAmount"
+                                           class="form-control"
+                                           id="attendeeChargeAmount"
+                                           placeholder="100">
+                                    @error('attendeeChargeAmount')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div>
+                                    <label for="attendeeChargeType" class="form-label">Type</label>
+                                    <select id="attendeeChargeType"
+                                            wire:model="attendeeChargeType"
+                                            class="form-control">
+                                        <option value="rated">Rated</option>
+                                        <option value="unrated">Unrated</option>
+                                    </select>
+
+                                    @error('attendeeChargeType')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <div>
+                                    <label for="attendeeChargeNote" class="form-label">Note</label>
+                                    <input type="text" wire:model="attendeeChargeNote"
+                                           class="form-control"
+                                           id="attendeeChargeNote"
+                                           placeholder="Write charge description">
+                                    @error('attendeeChargeNote')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+
+                </div>
+
+                <div class="modal-footer">
+                    <a href="#" class="btn btn-link link-secondary" data-bs-dismiss="modal">
+                        Cancel
+                    </a>
+                    <button class="btn btn-primary ms-auto" type="submit" form="modal-edit-charge-form"
+                            wire:loading.attr="disabled" wire:target="updateCharge">
+
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24"
+                             stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M12 5l0 14"></path>
+                            <path d="M5 12l14 0"></path>
+                        </svg>
+                        Add
+                        <span wire:loading wire:target="updateCharge">
+                            &nbsp; - Adding...
                         </span>
                     </button>
                 </div>
@@ -318,28 +665,52 @@
         </div>
     </div>
 
+
     <script>
         document.addEventListener('livewire:initialized', () => {
 
 
-            document.getElementById('modal-create').addEventListener('hidden.bs.modal', event => {
+            document.getElementById('modal-add-student').addEventListener('hidden.bs.modal', event => {
                 @this.
-                resetForm();
-            })
+                resetAddStudentForm();
+            });
 
-            const createModal = new bootstrap.Modal('#modal-create');
+            document.getElementById('modal-add-charge').addEventListener('hidden.bs.modal', event => {
+                @this.
+                resetChargeStudentForm();
+            });
+
+            document.getElementById('modal-edit-charge').addEventListener('hidden.bs.modal', event => {
+                @this.
+                resetChargeStudentForm();
+            });
+
+            const addStudentModal = new bootstrap.Modal('#modal-add-student');
+            const addChargeModal = new bootstrap.Modal('#modal-add-charge');
+            const editChargeModal = new bootstrap.Modal('#modal-edit-charge');
 
             @this.
             on('close-all-modals', (event) => {
-                createModal.hide();
+                addStudentModal.hide();
+                addChargeModal.hide();
+                editChargeModal.hide();
             });
 
             @this.
-            on('toggle-modal-create', (event) => {
-                createModal.toggle();
+            on('toggle-modal-add-student', (event) => {
+                addStudentModal.toggle();
 
             });
 
+            @this.
+            on('toggle-modal-edit-charge', (event) => {
+                editChargeModal.toggle();
+            });
+
+            @this.
+            on('toggle-modal-charge-student', (event) => {
+                addChargeModal.toggle();
+            });
 
         });
     </script>

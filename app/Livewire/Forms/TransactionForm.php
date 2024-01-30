@@ -2,8 +2,10 @@
 
 namespace App\Livewire\Forms;
 
+use App\Models\Employee;
 use App\Models\Group;
 use App\Models\Student;
+use App\Models\Teacher;
 use App\Models\Transaction;
 use Livewire\Form;
 
@@ -24,7 +26,7 @@ class TransactionForm extends Form
             'type' => ['required', 'string', 'in:' . implode(',', array_keys(Transaction::TYPES))],
             'amount' => ['required', 'numeric', 'gt:0', 'regex:/^[0-9]+(\.[0-9]{1,2})?$/'],
             'description' => ['required', 'string', 'max:10000'],
-            ];
+        ];
     }
 
     public function validationAttributes(): array
@@ -49,20 +51,31 @@ class TransactionForm extends Form
     {
         //Deduct from sender
         $this->transactable_id = $fromId;
-        $this->type = Transaction::TYPE_TRANSFER;
+        $this->type = Transaction::TYPE_TRANSFER_OUT;
         $this->amount = $amount;
         $this->description = $description;
         $this->store($transactableModel);
         $this->model->sync();
 
+        $name = '';
+
+        if ($transactableModel == Student::class) {
+            $name = $this->model->transactable->full_name;
+        }
+
+        if (in_array($transactableModel, [Teacher::class, Employee::class])) {
+            $name = $this->model->transactable->name;
+        }
+
         //Add to receiver
         $this->transactable_id = $toId;
-        $this->type = Transaction::TYPE_DEPOSIT;
+        $this->type = Transaction::TYPE_TRANSFER_IN;
         $this->amount = $amount;
-        $this->description = 'Internal Transfer, reference: ' . $fromId . ' - ' . $this->model->number . '.';
+        $this->description = 'Internal Transfer, reference: ' . $name . ' - ' . $this->model->number . '.';
         $this->store($transactableModel);
         $this->model->sync();
     }
+
     public function store($transactableModel)
     {
         $this->validate();

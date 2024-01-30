@@ -26,7 +26,6 @@ class Index extends Component
         $this->groups = Group::orderBy('created_at', 'desc')->get();
     }
 
-
     #[Layout('layouts.app')]
     public function render()
     {
@@ -40,9 +39,9 @@ class Index extends Component
 
         $subjects = $subjects->paginate($this->perPage);
 
-        return view('livewire.dashboard.subjects.index', [
-            'subjects' => $subjects
-        ]);
+            return view('livewire.dashboard.subjects.index', [
+                'subjects' => $subjects
+            ]);
     }
 
 

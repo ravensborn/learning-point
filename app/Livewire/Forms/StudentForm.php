@@ -157,6 +157,8 @@ class StudentForm extends Form
 
         $data = $this->only($this->attributes);
 
+        $data['number'] = Student::generateNumber();
+
         $model = new Student();
 
         return $this->model = $model->create($data);

@@ -13,6 +13,8 @@ return new class extends Migration {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
 
+            $table->string('number');
+
             $table->unsignedBigInteger('user_id')
                 ->nullable();
             $table->foreign('user_id')

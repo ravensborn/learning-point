@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard\Sessions;
 
 use App\Livewire\Forms\SessionForm;
+use App\Models\Attendee;
 use App\Models\Group;
 use App\Models\Session;
 use App\Models\Student;
@@ -25,41 +26,40 @@ class Create extends Component
     public $students;
 
 
-
     public function store(): void
     {
-
-        $students = $this->prepareStudentsArray($this->students);
-
         $this->sessionForm->user_id = auth()->user()->id;
-        $this->sessionForm->students = $students;
         $model = $this->sessionForm->store();
+
+        $this->storeAttendees($model->id);
+
         $this->redirectRoute('dashboard.sessions.manage', $model->id);
     }
 
-    public function prepareStudentsArray($students): array
+    public function storeAttendees($sessionId): void
     {
-        $result = [];
-        foreach ($students as $student) {
+        foreach ($this->students as $student) {
 
             [$amount, $note] = $this->calculateStudentCharge($student);
-            $chargeList = [];
 
-            if($amount > 0) {
-                $chargeList[] =   [
-                    'name' => 'Session amount',
-                    'amount' => $amount,
-                    'note' => $note,
-                ];
-            }
-
-            $result[$student->id] = [
-                'name' => $student->full_name,
-                'charge_list' => $chargeList,
+            $chargeList[] = [
+                'name' => 'Session Charge',
+                'amount' => $amount,
+                'rated' => true,
+                'note' => $note,
             ];
-        }
 
-        return $result;
+            Attendee::create([
+                'session_id' => $sessionId,
+                'student_id' => $student->id,
+                'attending' => true,
+                'charged' => true,
+                'charge_list' => $chargeList,
+                'cancellation_charge_list' => [],
+            ]);
+
+            $chargeList = [];
+        }
     }
 
     public function calculateStudentCharge($student): array
@@ -97,9 +97,6 @@ class Create extends Component
         if ($student) {
             if (!$this->students->contains('id', '=', $student->id)) {
                 $this->students->push($student);
-
-//                $this->studentSearchQuery = '';
-//                $this->foundStudents = collect();
             }
         }
 

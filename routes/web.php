@@ -7,6 +7,7 @@ use App\Livewire\Dashboard\Subjects\Index as SubjectsIndex;
 
 use App\Livewire\Dashboard\Sessions\Index as SessionsIndex;
 use App\Livewire\Dashboard\Sessions\Create as SessionsCreate;
+use App\Livewire\Dashboard\Sessions\Edit as SessionsEdit;
 use App\Livewire\Dashboard\Sessions\Manage as SessionsManage;
 
 use App\Livewire\Dashboard\Teachers\Index as TeachersIndex;
@@ -72,6 +73,7 @@ Route::middleware(['auth'])->group(function() {
 
         Route::get('/sessions', SessionsIndex::class)->name('sessions.index');
         Route::get('/sessions/create', SessionsCreate::class)->name('sessions.create');
+        Route::get('/sessions/{session}/edit', SessionsEdit::class)->name('sessions.edit');
         Route::get('/sessions/{session}/manage', SessionsManage::class)->name('sessions.manage');
 
         Route::get('/teachers', TeachersIndex::class)->name('teachers.index');

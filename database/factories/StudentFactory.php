@@ -20,6 +20,7 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
+            'number' => 'STU-000' . $this->faker->randomNumber(3, true),
             'first_name' => $this->faker->firstName,
             'middle_name' => $this->faker->lastName,
             'last_name' => $this->faker->lastName,

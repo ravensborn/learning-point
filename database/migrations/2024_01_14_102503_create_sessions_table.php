@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('sessions', function (Blueprint $table) {
             $table->id();
 
+            $table->string('number');
+
             $table->unsignedBigInteger('user_id')
                 ->nullable();
             $table->foreign('user_id')
@@ -37,8 +39,6 @@ return new class extends Migration
 
             $table->string('type');
             $table->string('status');
-
-            $table->json('students');
 
             $table->dateTime('time_in');
             $table->dateTime('time_out');

@@ -17,6 +17,7 @@ class TeacherFactory extends Factory
     public function definition(): array
     {
         return [
+            'number' => 'TCH-000' . $this->faker->randomNumber(3, true),
             'name' => $this->faker->name,
             'email' => $this->faker->email,
             'phone_number' => $this->faker->phoneNumber,

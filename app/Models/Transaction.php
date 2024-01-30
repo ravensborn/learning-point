@@ -22,26 +22,30 @@ class Transaction extends Model
     const TYPE_WITHDRAW = 'withdraw';
     const TYPE_DEPOSIT = 'deposit';
     const TYPE_PURCHASE = 'purchase';
-    const TYPE_TRANSFER = 'transfer';
+    const TYPE_TRANSFER_IN = 'transfer-in';
+    const TYPE_TRANSFER_OUT = 'transfer-out';
 
     const TYPES = [
         self::TYPE_WITHDRAW => 'Withdraw',
         self::TYPE_DEPOSIT => 'Deposit',
         self::TYPE_PURCHASE => 'Purchase',
-        self::TYPE_TRANSFER => 'Transfer',
+        self::TYPE_TRANSFER_IN => 'Transfer In',
+        self::TYPE_TRANSFER_OUT => 'Transfer Out',
     ];
 
     const TYPE_COLOR_CLASSES = [
         self::TYPE_WITHDRAW => 'text-danger',
         self::TYPE_DEPOSIT => 'text-success',
         self::TYPE_PURCHASE => 'text-danger',
-        self::TYPE_TRANSFER => 'text-danger',
+        self::TYPE_TRANSFER_IN => 'text-success',
+        self::TYPE_TRANSFER_OUT => 'text-danger',
     ];
     const TYPE_PREFIX_CHARACTER = [
         self::TYPE_WITHDRAW => '▼',
         self::TYPE_DEPOSIT => '▲',
         self::TYPE_PURCHASE => '▼',
-        self::TYPE_TRANSFER => '▼',
+        self::TYPE_TRANSFER_IN => '▲',
+        self::TYPE_TRANSFER_OUT => '▼',
     ];
 
 
@@ -77,7 +81,11 @@ class Transaction extends Model
            if($this->type == self::TYPE_PURCHASE) {
                $wallet -= $amount;
            }
-           if($this->type == self::TYPE_TRANSFER) {
+           if($this->type == self::TYPE_TRANSFER_IN) {
+               $wallet += $amount;
+           }
+
+           if($this->type == self::TYPE_TRANSFER_OUT) {
                $wallet -= $amount;
            }
 

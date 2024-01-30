@@ -15,4 +15,19 @@ class Employee extends Model
     {
         return $this->morphMany(Transaction::class, 'transactable');
     }
+
+    public static function generateNumber(): string
+    {
+        $last =  self::orderBy('id', 'DESC')->first();
+        $lastId = $last ? $last->id : 0;
+
+        $prefix = 'EMP-';
+        $next = 1 + $lastId;
+
+        return sprintf(
+            '%s%s',
+            $prefix,
+            str_pad((string)$next, 6, "0", STR_PAD_LEFT)
+        );
+    }
 }

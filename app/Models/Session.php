@@ -12,7 +12,6 @@ class Session extends Model
     protected $guarded = ['id'];
 
     protected $casts = [
-        'students' => 'array',
         'time_in' => 'datetime',
         'time_out' => 'datetime',
     ];
@@ -25,16 +24,19 @@ class Session extends Model
 
     const STATUSES = [
         self::STATUS_PENDING => 'Pending',
+        self::STATUS_PROCESSED => 'Processed',
         self::STATUS_COMPLETED => 'Completed',
         self::STATUS_CANCELLED => 'Cancelled',
     ];
 
     const STATUS_PENDING = 'pending';
+    const STATUS_PROCESSED = 'processed';
     const STATUS_COMPLETED = 'completed';
     const STATUS_CANCELLED = 'cancelled';
 
     const STATUS_COLOR_CLASSES = [
         self::STATUS_PENDING => 'bg-yellow',
+        self::STATUS_PROCESSED => 'bg-primary',
         self::STATUS_COMPLETED => 'bg-success',
         self::STATUS_CANCELLED => 'bg-danger',
     ];
@@ -73,5 +75,24 @@ class Session extends Model
     {
         return $this->belongsTo(Subject::class);
     }
+    public function attendees(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Attendee::class);
+    }
 
+
+    public static function generateNumber(): string
+    {
+        $last =  self::orderBy('id', 'DESC')->first();
+        $lastId = $last ? $last->id : 0;
+
+        $prefix = 'SESH-';
+        $next = 1 + $lastId;
+
+        return sprintf(
+            '%s%s',
+            $prefix,
+            str_pad((string)$next, 6, "0", STR_PAD_LEFT)
+        );
+    }
 }

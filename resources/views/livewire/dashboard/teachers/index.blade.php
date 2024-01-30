@@ -68,6 +68,7 @@
                                 <tr>
 
                                     <th class="w-1">No.</th>
+                                    <th>Series</th>
                                     <th>Name</th>
                                     <th>Wallet</th>
                                     <th>E-Mail</th>
@@ -85,6 +86,9 @@
                                                 <span class="text-secondary">
                                                     {{ ($teachers->currentpage()-1) * $teachers->perpage() + $loop->index + 1 }}
                                                 </span>
+                                        </td>
+                                        <td class="text-secondary">
+                                            {{ $teacher->number }}
                                         </td>
                                         <td>
                                             {{ ucfirst($teacher->name) }}
