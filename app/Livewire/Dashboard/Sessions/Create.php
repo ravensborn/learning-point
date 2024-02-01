@@ -40,13 +40,14 @@ class Create extends Component
     {
         foreach ($this->students as $student) {
 
-            [$amount, $note] = $this->calculateStudentCharge($student);
+            [$amount, $note] = Attendee::calculateStudentCharge($this->sessionForm->subject_id, $student->studentRates, $this->students->count());
 
             $chargeList[] = [
                 'name' => 'Session Charge',
                 'amount' => $amount,
                 'rated' => true,
                 'note' => $note,
+                'managed' => true,
             ];
 
             Attendee::create([
@@ -62,28 +63,6 @@ class Create extends Component
         }
     }
 
-    public function calculateStudentCharge($student): array
-    {
-        $studentPriceException = $student->studentRates
-            ->where('subject_id', $this->sessionForm->subject_id)
-            ->where('number_of_students', $this->students->count())
-            ->first();
-
-        if ($studentPriceException) {
-            return [$studentPriceException->rate, 'Loaded from student price exception table.'];
-        }
-
-        $subjectPriceException = Subject::find($this->sessionForm->subject_id)
-            ->subjectRates
-            ->where('number_of_students', $this->students->count())
-            ->first();
-
-        if ($subjectPriceException) {
-            return [$subjectPriceException->rate, 'Loaded from subject price table.'];
-        }
-
-        return [0, ""];
-    }
 
     public function updatedSessionFormTimeIn(): void
     {

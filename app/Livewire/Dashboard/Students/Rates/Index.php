@@ -63,6 +63,7 @@ class Index extends Component
     public function store(): void
     {
         if (StudentRate::where('rate', $this->form->rate)
+            ->where('student_id', $this->student->id)
             ->where('number_of_students', $this->form->number_of_students)
             ->where('subject_id', $this->form->subject_id)
             ->first()) {

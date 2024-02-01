@@ -29,9 +29,13 @@
                                 <div class="dropdown me-2">
                                     <a href="#" class="btn dropdown-toggle" data-bs-toggle="dropdown">Actions</a>
                                     <div class="dropdown-menu">
+                                        <a class="dropdown-item"
+                                           href="{{ route('dashboard.sessions.edit', $session->id) }}">
+                                            Edt Session
+                                        </a>
                                         <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                            data-bs-target="#modal-add-student">
-                                            Add Student
+                                            Add New Student
                                         </a>
                                         <a class="dropdown-item" href="#" wire:click="showAddChargeModal('all')">
                                             Bulk Charge
@@ -91,20 +95,34 @@
                                     </div>
                                 </div>
                                 <div class="datagrid-item">
+                                    <div class="datagrid-title">Cancellation Fee Limit</div>
+                                    <div
+                                        class="datagrid-content">
+                                        ${{ number_format($this->settings->maximum_session_cancellation_charge_limit, 2) }}
+                                    </div>
+                                </div>
+                                <div class="datagrid-item">
                                     <div class="datagrid-title">Type</div>
                                     <div class="datagrid-content">
-                                                                                  <span class="badge text-body">
-                                                                                        {{ $session->type_name }}
-                                                                                    </span>
+                                        <span class="badge text-body">
+                                            {{ $session->type_name }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Attending</div>
+                                    <div class="datagrid-content">
+                                        <span class="badge text-body">
+                                            {{ $session->attendees->where('attending', true)->count() }} / {{ $session->attendees->count() }}
+                                        </span>
                                     </div>
                                 </div>
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Status</div>
                                     <div class="datagrid-content">
-                                                                                  <span
-                                                                                      class="badge text-white {{ $session->status_color_class }}">
-                                                                                        {{ $session->status_name }}
-                                                                                    </span>
+                                        <span class="badge text-white {{ $session->status_color_class }}">
+                                            {{ $session->status_name }}
+                                        </span>
                                     </div>
                                 </div>
                                 @if($session->note)
@@ -161,230 +179,314 @@
 
                 <div class="row row-deck row-cards mt-3">
 
-                    <div class="card">
-                        <div class="card-header">
-                            <div class="d-flex justify-content-between w-100">
-                                <div class="d-flex justify-content-start align-items-center">
-                                    <div class="me-3">
-                                        <h3 class="card-title">{{ $attendee->student->full_name }}</h3>
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between w-100">
+                                    <div class="d-flex justify-content-start align-items-center">
+                                        <div class="me-3">
+                                            <h3 class="card-title">{{ $attendee->student->full_name }}</h3>
+                                        </div>
+                                        <div class="me-3">
+                                            <label class="form-check form-switch mb-0">
+                                                <input wire:change="toggleStudentAttending({{ $attendee->id }})"
+                                                       @if($attendee->attending) checked="" @endif
+                                                       class="form-check-input"
+                                                       type="checkbox">
+                                                <span class="form-check-label">Attending</span>
+                                            </label>
+                                        </div>
+                                        <div class="me-3">
+                                            <label class="form-check form-switch mb-0">
+                                                <input class="form-check-input"
+                                                       wire:change="toggleStudentCharged({{ $attendee->id }})"
+                                                       @if($attendee->charged) checked="" @endif
+                                                       type="checkbox">
+                                                <span class="form-check-label">Charged</span>
+                                            </label>
+                                        </div>
                                     </div>
-                                    <div class="me-3">
-                                        <label class="form-check form-switch mb-0">
-                                            <input wire:change="toggleStudentAttending({{ $attendee->id }})"
-                                                   @if($attendee->attending) checked="" @endif
-                                                   class="form-check-input"
-                                                   type="checkbox">
-                                            <span class="form-check-label">Attending</span>
-                                        </label>
-                                    </div>
-                                    <div class="me-3">
-                                        <label class="form-check form-switch mb-0">
-                                            <input class="form-check-input"
-                                                   wire:change="toggleStudentCharged({{ $attendee->id }})"
-                                                   @if($attendee->charged) checked="" @endif
-                                                   type="checkbox">
-                                            <span class="form-check-label">Charged</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <div>
+                                    <div>
 
-                                </div>
-                                <div>
-                                    <a href="#" class="btn btn-sm btn-ghost-primary"
-                                       wire:click.prevent="showAddChargeModal({{ $attendee->id }})">
-                                        <!--<editor-fold desc="SVG ICON">-->
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                             stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                            <path d="M12 5l0 14"/>
-                                            <path d="M5 12l14 0"/>
-                                        </svg>
-                                        <!--</editor-fold>-->
-                                        Add Charge
-                                    </a>
-                                    <button class="btn btn-sm btn-ghost-danger"
-                                            wire:click.prevent="removeStudent({{ $attendee->student_id }})">
-                                        <!--<editor-fold desc="SVG ICON">-->
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                             class="icon icon-tabler icon-tabler-trash" width="24" height="24"
-                                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                             stroke-linecap="round" stroke-linejoin="round">
-                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                            <path d="M4 7l16 0"/>
-                                            <path d="M10 11l0 6"/>
-                                            <path d="M14 11l0 6"/>
-                                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
-                                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
-                                        </svg>
-                                        <!--</editor-fold>-->
-                                        @if($removingStudentId == $attendee->student_id)
-                                            Are you sure?
-                                        @else
-                                            Remove Student
+                                    </div>
+                                    <div>
+                                        @if($attendee->attending && $attendee->charged)
+                                            <a href="#" class="btn btn-sm btn-ghost-info"
+                                               wire:click.prevent="updateAttendeeSessionCharge({{ $attendee->id }})">
+                                                <!--<editor-fold desc="SVG ICON">-->
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     class="icon icon-tabler icon-tabler-refresh" width="24" height="24"
+                                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                     fill="none"
+                                                     stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                    <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4"/>
+                                                    <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/>
+                                                </svg>
+                                                <!--</editor-fold>-->
+                                                Update Session Charge
+                                            </a>
                                         @endif
-                                    </button>
+                                        <a href="#" class="btn btn-sm btn-ghost-primary"
+                                           wire:click.prevent="showAddChargeModal({{ $attendee->id }})">
+                                            <!--<editor-fold desc="SVG ICON">-->
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
+                                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                                 stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                <path d="M12 5l0 14"/>
+                                                <path d="M5 12l14 0"/>
+                                            </svg>
+                                            <!--</editor-fold>-->
+                                            Add Charge
+                                        </a>
+                                        <button class="btn btn-sm btn-ghost-danger"
+                                                wire:click.prevent="removeStudent({{ $attendee->student_id }})">
+                                            <!--<editor-fold desc="SVG ICON">-->
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                 class="icon icon-tabler icon-tabler-trash" width="24" height="24"
+                                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                                 stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                <path d="M4 7l16 0"/>
+                                                <path d="M10 11l0 6"/>
+                                                <path d="M14 11l0 6"/>
+                                                <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
+                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
+                                            </svg>
+                                            <!--</editor-fold>-->
+                                            @if($removingStudentId == $attendee->student_id)
+                                                Are you sure?
+                                            @else
+                                                Remove Student
+                                            @endif
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="card-body">
+                            <div class="card-body">
 
-
-                            @if(!$attendee->charged)
-                                <div class="text-secondary">
-                                    <svg xmlns="http://www.w3.org/2000/svg"
-                                         class="icon icon-tabler icon-tabler-info-circle" width="24" height="24"
-                                         viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                         stroke-linecap="round" stroke-linejoin="round">
-                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                        <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/>
-                                        <path d="M12 9h.01"/>
-                                        <path d="M11 12h1v4h1"/>
-                                    </svg>
-                                    Student will not be charged.
-                                </div>
-
-                            @else
-
-                                @if($attendee->attending)
-
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <tbody>
-                                            @forelse($attendee->charge_list as $index => $item)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $item['name'] }}</td>
-                                                    <td>{{ $item['rated'] ? 'Rated' : 'Unrated' }}</td>
-                                                    @if($item['rated'])
-                                                        <td>{{ '$' . number_format($item['amount'], 2) . ' x ' . $duration . ' = ' . '$' . number_format(($item['amount'] * $duration), 2)}}</td>
-                                                    @else
-                                                        <td>{{ '$' . number_format($item['amount'], 2) }}</td>
-                                                    @endif
-                                                    <td>{{ $item['note'] }}</td>
-                                                    <td>
-                                                        <a href="#" class="btn btn-sm btn-ghost-warning"
-                                                           wire:click.prevent="showEditChargeModal({{ $attendee->id }}, {{ $index }})">
-                                                            <!--<editor-fold desc="SVG ICON">-->
-                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                 class="icon icon-tabler icon-tabler-pencil" width="24"
-                                                                 height="24" viewBox="0 0 24 24" stroke-width="2"
-                                                                 stroke="currentColor" fill="none"
-                                                                 stroke-linecap="round" stroke-linejoin="round">
-                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                                <path
-                                                                    d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/>
-                                                                <path d="M13.5 6.5l4 4"/>
-                                                            </svg>
-                                                            <!--</editor-fold>-->
-                                                            Edit Charge
-                                                        </a>
-                                                        <a href="#" class="btn btn-sm btn-ghost-danger"
-                                                           wire:click.prevent="removeCharge({{ $attendee->id }}, {{ $index }})">
-                                                            <!--<editor-fold desc="SVG ICON">-->
-                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                 class="icon icon-tabler icon-tabler-trash" width="24"
-                                                                 height="24"
-                                                                 viewBox="0 0 24 24" stroke-width="2"
-                                                                 stroke="currentColor" fill="none"
-                                                                 stroke-linecap="round" stroke-linejoin="round">
-                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                                <path d="M4 7l16 0"/>
-                                                                <path d="M10 11l0 6"/>
-                                                                <path d="M14 11l0 6"/>
-                                                                <path
-                                                                    d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
-                                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
-                                                            </svg>
-                                                            <!--</editor-fold>-->
-                                                            @if($index == $removingChargeListIndex && $attendee->id == $removingChargeListAttendeeId)
-                                                                Are you sure?
-                                                            @else
-                                                                Remove Charge
-                                                            @endif
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            @empty
-                                                <tr>
-
-                                                </tr>
-                                            @endforelse
-                                            </tbody>
-                                        </table>
+                                @if(!$attendee->charged)
+                                    <div class="text-warning">
+                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                             class="icon icon-tabler icon-tabler-info-circle" width="24" height="24"
+                                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                             stroke-linecap="round" stroke-linejoin="round">
+                                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                            <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/>
+                                            <path d="M12 9h.01"/>
+                                            <path d="M11 12h1v4h1"/>
+                                        </svg>
+                                        Student will not be charged.
                                     </div>
+
                                 @else
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <tbody>
-                                            @forelse($attendee->cancellation_charge_list as $index => $item)
-                                                <tr>
-                                                    <td>{{ $loop->iteration }}</td>
-                                                    <td>{{ $item['name'] }}</td>
-                                                    <td>{{ $item['rated'] ? 'Rated' : 'Unrated' }}</td>
-                                                    @if($item['rated'])
-                                                        <td>{{ '$' . number_format($item['amount'], 2) . ' x ' . $duration . ' = ' . '$' . number_format(($item['amount'] * $duration), 2)}}</td>
-                                                    @else
-                                                        <td>{{ '$' . number_format($item['amount'], 2) }}</td>
-                                                    @endif
-                                                    <td>{{ $item['note'] }}</td>
-                                                    <td>
-                                                        <a href="#" class="btn btn-sm btn-ghost-warning"
-                                                           wire:click.prevent="showEditChargeModal({{ $attendee->id }}, {{ $index }})">
-                                                            <!--<editor-fold desc="SVG ICON">-->
+
+                                    @if($attendee->attending)
+
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                @forelse($attendee->charge_list as $index => $item)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>
+                                                            {{ $item['name'] }}
+                                                            @if($item['managed'])
+                                                                <span class="text-success">
                                                             <svg xmlns="http://www.w3.org/2000/svg"
-                                                                 class="icon icon-tabler icon-tabler-pencil" width="24"
+                                                                 class="icon icon-tabler icon-tabler-bolt" width="24"
                                                                  height="24" viewBox="0 0 24 24" stroke-width="2"
                                                                  stroke="currentColor" fill="none"
-                                                                 stroke-linecap="round" stroke-linejoin="round">
-                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                                <path
-                                                                    d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/>
-                                                                <path d="M13.5 6.5l4 4"/>
-                                                            </svg>
-                                                            <!--</editor-fold>-->
-                                                            Edit Charge
-                                                        </a>
-                                                        <a href="#" class="btn btn-sm btn-ghost-danger"
-                                                           wire:click.prevent="removeCharge({{ $attendee->id }}, {{ $index }})">
-                                                            <!--<editor-fold desc="SVG ICON">-->
-                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                 class="icon icon-tabler icon-tabler-trash" width="24"
-                                                                 height="24"
-                                                                 viewBox="0 0 24 24" stroke-width="2"
-                                                                 stroke="currentColor" fill="none"
-                                                                 stroke-linecap="round" stroke-linejoin="round">
-                                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                                <path d="M4 7l16 0"/>
-                                                                <path d="M10 11l0 6"/>
-                                                                <path d="M14 11l0 6"/>
-                                                                <path
-                                                                    d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
-                                                                <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
-                                                            </svg>
-                                                            <!--</editor-fold>-->
-                                                            @if($index == $removingChargeListIndex && $attendee->id == $removingChargeListAttendeeId)
-                                                                Are you sure?
-                                                            @else
-                                                                Remove Charge
+                                                                 stroke-linecap="round" stroke-linejoin="round"><path
+                                                                    stroke="none" d="M0 0h24v24H0z" fill="none"/><path
+                                                                    d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11"/></svg>
+                                                            </span>
                                                             @endif
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            @empty
-                                                <tr>
+                                                        </td>
+                                                        <td>{{ $item['rated'] ? 'Rated' : 'Unrated' }}</td>
+                                                        @if($item['rated'])
+                                                            <td>{{ '$' . number_format($item['amount'], 2) . ' x ' . $duration . ' = ' . '$' . number_format(($item['amount'] * $duration), 2)}}</td>
+                                                        @else
+                                                            <td>{{ '$' . number_format($item['amount'], 2) }}</td>
+                                                        @endif
+                                                        <td>{{ $item['note'] }}</td>
+                                                        <td>
+                                                            <a href="#" class="btn btn-sm btn-ghost-warning"
+                                                               wire:click.prevent="showEditChargeModal({{ $attendee->id }}, {{ $index }})">
+                                                                <!--<editor-fold desc="SVG ICON">-->
+                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                     class="icon icon-tabler icon-tabler-pencil"
+                                                                     width="24"
+                                                                     height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                                     stroke="currentColor" fill="none"
+                                                                     stroke-linecap="round" stroke-linejoin="round">
+                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                                    <path
+                                                                        d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/>
+                                                                    <path d="M13.5 6.5l4 4"/>
+                                                                </svg>
+                                                                <!--</editor-fold>-->
+                                                                Edit Charge
+                                                            </a>
+                                                            <a href="#" class="btn btn-sm btn-ghost-danger"
+                                                               wire:click.prevent="removeCharge({{ $attendee->id }}, {{ $index }})">
+                                                                <!--<editor-fold desc="SVG ICON">-->
+                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                     class="icon icon-tabler icon-tabler-trash"
+                                                                     width="24"
+                                                                     height="24"
+                                                                     viewBox="0 0 24 24" stroke-width="2"
+                                                                     stroke="currentColor" fill="none"
+                                                                     stroke-linecap="round" stroke-linejoin="round">
+                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                                    <path d="M4 7l16 0"/>
+                                                                    <path d="M10 11l0 6"/>
+                                                                    <path d="M14 11l0 6"/>
+                                                                    <path
+                                                                        d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
+                                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
+                                                                </svg>
+                                                                <!--</editor-fold>-->
+                                                                @if($index == $removingChargeListIndex && $attendee->id == $removingChargeListAttendeeId)
+                                                                    Are you sure?
+                                                                @else
+                                                                    Remove Charge
+                                                                @endif
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="5">
+                                                        <span class="text-info">
+                                                             <svg xmlns="http://www.w3.org/2000/svg"
+                                                                  class="icon icon-tabler icon-tabler-info-circle"
+                                                                  width="24" height="24"
+                                                                  viewBox="0 0 24 24" stroke-width="2"
+                                                                  stroke="currentColor" fill="none"
+                                                                  stroke-linecap="round" stroke-linejoin="round">
+                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                                 <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/>
+                                                                 <path d="M12 9h.01"/>
+                                                                 <path d="M11 12h1v4h1"/>
+                                                             </svg>
+                                                             Student does not have any charges.
+                                                        </span>
+                                                        </td>
+                                                    </tr>
+                                                @endforelse
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @else
+                                        <div class="table-responsive">
+                                            <table class="table">
+                                                <tbody>
+                                                @forelse($attendee->cancellation_charge_list as $index => $item)
+                                                    <tr>
+                                                        <td>{{ $loop->iteration }}</td>
+                                                        <td>{{ $item['name'] }}</td>
+                                                        <td>{{ $item['rated'] ? 'Rated' : 'Unrated' }}</td>
 
-                                                </tr>
-                                            @endforelse
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                                        <td>
+                                                            @if($item['amount'] > $this->settings->maximum_session_cancellation_charge_limit)
+                                                                <span class="text-danger"
+                                                                      title="Amount exceeds limit.">
+                                                                           <svg xmlns="http://www.w3.org/2000/svg"
+                                                                                class="icon icon-tabler icon-tabler-alert-triangle"
+                                                                                width="24" height="24"
+                                                                                viewBox="0 0 24 24" stroke-width="2"
+                                                                                stroke="currentColor" fill="none"
+                                                                                stroke-linecap="round"
+                                                                                stroke-linejoin="round"><path
+                                                                                   stroke="none" d="M0 0h24v24H0z"
+                                                                                   fill="none"/><path d="M12 9v4"/><path
+                                                                                   d="M10.363 3.591l-8.106 13.534a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636 -2.87l-8.106 -13.536a1.914 1.914 0 0 0 -3.274 0z"/><path
+                                                                                   d="M12 16h.01"/></svg>
+                                                                        </span>
+                                                            @endif
+                                                            @if($item['rated'])
+                                                                {{ '$' . number_format($item['amount'], 2) . ' x ' . $duration . ' = ' . '$' . number_format(($item['amount'] * $duration), 2)}}
+
+                                                            @else
+                                                                {{ '$' . number_format($item['amount'], 2) }}
+                                                            @endif
+                                                        </td>
+
+                                                        <td>{{ $item['note'] }}</td>
+                                                        <td>
+                                                            <a href="#" class="btn btn-sm btn-ghost-warning"
+                                                               wire:click.prevent="showEditChargeModal({{ $attendee->id }}, {{ $index }})">
+                                                                <!--<editor-fold desc="SVG ICON">-->
+                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                     class="icon icon-tabler icon-tabler-pencil"
+                                                                     width="24"
+                                                                     height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                                     stroke="currentColor" fill="none"
+                                                                     stroke-linecap="round" stroke-linejoin="round">
+                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                                    <path
+                                                                        d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4"/>
+                                                                    <path d="M13.5 6.5l4 4"/>
+                                                                </svg>
+                                                                <!--</editor-fold>-->
+                                                                Edit Charge
+                                                            </a>
+                                                            <a href="#" class="btn btn-sm btn-ghost-danger"
+                                                               wire:click.prevent="removeCharge({{ $attendee->id }}, {{ $index }})">
+                                                                <!--<editor-fold desc="SVG ICON">-->
+                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                     class="icon icon-tabler icon-tabler-trash"
+                                                                     width="24"
+                                                                     height="24"
+                                                                     viewBox="0 0 24 24" stroke-width="2"
+                                                                     stroke="currentColor" fill="none"
+                                                                     stroke-linecap="round" stroke-linejoin="round">
+                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                                    <path d="M4 7l16 0"/>
+                                                                    <path d="M10 11l0 6"/>
+                                                                    <path d="M14 11l0 6"/>
+                                                                    <path
+                                                                        d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"/>
+                                                                    <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"/>
+                                                                </svg>
+                                                                <!--</editor-fold>-->
+                                                                @if($index == $removingChargeListIndex && $attendee->id == $removingChargeListAttendeeId)
+                                                                    Are you sure?
+                                                                @else
+                                                                    Remove Charge
+                                                                @endif
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @empty
+                                                    <td colspan="5">
+                                                        <span class="text-info">
+                                                             <svg xmlns="http://www.w3.org/2000/svg"
+                                                                  class="icon icon-tabler icon-tabler-info-circle"
+                                                                  width="24" height="24"
+                                                                  viewBox="0 0 24 24" stroke-width="2"
+                                                                  stroke="currentColor" fill="none"
+                                                                  stroke-linecap="round" stroke-linejoin="round">
+                                                                 <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                                 <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/>
+                                                                 <path d="M12 9h.01"/>
+                                                                 <path d="M11 12h1v4h1"/>
+                                                             </svg>
+                                                             Student does not have any cancellation charges.
+                                                        </span>
+                                                    </td>
+                                                @endforelse
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    @endif
+
                                 @endif
 
-                            @endif
 
-
+                            </div>
                         </div>
                     </div>
 
@@ -510,6 +612,7 @@
                                 <div>
                                     <label for="attendeeChargeType" class="form-label">Type</label>
                                     <select id="attendeeChargeType"
+                                            wire:model.change="attendeeChargeType"
                                             class="form-control">
                                         <option value="rated">Rated</option>
                                         <option value="unrated">Unrated</option>
@@ -608,7 +711,7 @@
                                 <div>
                                     <label for="attendeeChargeType" class="form-label">Type</label>
                                     <select id="attendeeChargeType"
-                                            wire:model="attendeeChargeType"
+                                            wire:model.change="attendeeChargeType"
                                             class="form-control">
                                         <option value="rated">Rated</option>
                                         <option value="unrated">Unrated</option>

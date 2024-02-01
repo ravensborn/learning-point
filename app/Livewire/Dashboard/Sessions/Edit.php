@@ -29,6 +29,14 @@ class Edit extends Component
         $this->sessionForm->user_id = auth()->user()->id;
         $this->sessionForm->update();
 
+        foreach ($this->session->attendees as $attendee) {
+//            Attendee::calculateStudentCharge($this->session->subject_id, $attendee->student->studentRates, $this->session->attendees
+//                ->where('attending', true)->count());
+
+            $this->session->updateAttendeeSessionCharge($attendee->id, false);
+
+        }
+
         $this->redirectRoute('dashboard.sessions.manage', $this->sessionForm->model->id);
     }
 

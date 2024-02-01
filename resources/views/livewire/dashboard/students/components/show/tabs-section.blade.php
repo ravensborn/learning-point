@@ -1,5 +1,6 @@
 <div class="col">
     <div class="card">
+
         <div class="card-header" style="overflow: hidden;">
             <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs" role="tablist">
 {{--                <li class="nav-item" role="presentation" wire:ignore>--}}
@@ -146,6 +147,7 @@
                     </p>
                 </div>
                 <!--</editor-fold>-->
+
                 <!--<editor-fold desc="Transactions">-->
                 <div class="tab-pane" id="tabs-3" role="tabpanel" wire:ignore.self>
                     <h4>Transactions</h4>
@@ -209,6 +211,7 @@
 
                 </div>
                 <!--</editor-fold>-->
+
                 <!--<editor-fold desc="Family">-->
                 <div class="tab-pane" id="tabs-4" role="tabpanel" wire:ignore.self>
                     <div class="d-flex justify-content-between">
@@ -252,20 +255,20 @@
                                     </div>
                                 </div>
                             @endif
-                            @forelse($familyMembers as $student)
+                            @forelse($familyMembers as $member)
                                 <div class="list-group-item">
                                     <div class="row align-items-center">
                                         <div class="col-auto"><span class="badge bg-success"></span></div>
                                         <div class="col-auto">
                                             <a href="#">
-                                                <span class="avatar">{{ substr($student->first_name, 0, 1) }}</span>
+                                                <span class="avatar">{{ substr($member->first_name, 0, 1) }}</span>
                                             </a>
                                         </div>
                                         <div class="col text-truncate">
-                                            <a href="{{ route('dashboard.students.show', $student->id) }}"
+                                            <a href="{{ route('dashboard.students.show', $member->id) }}"
                                                class="text-reset d-block">
-                                                {{ $student->full_name }}
-                                                @if($student->id == $this->student->id)
+                                                {{ $member->full_name }}
+                                                @if($member->id == $student->id)
                                                     <div class="badge">Yourself</div>
                                                 @endif
                                             </a>
@@ -274,19 +277,19 @@
                                                     <div class="list-inline-item text-secondary">
                                                         Member
                                                     </div>
-                                                    @if($student->primary_phone_number)
+                                                    @if($member->primary_phone_number)
                                                         <div class="list-inline-item">
                                                             <a class="text-secondary"
-                                                               href="tel:{{ $student->primary_phone_number }}">
-                                                                {{ $student->primary_phone_number }}
+                                                               href="tel:{{ $member->primary_phone_number }}">
+                                                                {{ $member->primary_phone_number }}
                                                             </a>
                                                         </div>
                                                     @endif
-                                                    @if($student->secondary_phone_number)
+                                                    @if($member->secondary_phone_number)
                                                         <div class="list-inline-item">
                                                             <a class="text-secondary"
-                                                               href="tel:{{ $student->secondary_phone_number }}">
-                                                                {{ $student->secondary_phone_number }}
+                                                               href="tel:{{ $member->secondary_phone_number }}">
+                                                                {{ $member->secondary_phone_number }}
                                                             </a>
                                                         </div>
                                                     @endif
@@ -308,6 +311,7 @@
                     </div>
                 </div>
                 <!--</editor-fold>-->
+
                 <!--<editor-fold desc="Contacts">-->
                 <div class="tab-pane" id="tabs-5" role="tabpanel" wire:ignore.self>
                     <div class="d-flex justify-content-between">
@@ -442,6 +446,7 @@
                     </div>
                 </div>
                 <!--</editor-fold>-->
+
                 <!--<editor-fold desc="Documents">-->
                 <div class="tab-pane" id="tabs-6" role="tabpanel" wire:ignore.self>
                     <div class="d-flex justify-content-between">
@@ -564,6 +569,7 @@
                     </div>
                 </div>
                 <!--</editor-fold>-->
+
                 <!--<editor-fold desc="Price Exepctions">-->
                 <div class="tab-pane" id="tabs-7" role="tabpanel" wire:ignore.self>
                     <h4>Price Exceptions</h4>

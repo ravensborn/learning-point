@@ -2,14 +2,11 @@
 
 namespace App\Livewire\Dashboard\Sessions;
 
-use App\Livewire\Forms\SessionForm;
 use App\Livewire\Forms\TransactionForm;
 use App\Models\Attendee;
-use App\Models\Group;
 use App\Models\Session;
+use App\Models\Setting;
 use App\Models\Student;
-use App\Models\Subject;
-use App\Models\Teacher;
 use App\Models\Transaction;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -24,6 +21,8 @@ class Manage extends Component
 
     public float $duration = 0;
 
+    public $settings;
+
 
     public function mount(Session $session): void
     {
@@ -31,6 +30,23 @@ class Manage extends Component
         $this->duration = $session->time_out->floatDiffInRealHours($session->time_in);
         $this->foundStudents = collect();
         $this->calculateTotal();
+        $this->settings = Setting::find(1);
+    }
+
+
+    public function updateAllAttendeeSessionCharges($createIfNotExist): void
+    {
+        foreach ($this->session->attendees as $attendee) {
+            $this->session->updateAttendeeSessionCharge($attendee->id, $createIfNotExist);
+        }
+        $this->reloadSession();
+    }
+
+    public function updateAttendeeSessionCharge($attendeeId): void
+    {
+        $this->session->updateAttendeeSessionCharge($attendeeId);
+        $this->reloadSession();
+
     }
 
 
@@ -133,6 +149,7 @@ class Manage extends Component
                 'amount' => $this->attendeeChargeAmount,
                 'rated' => $this->attendeeChargeType == 'rated',
                 'note' => $this->attendeeChargeNote,
+                'managed' => false,
             ];
 
 
@@ -151,6 +168,12 @@ class Manage extends Component
     {
         $attendee = $this->session->attendees->find($attendeeId);
 
+//        if (!$attendee->attending) {
+//            if ($this->attendeeChargeAmount > $this->settings->maximum_session_cancellation_charge_limit) {
+//                $this->attendeeChargeAmount = $this->settings->maximum_session_cancellation_charge_limit;
+//            }
+//        }
+
         if ($attendee) {
 
             $chargeListKey = $attendee->attending ? 'charge_list' : 'cancellation_charge_list';
@@ -162,12 +185,14 @@ class Manage extends Component
                 'amount' => $this->attendeeChargeAmount,
                 'rated' => $this->attendeeChargeType == 'rated',
                 'note' => $this->attendeeChargeNote,
+                'managed' => false,
             ];
 
             $attendee->update([
                 $chargeListKey => $chargeList
             ]);
 
+            $this->resetValidation();
             $this->dispatch('close-all-modals');
             $this->reloadSession();
         }
@@ -250,15 +275,17 @@ class Manage extends Component
 
     public function addStudent(): void
     {
-        if (!$this->session->attendees->find($this->selectedStudentId)) {
+        if (!$this->session->attendees->where('student_id', $this->selectedStudentId)->first()) {
             Attendee::create([
                 'student_id' => $this->selectedStudentId,
                 'session_id' => $this->session->id,
-                'cancelled' => false,
+                'attending' => true,
+                'charged' => true,
                 'charge_list' => [],
+                'cancellation_charge_list' => [],
             ]);
         }
-
+        $this->updateAllAttendeeSessionCharges(false);
         $this->dispatch('close-all-modals');
     }
 

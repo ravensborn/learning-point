@@ -127,7 +127,7 @@
                                             {{ ucfirst($session->subject?->name ?? '-') }}
                                         </td>
                                         <td>
-                                            {{ $session->attendees->count() }}
+                                            {{ $session->attendees->where('attending', true)->count() . '/' . $session->attendees->count() }}
                                         </td>
                                         <td>
                                             <div>

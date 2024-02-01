@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Dashboard\Home as Home;
+use App\Livewire\Dashboard\Settings\Index as SettingsIndex;
 use App\Livewire\Dashboard\Users\Index as UsersIndex;
 
 use App\Livewire\Dashboard\Subjects\Index as SubjectsIndex;
@@ -100,6 +101,9 @@ Route::middleware(['auth'])->group(function() {
 
         Route::get('/families', FamiliesIndex::class)->name('families.index');
         Route::get('/families/{family}/students', FamilyStudentsIndex::class)->name('family.students.index');
+
+
+        Route::get('/settings', SettingsIndex::class)->name('settings.index');
     });
 
 });

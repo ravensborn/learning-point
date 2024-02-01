@@ -80,6 +80,50 @@ class Session extends Model
         return $this->hasMany(Attendee::class);
     }
 
+    public function updateAttendeeSessionCharge($attendeeId, $createIfNotExist = true): void
+    {
+        $attendee = $this->attendees->find($attendeeId);
+
+        if($attendee && $attendee->attending) {
+
+            $chargeList = $attendee->charge_list;
+            $selectedChargeItemIndex = -1;
+
+            foreach($chargeList as $index => $item) {
+                if($item['managed']) {
+                    $selectedChargeItemIndex = $index;
+                }
+            }
+
+            if($selectedChargeItemIndex >= 0) {
+                unset($chargeList[$selectedChargeItemIndex]);
+                $createIfNotExist = true;
+            }
+
+            if($createIfNotExist) {
+
+                [$amount, $note] = Attendee::calculateStudentCharge($this->subject_id, $attendee->student->studentRates, $this->attendees
+                    ->where('attending', true)
+                    ->count());
+
+                $chargeList[] = [
+                    'name' => 'Session Charge',
+                    'amount' => $amount,
+                    'rated' => true,
+                    'note' => $note,
+                    'managed' => true,
+                ];
+
+                $attendee->update([
+                    'charge_list' => $chargeList
+                ]);
+            }
+
+        }
+
+    }
+
+
 
     public static function generateNumber(): string
     {

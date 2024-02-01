@@ -23,6 +23,30 @@ class Attendee extends Model
 
     public function student(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(Student::class)->with(['studentRates']);
+    }
+
+
+    public static function calculateStudentCharge($subjectId, $studentRates, $numberOfStudents): array
+    {
+        $studentPriceException = $studentRates
+            ->where('subject_id', $subjectId)
+            ->where('number_of_students', $numberOfStudents)
+            ->first();
+
+        if ($studentPriceException) {
+            return [$studentPriceException->rate, 'Loaded from student price exception table.'];
+        }
+
+        $subjectPriceException = Subject::find($subjectId)
+            ->subjectRates
+            ->where('number_of_students', $numberOfStudents)
+            ->first();
+
+        if ($subjectPriceException) {
+            return [$subjectPriceException->rate, 'Loaded from subject price table.'];
+        }
+
+        return [0, ""];
     }
 }

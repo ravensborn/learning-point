@@ -240,6 +240,13 @@
                                          </span>
                                     Families
                                 </a>
+                                <a class="dropdown-item @if(request()->is('*/settings*')) active @endif"
+                                   href="{{ route('dashboard.settings.index') }}">
+                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
+                                             <i class="ti ti-custom ti-friends"></i>
+                                         </span>
+                                    Settings
+                                </a>
                             </div>
                         </div>
                     </li>
