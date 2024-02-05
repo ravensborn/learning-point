@@ -40,13 +40,10 @@ class Edit extends Component
         $this->redirectRoute('dashboard.sessions.manage', $this->sessionForm->model->id);
     }
 
-
-
     public function updatedSessionFormTimeIn(): void
     {
         $this->sessionForm->time_out = $this->sessionForm->time_in;
     }
-
 
     public function loadCurrentSessionDetails(): void
     {
@@ -57,6 +54,10 @@ class Edit extends Component
     {
 
         $this->session = $session;
+
+        if ($session->status == Session::STATUS_COMPLETED) {
+            $this->redirectRoute('dashboard.sessions.show-completed', $session->id);
+        }
 
         $this->availableTeachers = Teacher::orderBy('name')->get();
         $this->availableSubjects = Group::with([

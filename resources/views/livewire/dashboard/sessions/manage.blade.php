@@ -49,11 +49,25 @@
                                 <div class="dropdown me-2">
                                     <a href="#" class="btn dropdown-toggle" data-bs-toggle="dropdown">Session</a>
                                     <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="#">
-                                            Complete Session
+                                        <a class="dropdown-item" href="#"
+                                           wire:click="setStatus('{{ \App\Models\Session::STATUS_PENDING }}')">
+                                            Set as Pending
                                         </a>
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="#"
+                                           wire:click="setStatus('{{ \App\Models\Session::STATUS_PROCESSED }}')">
+                                            Set as Processed
+                                        </a>
+                                        <a class="dropdown-item" href="#"
+                                           wire:click="setStatus('{{ \App\Models\Session::STATUS_REJECTED }}')">
+                                            Set as Rejected
+                                        </a>
+                                        <a class="dropdown-item" href="#"
+                                           wire:click="setStatus('{{ \App\Models\Session::STATUS_CANCELLED }}')">
                                             Cancel Session
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <a class="dropdown-item" href="#" wire:click="completeSession()">
+                                            Complete Session
                                         </a>
                                     </div>
                                 </div>
@@ -118,6 +132,14 @@
                                     </div>
                                 </div>
                                 <div class="datagrid-item">
+                                    <div class="datagrid-title">Total</div>
+                                    <div class="datagrid-content">
+                                        <span class="badge text-white">
+                                            ${{ number_format($sessionTotal, 2) }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="datagrid-item">
                                     <div class="datagrid-title">Status</div>
                                     <div class="datagrid-content">
                                         <span class="badge text-white {{ $session->status_color_class }}">
@@ -125,14 +147,18 @@
                                         </span>
                                     </div>
                                 </div>
-                                @if($session->note)
-                                    <div class="datagrid-item">
-                                        <div class="datagrid-title">Note</div>
-                                        <div class="datagrid-content">
-                                            {{ $session->note }}
-                                        </div>
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Approval Note</div>
+                                    <div class="datagrid-content">
+                                        {{ $session->approval_note }}
                                     </div>
-                                @endif
+                                </div>
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Note</div>
+                                    <div class="datagrid-content">
+                                        {{ $session->note }}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -175,7 +201,7 @@
                 {{--                </div>--}}
             </div>
 
-            @foreach($session->attendees as $attendee)
+            @forelse($session->attendees as $attendee)
 
                 <div class="row row-deck row-cards mt-3">
 
@@ -185,7 +211,10 @@
                                 <div class="d-flex justify-content-between w-100">
                                     <div class="d-flex justify-content-start align-items-center">
                                         <div class="me-3">
-                                            <h3 class="card-title">{{ $attendee->student->full_name }}</h3>
+                                            <h3 class="card-title">
+                                                <a href="{{ route('dashboard.students.show', $attendee->student_id) }}"
+                                                   target="_blank">{{ $attendee->student->full_name }}</a>
+                                            </h3>
                                         </div>
                                         <div class="me-3">
                                             <label class="form-check form-switch mb-0">
@@ -204,6 +233,20 @@
                                                        type="checkbox">
                                                 <span class="form-check-label">Charged</span>
                                             </label>
+                                        </div>
+                                        <div class="me-3 text-info">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                 class="icon icon-tabler icon-tabler-receipt-dollar" width="24"
+                                                 height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                 fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                <path
+                                                    d="M5 21v-16a2 2 0 0 1 2 -2h10a2 2 0 0 1 2 2v16l-3 -2l-2 2l-2 -2l-2 2l-2 -2l-3 2"/>
+                                                <path
+                                                    d="M14.8 8a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 1 0 4h-2a2 2 0 0 1 -1.8 -1"/>
+                                                <path d="M12 6v10"/>
+                                            </svg>
+                                            ${{ number_format($this->calculateAttendeeChargeList($attendee->id), 2) }}
                                         </div>
                                     </div>
                                     <div>
@@ -492,7 +535,15 @@
 
                 </div>
 
-            @endforeach
+            @empty
+                <div class="row row-deck row-cards mt-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            No students are in this session.
+                        </div>
+                    </div>
+                </div>
+            @endforelse
 
         </div>
     </div>

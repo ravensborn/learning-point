@@ -18,11 +18,30 @@ class Index extends Component
     public int $perPage = 10;
     public string $search = '';
 
-    public function mount() {
+    public string $selectedStatus = 'all';
+
+    public bool $showToday = false;
+
+    public function toggleTodayFilter(): void
+    {
+        $this->showToday = !$this->showToday;
+    }
+
+    public function selectStatus($status): void
+    {
+        if (array_key_exists($status, Session::STATUSES) || $status == 'all') {
+            $this->selectedStatus = $status;
+        }
+
+    }
+
+    public function mount()
+    {
 
     }
 
     public array $statisticsCards;
+
     public function calculateStatistics(): void
     {
 
@@ -31,22 +50,24 @@ class Index extends Component
             'total' => Session::count(),
             'today' => Session::whereDate('created_at', Carbon::today())->count(),
             'class' => 'bg-primary',
+            'filter_key' => 'all',
         ];
 
-      foreach (Session::STATUSES as $key => $name) {
+        foreach (Session::STATUSES as $key => $name) {
 
-          $total = Session::where('status', $key)->count();
-          $today = Session::where('status', $key)
-              ->whereDate('created_at', Carbon::today())
-              ->count();
+            $total = Session::where('status', $key)->count();
+            $today = Session::where('status', $key)
+                ->whereDate('created_at', Carbon::today())
+                ->count();
 
-          $this->statisticsCards[] = [
-              'name' => $name,
-              'total' => $total,
-              'today' => $today,
-              'class' => Session::STATUS_COLOR_CLASSES[$key]
-          ];
-      }
+            $this->statisticsCards[] = [
+                'name' => $name,
+                'total' => $total,
+                'today' => $today,
+                'class' => Session::STATUS_COLOR_CLASSES[$key],
+                'filter_key' => $key,
+            ];
+        }
 
     }
 
@@ -64,6 +85,14 @@ class Index extends Component
             })->orWhereHas('subject', function ($query) {
                 $query->where('name', 'LIKE', '%' . trim($this->search) . '%');
             });
+        }
+
+        if (array_key_exists($this->selectedStatus, Session::STATUSES)) {
+            $sessions->where('status', $this->selectedStatus);
+        }
+
+        if($this->showToday) {
+            $sessions->whereDate('created_at', Carbon::today());
         }
 
         $sessions = $sessions->paginate($this->perPage);

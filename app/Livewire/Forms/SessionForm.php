@@ -18,7 +18,9 @@ class SessionForm extends Form
     public string $status = Session::STATUS_PENDING;
     public string $time_in = '';
     public string $time_out = '';
+    public float $total = 0;
     public string $note = '';
+    public string $approval_note = '';
 
     public function rules(): array
     {
@@ -30,7 +32,9 @@ class SessionForm extends Form
             'status' => ['required', 'string', 'in:' . implode(',', array_keys(Session::STATUSES))],
             'time_in' => ['required', 'date'],
             'time_out' => ['required', 'date', 'after:time_in'],
+            'total' => ['required', 'numeric'],
             'note' => ['nullable', 'string', 'min:1', 'max:10000'],
+            'approval_note' => ['nullable', 'string', 'min:1', 'max:10000'],
             ];
     }
 
@@ -44,7 +48,9 @@ class SessionForm extends Form
             'status' => 'status',
             'time_in' => 'time in',
             'time_out' => 'time out',
+            'total' => 'total',
             'note' => 'note',
+            'approval_note' => 'note',
         ];
     }
 
@@ -64,7 +70,7 @@ class SessionForm extends Form
     {
         $this->validate();
 
-        $data = $this->only(['user_id', 'teacher_id', 'subject_id', 'type', 'status', 'time_in', 'time_out', 'note']);
+        $data = $this->only(['user_id', 'teacher_id', 'subject_id', 'type', 'status', 'time_in', 'time_out', 'total', 'note', 'approval_note']);
 
         $data['number'] = Session::generateNumber();
 
@@ -77,7 +83,7 @@ class SessionForm extends Form
     {
         $this->validate();
 
-        return $this->model->update($this->only(['user_id', 'teacher_id', 'subject_id', 'type', 'status', 'time_in', 'time_out', 'note']));
+        return $this->model->update($this->only(['user_id', 'teacher_id', 'subject_id', 'type', 'status', 'time_in', 'time_out', 'total', 'note', 'approval_note']));
     }
 
 }

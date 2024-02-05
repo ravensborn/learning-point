@@ -43,9 +43,10 @@ return new class extends Migration
             $table->dateTime('time_in');
             $table->dateTime('time_out');
 
-//            $table->double('rate', 10, 2)->default(0)->comment('per hour');
+            $table->double('total', 10, 2)->default(0)->comment('per hour');
 
             $table->longText('note')->nullable();
+            $table->longText('approval_note')->nullable();
 
 
             $table->timestamps();

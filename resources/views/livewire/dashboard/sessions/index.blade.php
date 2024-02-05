@@ -34,21 +34,28 @@
                  wire:init="calculateStatistics">
                 @foreach($statisticsCards as $card)
                     <div class="col-sm-6 col-lg-3">
-                        <div class="card card-sm">
+                        <div
+                            wire:click="selectStatus('{{ $card['filter_key'] }}')"
+                            @class(['card card-sm' => true, 'border-primary' => $selectedStatus == $card['filter_key']])>
                             <div class="card-body">
                                 <div class="row align-items-center">
                                     <div class="col-auto">
-                            <span class="{{ $card['class'] }} text-white avatar">
-                                <svg xmlns="http://www.w3.org/2000/svg"
-                                     class="icon icon-tabler icon-tabler-chart-arrows-vertical" width="24" height="24"
-                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                     stroke-linecap="round" stroke-linejoin="round"><path stroke="none"
-                                                                                          d="M0 0h24v24H0z"
-                                                                                          fill="none"/><path
-                                        d="M18 21v-14"/><path d="M9 15l3 -3l3 3"/><path d="M15 10l3 -3l3 3"/><path
-                                        d="M3 21l18 0"/><path d="M12 21l0 -9"/><path d="M3 6l3 -3l3 3"/><path
-                                        d="M6 21v-18"/></svg>
-                            </span>
+                                        <span class="{{ $card['class'] }} text-white avatar">
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                 class="icon icon-tabler icon-tabler-chart-arrows-vertical" width="24"
+                                                 height="24"
+                                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                                                 stroke-linecap="round" stroke-linejoin="round">
+                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                <path d="M18 21v-14"/>
+                                                <path d="M9 15l3 -3l3 3"/>
+                                                <path d="M15 10l3 -3l3 3"/>
+                                                <path d="M3 21l18 0"/>
+                                                <path d="M12 21l0 -9"/>
+                                                <path d="M3 6l3 -3l3 3"/>
+                                                <path d="M6 21v-18"/>
+                                            </svg>
+                                        </span>
                                     </div>
                                     <div class="col">
                                         <div class="font-weight-medium">
@@ -69,8 +76,21 @@
 
                 <div class="col-12">
                     <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Session List</h3>
+                        <div class="card-header w-100">
+                            <div class="d-flex justify-content-between w-100">
+                                <div>
+                                    <h3 class="card-title">Session List</h3>
+                                </div>
+                                <div>
+                                    <label class="form-check form-switch mb-0">
+                                        <input wire:change="toggleTodayFilter()"
+                                               @if($showToday) checked="" @endif
+                                               class="form-check-input"
+                                               type="checkbox">
+                                        <span class="form-check-label">Show Today</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body border-bottom py-3">
                             <div class="d-flex">
@@ -106,6 +126,7 @@
                                     <th>Teacher</th>
                                     <th>Subject</th>
                                     <th>Students</th>
+                                    <th>Total</th>
                                     <th>Date</th>
                                     <th>Type</th>
                                     <th>Status</th>
@@ -128,6 +149,13 @@
                                         </td>
                                         <td>
                                             {{ $session->attendees->where('attending', true)->count() . '/' . $session->attendees->count() }}
+                                        </td>
+                                        <td>
+                                            @if($session->status == \App\Models\Session::STATUS_COMPLETED)
+                                                ${{ number_format($session->total, 2) }}
+                                            @else
+                                                -
+                                            @endif
                                         </td>
                                         <td>
                                             <div>
@@ -159,11 +187,21 @@
                                             <a class="btn align-text-top"
                                                href="{{ route('dashboard.sessions.manage', ['session' => $session->id]) }}">
                                                 <!--<editor-fold desc="SVG ICON">-->
-                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-notebook" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18" /><path d="M13 8l2 0" /><path d="M13 12l2 0" /></svg>
+                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                     class="icon icon-tabler icon-tabler-notebook" width="24"
+                                                     height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                     stroke="currentColor" fill="none" stroke-linecap="round"
+                                                     stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                    <path
+                                                        d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18"/>
+                                                    <path d="M13 8l2 0"/>
+                                                    <path d="M13 12l2 0"/>
+                                                </svg>
                                                 <!--</editor-fold>-->
                                                 Manage
                                             </a>
-                                                <span class="dropdown">
+                                            <span class="dropdown">
                                                   <button class="btn dropdown-toggle align-text-top"
                                                           data-bs-boundary="viewport"
                                                           data-bs-toggle="dropdown">Actions</button>

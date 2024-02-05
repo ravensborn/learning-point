@@ -13,26 +13,63 @@ use Livewire\Component;
 
 class Manage extends Component
 {
-
     public TransactionForm $transactionForm;
     public $session;
-
-    public string $total = '';
 
     public float $duration = 0;
 
     public $settings;
 
+    public float $sessionTotal = 0;
 
     public function mount(Session $session): void
     {
+        if ($session->status == Session::STATUS_COMPLETED) {
+            $this->redirectRoute('dashboard.sessions.show-completed', $session->id);
+        }
+
         $this->session = $session;
         $this->duration = $session->time_out->floatDiffInRealHours($session->time_in);
         $this->foundStudents = collect();
-        $this->calculateTotal();
         $this->settings = Setting::find(1);
     }
 
+    public function calculateAttendeeChargeList($attendeeId): int
+    {
+        $attendee = $this->session->attendees->find($attendeeId);
+
+        if ($attendee) {
+
+            if (!$attendee->charged) {
+                return 0;
+            }
+
+            $sum = 0;
+
+            if ($attendee->attending) {
+                foreach ($attendee->charge_list as $item) {
+                    if ($item['rated']) {
+                        $sum = $sum + ($item['amount'] * $this->duration);
+                    } else {
+                        $sum = $sum + $item['amount'];
+                    }
+                }
+            } else {
+                foreach ($attendee->cancellation_charge_list as $item) {
+                    if ($item['rated']) {
+                        $sum = $sum + ($item['amount'] * $this->duration);
+                    } else {
+                        $sum = $sum + $item['amount'];
+                    }
+                }
+            }
+
+            return $sum;
+
+        }
+
+        return 0;
+    }
 
     public function updateAllAttendeeSessionCharges($createIfNotExist): void
     {
@@ -46,9 +83,7 @@ class Manage extends Component
     {
         $this->session->updateAttendeeSessionCharge($attendeeId);
         $this->reloadSession();
-
     }
-
 
     public int $removingChargeListAttendeeId = 0;
     public int $removingChargeListIndex = -1;
@@ -208,7 +243,6 @@ class Manage extends Component
         $this->attendeeChargeType = 'rated';
     }
 
-
     public function toggleStudentAttending($attendeeId): void
     {
         $this->removingChargeListAttendeeId = 0;
@@ -216,10 +250,17 @@ class Manage extends Component
 
         $attendee = Attendee::find($attendeeId);
         if ($attendee) {
+
             $attendee->update([
                 'attending' => !$attendee->attending
             ]);
+
+            //TODO: FIX THIS
+//            $this->session->updateAttendeeSessionCharge($attendeeId);
+
         }
+
+
     }
 
     public function toggleStudentCharged($attendeeId): void
@@ -238,15 +279,18 @@ class Manage extends Component
     public function calculateTotal(): void
     {
         $sum = 0;
-        foreach ($this->session->attendees as $attendee) {
+        foreach ($this->session->attendees->where('attending', true) as $attendee) {
             foreach ($attendee->charge_list as $item) {
-                $sum += $item['amount'];
+                if ($item['rated']) {
+                    $sum += $item['amount'] * $this->duration;
+                } else {
+                    $sum += $item['amount'];
+                }
             }
         }
 
-        $this->total = $sum;
+        $this->sessionTotal = $sum;
     }
-
 
     public int $removingStudentId = 0;
 
@@ -316,24 +360,62 @@ class Manage extends Component
     }
 
 
-    public function makeTransaction($studentId, $amount): void
+    public function makeTransaction($studentId, $amount, $description): void
     {
         $this->transactionForm->transactable_id = $studentId;
         $this->transactionForm->type = Transaction::TYPE_PURCHASE;
         $this->transactionForm->amount = $amount;
-        $this->transactionForm->description = 'Session Purchase - ' . $this->session->id;
+        $this->transactionForm->description = $description;
         $this->transactionForm->store(Student::class);
         $this->transactionForm->model->sync();
-
-        $this->session->update([
-            'status' => Session::STATUS_COMPLETED,
-        ]);
     }
 
+
+    public function completeSession(): void
+    {
+
+        foreach ($this->session->attendees as $attendee) {
+
+            if ($attendee->charged) {
+
+                $amount = $this->calculateAttendeeChargeList($attendee->id);
+                $description = 'Session Purchase ' . $this->session->number . '.';
+                if (!$attendee->attending) {
+                    $description = 'Session Cancellation ' . $this->session->number . '.';
+                }
+
+                if ($amount > 0) {
+                    $this->makeTransaction($attendee->student_id, $amount, $description);
+                }
+
+            } else {
+                $this->makeTransaction($attendee->student_id, 0, 'Free Session ' . $this->session->number . '.');
+            }
+
+
+        }
+
+        $this->session->update([
+            'total' => $this->sessionTotal,
+            'status' => Session::STATUS_COMPLETED,
+        ]);
+
+        $this->redirectRoute('dashboard.sessions.show-completed', $this->session->id);
+
+    }
+
+    public function setStatus($action): void
+    {
+        $this->session->update([
+            'status' => $action
+        ]);
+    }
 
     #[Layout('layouts.app')]
     public function render()
     {
+
+        $this->calculateTotal();
         return view('livewire.dashboard.sessions.manage');
     }
 

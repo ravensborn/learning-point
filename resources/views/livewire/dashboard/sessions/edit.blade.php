@@ -116,6 +116,16 @@
                             </div>
 
                             <div class="mb-3 row">
+                                <label for="note" class="col-sm-2 col-form-label">Approval Note</label>
+                                <div class="col-sm-10">
+                                    <textarea id="note" class="form-control" wire:model.live.debounce.150ms="sessionForm.approval_note"></textarea>
+                                    @error('sessionForm.approval_note')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
                                 <label for="note" class="col-sm-2 col-form-label">Note</label>
                                 <div class="col-sm-10">
                                     <textarea id="note" class="form-control" wire:model.live.debounce.150ms="sessionForm.note"></textarea>

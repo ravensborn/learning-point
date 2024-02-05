@@ -36,7 +36,6 @@ class Index extends Component
         ]);
     }
 
-
     public function update(): void
     {
 

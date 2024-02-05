@@ -25,7 +25,6 @@ class Create extends Component
     public $foundStudents;
     public $students;
 
-
     public function store(): void
     {
         $this->sessionForm->user_id = auth()->user()->id;

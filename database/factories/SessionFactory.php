@@ -26,8 +26,9 @@ class SessionFactory extends Factory
             'type' => $this->faker->randomElement([Session::TYPE_THEORETICAL, Session::TYPE_PRACTICAL]),
             'time_in' => now(),
             'time_out' => now()->addHour()->addMinutes(30),
-//            'rate' => $this->faker->randomNumber(2, true),
+            'total' => $this->faker->randomNumber(2, true),
             'note' => $this->faker->paragraph,
+            'approval_note' => $this->faker->paragraph,
         ];
     }
 }

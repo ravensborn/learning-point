@@ -24,7 +24,7 @@ class TransactionForm extends Form
     {
         return [
             'type' => ['required', 'string', 'in:' . implode(',', array_keys(Transaction::TYPES))],
-            'amount' => ['required', 'numeric', 'gt:0', 'regex:/^[0-9]+(\.[0-9]{1,2})?$/'],
+            'amount' => ['required', 'numeric', 'gte:0', 'regex:/^[0-9]+(\.[0-9]{1,2})?$/'],
             'description' => ['required', 'string', 'max:10000'],
         ];
     }

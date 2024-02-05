@@ -27,18 +27,21 @@ class Session extends Model
         self::STATUS_PROCESSED => 'Processed',
         self::STATUS_COMPLETED => 'Completed',
         self::STATUS_CANCELLED => 'Cancelled',
+        self::STATUS_REJECTED => 'Rejected',
     ];
 
     const STATUS_PENDING = 'pending';
     const STATUS_PROCESSED = 'processed';
     const STATUS_COMPLETED = 'completed';
     const STATUS_CANCELLED = 'cancelled';
+    const STATUS_REJECTED = 'rejected';
 
     const STATUS_COLOR_CLASSES = [
         self::STATUS_PENDING => 'bg-yellow',
         self::STATUS_PROCESSED => 'bg-primary',
         self::STATUS_COMPLETED => 'bg-success',
         self::STATUS_CANCELLED => 'bg-danger',
+        self::STATUS_REJECTED => 'bg-warning',
     ];
 
     public function getStatusNameAttribute(): string
