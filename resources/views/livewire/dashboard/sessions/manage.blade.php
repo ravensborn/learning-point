@@ -76,6 +76,10 @@
                         <div class="card-body">
                             <div class="datagrid">
                                 <div class="datagrid-item">
+                                    <div class="datagrid-title">Session</div>
+                                    <div class="datagrid-content">{{ $session->number }}</div>
+                                </div>
+                                <div class="datagrid-item">
                                     <div class="datagrid-title">Created By</div>
                                     <div class="datagrid-content">{{ $session->user->name }}</div>
                                 </div>
@@ -134,7 +138,7 @@
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Total</div>
                                     <div class="datagrid-content">
-                                        <span class="badge text-white">
+                                        <span class="badge text-body">
                                             ${{ number_format($sessionTotal, 2) }}
                                         </span>
                                     </div>
@@ -270,19 +274,23 @@
                                                 Update Session Charge
                                             </a>
                                         @endif
-                                        <a href="#" class="btn btn-sm btn-ghost-primary"
-                                           wire:click.prevent="showAddChargeModal({{ $attendee->id }})">
-                                            <!--<editor-fold desc="SVG ICON">-->
-                                            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
-                                                 viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
-                                                 stroke-linecap="round" stroke-linejoin="round">
-                                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                <path d="M12 5l0 14"/>
-                                                <path d="M5 12l14 0"/>
-                                            </svg>
-                                            <!--</editor-fold>-->
-                                            Add Charge
-                                        </a>
+                                        @if($attendee->charged)
+                                            <a href="#" class="btn btn-sm btn-ghost-primary"
+                                               wire:click.prevent="showAddChargeModal({{ $attendee->id }})">
+                                                <!--<editor-fold desc="SVG ICON">-->
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24"
+                                                     height="24"
+                                                     viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"
+                                                     fill="none"
+                                                     stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                    <path d="M12 5l0 14"/>
+                                                    <path d="M5 12l14 0"/>
+                                                </svg>
+                                                <!--</editor-fold>-->
+                                                Add Charge
+                                            </a>
+                                        @endif
                                         <button class="btn btn-sm btn-ghost-danger"
                                                 wire:click.prevent="removeStudent({{ $attendee->student_id }})">
                                             <!--<editor-fold desc="SVG ICON">-->
@@ -572,9 +580,10 @@
                                     </div>
                                     @enderror
                                     <div class="d-flex flex-column gap-2 mt-3 justify-center">
-                                        @forelse($foundStudents as $student)
-                                            @if($student->id == $selectedStudentId)
-                                                <div class="badge cursor-pointer border-success">
+                                        @forelse($foundStudents as $index => $student)
+                                            @if(in_array($student->id, $selectedStudentIds))
+                                                <div class="badge cursor-pointer border-success"
+                                                     wire:click="removeSelectedStudent({{ $student->id }})">
                                                     {{ $student->full_name }}
                                                 </div>
                                             @else

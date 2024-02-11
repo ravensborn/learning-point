@@ -165,7 +165,7 @@
                                                 {{ $session->time_out->format('Y-m-d h:i A') }}
                                             </div>
                                             <div>
-                                                Duration: {{ $session->time_out->floatDiffInRealHours($session->time_in) }}
+                                                Duration: {{ round($session->time_out->floatDiffInRealHours($session->time_in), 2) }}
                                                 h
                                             </div>
                                         </td>
@@ -206,8 +206,19 @@
                                                           data-bs-boundary="viewport"
                                                           data-bs-toggle="dropdown">Actions</button>
                                                   <div class="dropdown-menu dropdown-menu-end">
+                                                      @foreach(\App\Models\Session::STATUSES as $key => $name)
+                                                          @if($key == \App\Models\Session::STATUS_COMPLETED)
+                                                              @continue
+                                                          @endif
+                                                          <button class="dropdown-item"
+                                                                  wire:click="setStatus({{ $session->id }}, '{{ $key }}')">
+                                                              {{ $name }}
+                                                          </button>
+                                                      @endforeach
+                                                        <div class="dropdown-divider"></div>
                                                     <button class="dropdown-item"
                                                             wire:click="prepareItemDeletion({{ $session->id }})">Delete</button>
+
                                                   </div>
                                                 </span>
                                         </td>

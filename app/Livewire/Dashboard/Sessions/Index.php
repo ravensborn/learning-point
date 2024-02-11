@@ -71,6 +71,16 @@ class Index extends Component
 
     }
 
+    public function setStatus($sessionId, $status): void
+    {
+        if(in_array($status, array_keys(Session::STATUSES))) {
+            $session = Session::findOrFail($sessionId);
+
+            $session->update([
+                'status' => $status
+            ]);
+        }
+    }
 
     #[Layout('layouts.app')]
     public function render()

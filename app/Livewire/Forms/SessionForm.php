@@ -60,8 +60,8 @@ class SessionForm extends Form
 
         $this->fill($model);
 
-        $this->time_in = $model->time_in->format('Y-m-d h:i:s');
-        $this->time_out = $model->time_out->format('Y-m-d h:i:s');
+        $this->time_in = $model->time_in->format('Y-m-d\TH:i:s');
+        $this->time_out = $model->time_out->format('Y-m-d\TH:i:s');
 
         $this->model = $model;
     }

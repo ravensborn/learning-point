@@ -29,7 +29,7 @@ class Manage extends Component
         }
 
         $this->session = $session;
-        $this->duration = $session->time_out->floatDiffInRealHours($session->time_in);
+        $this->duration = round($session->time_out->floatDiffInRealHours($session->time_in), 2);
         $this->foundStudents = collect();
         $this->settings = Setting::find(1);
     }
@@ -315,19 +315,33 @@ class Manage extends Component
 
     public string $searchStudentQuery = '';
     public $foundStudents;
-    public int $selectedStudentId = 0;
+    public array $selectedStudentIds = [];
 
     public function addStudent(): void
     {
-        if (!$this->session->attendees->where('student_id', $this->selectedStudentId)->first()) {
-            Attendee::create([
-                'student_id' => $this->selectedStudentId,
-                'session_id' => $this->session->id,
-                'attending' => true,
-                'charged' => true,
-                'charge_list' => [],
-                'cancellation_charge_list' => [],
-            ]);
+        if (!$this->session->attendees->whereIn('student_id', $this->selectedStudentIds)->count()) {
+
+            $newAttendeeIds = collect();
+
+            foreach ($this->selectedStudentIds as $studentId) {
+                $attendee = Attendee::create([
+                    'student_id' => $studentId,
+                    'session_id' => $this->session->id,
+                    'attending' => true,
+                    'charged' => true,
+                    'charge_list' => [],
+                    'cancellation_charge_list' => [],
+                ]);
+                $newAttendeeIds->push($attendee->id);
+            }
+
+            $this->reloadSession();
+
+            foreach ($newAttendeeIds as $id) {
+                $this->session->updateAttendeeSessionCharge($id);
+            }
+
+            $this->selectedStudentIds = [];
         }
         $this->updateAllAttendeeSessionCharges(false);
         $this->dispatch('close-all-modals');
@@ -335,14 +349,26 @@ class Manage extends Component
 
     public function resetAddStudentForm(): void
     {
-        $this->selectedStudentId = 0;
+        $this->selectedStudentIds = [];
         $this->foundStudents = collect();
         $this->searchStudentQuery = '';
     }
 
+
+    public function removeSelectedStudent($studentId): void
+    {
+        foreach ($this->selectedStudentIds as $index => $id) {
+            if ($id == $studentId) {
+                unset($this->selectedStudentIds[$index]);
+            }
+        }
+    }
+
     public function selectStudent($id): void
     {
-        $this->selectedStudentId = $id;
+        if (!in_array($id, $this->selectedStudentIds)) {
+            $this->selectedStudentIds[] = $id;
+        }
     }
 
     public function updatedSearchStudentQuery(): void

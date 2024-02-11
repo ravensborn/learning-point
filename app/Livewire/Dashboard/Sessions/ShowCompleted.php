@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard\Sessions;
 
 use App\Models\Session;
+use App\Models\Setting;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -13,6 +14,8 @@ class ShowCompleted extends Component
 
     public string $duration;
 
+    public $settings;
+
     public function mount(Session $session): void
     {
         if($session->status != Session::STATUS_COMPLETED) {
@@ -20,7 +23,8 @@ class ShowCompleted extends Component
         }
         $this->session = $session;
 
-        $this->duration = $session->time_out->floatDiffInRealHours($session->time_in);
+        $this->duration = round($session->time_out->floatDiffInRealHours($session->time_in), 2);
+        $this->settings = Setting::find(1);
     }
 
     public function calculateAttendeeChargeList($attendeeId): int
