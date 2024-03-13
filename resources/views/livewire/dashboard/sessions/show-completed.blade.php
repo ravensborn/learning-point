@@ -32,6 +32,10 @@
                         <div class="card-body">
                             <div class="datagrid">
                                 <div class="datagrid-item">
+                                    <div class="datagrid-title">Session</div>
+                                    <div class="datagrid-content">{{ $session->number }}</div>
+                                </div>
+                                <div class="datagrid-item">
                                     <div class="datagrid-title">Created By</div>
                                     <div class="datagrid-content">{{ $session->user->name }}</div>
                                 </div>
@@ -61,7 +65,10 @@
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Duration</div>
                                     <div
-                                        class="datagrid-content">{{ $duration }}h
+                                        class="datagrid-content">
+                                        {{ $duration }}
+                                        /
+                                        {{ $this->getDiffForLP() }}
                                     </div>
                                 </div>
                                 <div class="datagrid-item">

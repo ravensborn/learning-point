@@ -31,7 +31,7 @@
                                     <div class="dropdown-menu">
                                         <a class="dropdown-item"
                                            href="{{ route('dashboard.sessions.edit', $session->id) }}">
-                                            Edt Session
+                                            Edit Session
                                         </a>
                                         <a class="dropdown-item" href="#" data-bs-toggle="modal"
                                            data-bs-target="#modal-add-student">
@@ -109,7 +109,10 @@
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Duration</div>
                                     <div
-                                        class="datagrid-content">{{ $duration }}h
+                                        class="datagrid-content">
+                                        {{ $duration }}
+                                        /
+                                        {{ $this->getDiffForLP() }}
                                     </div>
                                 </div>
                                 <div class="datagrid-item">
@@ -205,11 +208,11 @@
                 {{--                </div>--}}
             </div>
 
-            @forelse($session->attendees as $attendee)
+            <div class="row row-deck row-cards mt-3" id="students">
 
-                <div class="row row-deck row-cards mt-3">
+                @forelse($session->attendees as $attendee)
 
-                    <div class="col">
+                    <div class="col-12" wire:key="{{ $attendee->id }}">
                         <div class="card">
                             <div class="card-header">
                                 <div class="d-flex justify-content-between w-100">
@@ -332,14 +335,13 @@
                                     </div>
 
                                 @else
-
                                     @if($attendee->attending)
 
                                         <div class="table-responsive">
                                             <table class="table">
                                                 <tbody>
                                                 @forelse($attendee->charge_list as $index => $item)
-                                                    <tr>
+                                                    <tr wire:key="attendee_{{ $attendee->id }}_charge_list_{{ $index }}">
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>
                                                             {{ $item['name'] }}
@@ -435,7 +437,7 @@
                                             <table class="table">
                                                 <tbody>
                                                 @forelse($attendee->cancellation_charge_list as $index => $item)
-                                                    <tr>
+                                                    <tr wire:key="attendee_{{ $attendee->id }}_cancel_charge_list_{{ $index }}">
                                                         <td>{{ $loop->iteration }}</td>
                                                         <td>{{ $item['name'] }}</td>
                                                         <td>{{ $item['rated'] ? 'Rated' : 'Unrated' }}</td>
@@ -541,17 +543,16 @@
                         </div>
                     </div>
 
-                </div>
-
-            @empty
-                <div class="row row-deck row-cards mt-3">
-                    <div class="card">
-                        <div class="card-body text-center">
-                            No students are in this session.
+                @empty
+                    <div class="col">
+                        <div class="card">
+                            <div class="card-body text-center">
+                                No students are in this session.
+                            </div>
                         </div>
                     </div>
-                </div>
-            @endforelse
+                @endforelse
+            </div>
 
         </div>
     </div>

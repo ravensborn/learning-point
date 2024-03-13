@@ -97,7 +97,7 @@
 
                                 <label for="time-in" class="col-sm-2 col-form-label required">Time in</label>
                                 <div class="col-sm-10">
-                                    <input type="datetime-local" class="form-control" id="time-in" wire:model="sessionForm.time_in">
+                                    <input type="datetime-local" class="form-control" id="time-in" wire:model.live="sessionForm.time_in">
                                     @error('sessionForm.time_in')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror

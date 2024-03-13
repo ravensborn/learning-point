@@ -77,6 +77,7 @@ class Student extends Model implements HasMedia
         return $this->morphMany(Transaction::class, 'transactable');
     }
 
+
     public function studentRates(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(StudentRate::class);

@@ -85,6 +85,7 @@ class Session extends Model
 
     public function updateAttendeeSessionCharge($attendeeId, $createIfNotExist = true): void
     {
+
         $attendee = $this->attendees->find($attendeeId);
 
         if($attendee && $attendee->attending) {
@@ -118,10 +119,9 @@ class Session extends Model
                 ];
 
                 $attendee->update([
-                    'charge_list' => $chargeList
+                    'charge_list' => array_values($chargeList)
                 ]);
             }
-
         }
 
     }

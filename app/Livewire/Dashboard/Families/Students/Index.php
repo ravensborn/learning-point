@@ -78,6 +78,7 @@ class Index extends Component
     {
         $this->form->family_id = $this->family->id;
         $this->form->store();
+        $this->family = Family::find($this->family->id);
 
         $this->dispatch('toggle-modal-create');
     }

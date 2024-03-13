@@ -3,6 +3,7 @@
 namespace App\Livewire\Dashboard\Sessions;
 
 use App\Models\Session;
+use App\Models\Student;
 use App\Traits\SessionModalFunctions;
 use Carbon\Carbon;
 use Livewire\Attributes\Layout;
@@ -85,15 +86,20 @@ class Index extends Component
     #[Layout('layouts.app')]
     public function render()
     {
-        $sessions = Session::query()->orderBy('created_at', 'desc');
+        $sessions = Session::query()->orderBy('id', 'desc');
 
         if ($this->search) {
 
             $this->resetPage();
+
             $sessions->whereHas('teacher', function ($query) {
                 $query->where('name', 'LIKE', '%' . trim($this->search) . '%');
             })->orWhereHas('subject', function ($query) {
                 $query->where('name', 'LIKE', '%' . trim($this->search) . '%');
+            })->orWhereHas('attendees', function ($query) {
+                $query->whereHas('student', function ($q) {
+                    $q->whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($this->search) . "%' ");
+                });
             });
         }
 

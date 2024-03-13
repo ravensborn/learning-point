@@ -14,7 +14,9 @@ use Livewire\Component;
 class Manage extends Component
 {
     public TransactionForm $transactionForm;
+
     public $session;
+//    public $attendees;
 
     public float $duration = 0;
 
@@ -32,6 +34,22 @@ class Manage extends Component
         $this->duration = round($session->time_out->floatDiffInRealHours($session->time_in), 2);
         $this->foundStudents = collect();
         $this->settings = Setting::find(1);
+    }
+
+    public function getDiffForLP(): string
+    {
+        $hours = $this->session->time_out->diffInHours($this->session->time_in);
+        $minutes = $this->session->time_out->diffInMinutes($this->session->time_in) % 60;
+
+        if ($hours == 0) {
+            $formattedDiff = "{$minutes} min";
+        } elseif ($minutes == 0) {
+            $formattedDiff = "{$hours} h";
+        } else {
+            $formattedDiff = "{$hours} h {$minutes} min";
+        }
+
+        return $formattedDiff;
     }
 
     public function calculateAttendeeChargeList($attendeeId): int
@@ -71,18 +89,14 @@ class Manage extends Component
         return 0;
     }
 
+
     public function updateAllAttendeeSessionCharges($createIfNotExist): void
     {
+
         foreach ($this->session->attendees as $attendee) {
             $this->session->updateAttendeeSessionCharge($attendee->id, $createIfNotExist);
         }
-        $this->reloadSession();
-    }
 
-    public function updateAttendeeSessionCharge($attendeeId): void
-    {
-        $this->session->updateAttendeeSessionCharge($attendeeId);
-        $this->reloadSession();
     }
 
     public int $removingChargeListAttendeeId = 0;
@@ -193,7 +207,6 @@ class Manage extends Component
             ]);
 
             $this->dispatch('close-all-modals');
-            $this->reloadSession();
         }
 
 
@@ -229,7 +242,6 @@ class Manage extends Component
 
             $this->resetValidation();
             $this->dispatch('close-all-modals');
-            $this->reloadSession();
         }
     }
 
@@ -243,21 +255,24 @@ class Manage extends Component
         $this->attendeeChargeType = 'rated';
     }
 
-    public function toggleStudentAttending($attendeeId): void
+    public function toggleStudentAttending($attendeeId)
     {
         $this->removingChargeListAttendeeId = 0;
         $this->removingChargeListIndex = -1;
 
         $attendee = Attendee::find($attendeeId);
+
         if ($attendee) {
 
             $attendee->update([
                 'attending' => !$attendee->attending
             ]);
 
-            //TODO: FIX THIS
-//            $this->session->updateAttendeeSessionCharge($attendeeId);
+            $this->reloadSession();
 
+            $this->updateAllAttendeeSessionCharges(false);
+
+            $this->redirect(route('dashboard.sessions.manage', ['session' => $this->session->id, '#students']));
         }
 
 
@@ -299,9 +314,8 @@ class Manage extends Component
         if ($this->removingStudentId == $id) {
             $attendee = $this->session->attendees->where('student_id', '=', $id)->first();
 
-            if ($id) {
+            if ($attendee) {
                 $attendee->delete();
-                $this->reloadSession();
             }
         } else {
             $this->removingStudentId = $id;
@@ -311,6 +325,7 @@ class Manage extends Component
     public function reloadSession(): void
     {
         $this->session = Session::find($this->session->id);
+//        $this->attendees = Attendee::where('session_id', $this->session->id)->get();
     }
 
     public string $searchStudentQuery = '';
@@ -334,8 +349,6 @@ class Manage extends Component
                 ]);
                 $newAttendeeIds->push($attendee->id);
             }
-
-            $this->reloadSession();
 
             foreach ($newAttendeeIds as $id) {
                 $this->session->updateAttendeeSessionCharge($id);
@@ -442,6 +455,7 @@ class Manage extends Component
     {
 
         $this->calculateTotal();
+        $this->reloadSession();
         return view('livewire.dashboard.sessions.manage');
     }
 

@@ -3,23 +3,23 @@
 
         <div class="card-header" style="overflow: hidden;">
             <ul class="nav nav-tabs card-header-tabs" data-bs-toggle="tabs" role="tablist">
-{{--                <li class="nav-item" role="presentation" wire:ignore>--}}
-{{--                    <a href="#tabs-1" class="nav-link active" data-bs-toggle="tab"--}}
-{{--                       aria-selected="false" role="tab">--}}
-{{--                        <!--<editor-fold desc="SVG ICON">-->--}}
-{{--                        <svg xmlns="http://www.w3.org/2000/svg"--}}
-{{--                             class="icon me-2" width="24" height="24"--}}
-{{--                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"--}}
-{{--                             stroke-linecap="round" stroke-linejoin="round">--}}
-{{--                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>--}}
-{{--                            <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/>--}}
-{{--                            <path d="M12 9h.01"/>--}}
-{{--                            <path d="M11 12h1v4h1"/>--}}
-{{--                        </svg>--}}
-{{--                        <!--</editor-fold>-->--}}
-{{--                        Overview--}}
-{{--                    </a>--}}
-{{--                </li>--}}
+                {{--                <li class="nav-item" role="presentation" wire:ignore>--}}
+                {{--                    <a href="#tabs-1" class="nav-link active" data-bs-toggle="tab"--}}
+                {{--                       aria-selected="false" role="tab">--}}
+                {{--                        <!--<editor-fold desc="SVG ICON">-->--}}
+                {{--                        <svg xmlns="http://www.w3.org/2000/svg"--}}
+                {{--                             class="icon me-2" width="24" height="24"--}}
+                {{--                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"--}}
+                {{--                             stroke-linecap="round" stroke-linejoin="round">--}}
+                {{--                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>--}}
+                {{--                            <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0"/>--}}
+                {{--                            <path d="M12 9h.01"/>--}}
+                {{--                            <path d="M11 12h1v4h1"/>--}}
+                {{--                        </svg>--}}
+                {{--                        <!--</editor-fold>-->--}}
+                {{--                        Overview--}}
+                {{--                    </a>--}}
+                {{--                </li>--}}
                 <li class="nav-item" role="presentation" wire:ignore>
                     <a href="#tabs-2" class="nav-link active" data-bs-toggle="tab"
                        aria-selected="false" role="tab">
@@ -114,12 +114,14 @@
                     <a href="#tabs-7" class="nav-link" data-bs-toggle="tab"
                        aria-selected="false" role="tab">
                         <!--<editor-fold desc="SVG ICON">-->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2" width="44" height="44" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2" width="44" height="44"
+                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                             stroke-linecap="round" stroke-linejoin="round">
                             <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                            <path d="M9 15l6 -6" />
-                            <circle cx="9.5" cy="9.5" r=".5" fill="currentColor" />
-                            <circle cx="14.5" cy="14.5" r=".5" fill="currentColor" />
-                            <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" />
+                            <path d="M9 15l6 -6"/>
+                            <circle cx="9.5" cy="9.5" r=".5" fill="currentColor"/>
+                            <circle cx="14.5" cy="14.5" r=".5" fill="currentColor"/>
+                            <path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/>
                         </svg>
                         <!--</editor-fold>-->
                         Price Exceptions
@@ -129,22 +131,79 @@
         </div>
         <div class="card-body">
             <div class="tab-content" wire:ignore.self>
-{{--                <div class="tab-pane show active" id="tabs-1" role="tabpanel" wire:ignore.self>--}}
-{{--                    <h4>Overview tab</h4>--}}
-{{--                    <p>--}}
-{{--                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium amet animi--}}
-{{--                        commodi dolorem eligendi enim error fugiat fugit, itaque laborum, nemo, nesciunt--}}
-{{--                        odit quaerat recusandae tempore totam vel voluptatibus! Fuga.--}}
-{{--                    </p>--}}
-{{--                </div>--}}
+                {{--                <div class="tab-pane show active" id="tabs-1" role="tabpanel" wire:ignore.self>--}}
+                {{--                    <h4>Overview tab</h4>--}}
+                {{--                    <p>--}}
+                {{--                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium amet animi--}}
+                {{--                        commodi dolorem eligendi enim error fugiat fugit, itaque laborum, nemo, nesciunt--}}
+                {{--                        odit quaerat recusandae tempore totam vel voluptatibus! Fuga.--}}
+                {{--                    </p>--}}
+                {{--                </div>--}}
                 <!--<editor-fold desc="Sessions">-->
                 <div class="tab-pane show active" id="tabs-2" role="tabpanel" wire:ignore.self>
                     <h4>Sessions tab</h4>
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Accusantium amet animi
-                        commodi dolorem eligendi enim error fugiat fugit, itaque laborum, nemo, nesciunt
-                        odit quaerat recusandae tempore totam vel voluptatibus! Fuga.
-                    </p>
+                    @if($sessions->count() > 0)
+                        <div>
+                            <p class="text-secondary">
+                                View recent student sessions, or click on show all to see the full list.
+                            </p>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-vcenter card-table">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Number</th>
+                                    <th>Subject</th>
+                                    <th>Teacher</th>
+                                    <th>Status</th>
+                                    <th>Date</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($sessions as $session)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>
+                                            <a href="{{ route('dashboard.sessions.manage', $session->id) }}">
+                                                {{ $session->number }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            {{ ucfirst($session->subject?->name ?? '-') }}
+                                        </td>
+                                        <td class="text-secondary">
+                                            {{ ucfirst($session->teacher?->name ?? '-') }}
+                                        </td>
+                                        <td>
+                                             <span class="badge text-white {{ $session->status_color_class }}">
+                                                {{ $session->status_name }}
+                                            </span>
+                                        </td>
+                                        <td class="text-secondary">
+                                            {{ $session->created_at->format('Y-m-d / h:i A') }}
+                                        </td>
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-center mt-5">
+                            <a href="{{ route('dashboard.student.sessions.index', $student->id) }}">
+                                Manage all student sessions.
+                            </a>
+                        </div>
+                    @else
+                        <div class="list-group list-group-flush list-group-hoverable">
+                            <div class="list-group-item">
+                                <div class="row text-secondary">
+                                    <div class="col-12">
+                                        This student doesn't have any sessions.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
                 </div>
                 <!--</editor-fold>-->
 
@@ -202,7 +261,9 @@
                             <div class="list-group-item">
                                 <div class="row text-secondary">
                                     <div class="col-12">
-                                        You haven't made any transactions. <a href="{{ route('dashboard.student.transactions.index', $student->id) }}">Manage student transactions</a>.
+                                        Student haven't made any transactions. <a
+                                            href="{{ route('dashboard.student.transactions.index', $student->id) }}">Manage
+                                            student transactions</a>.
                                     </div>
                                 </div>
                             </div>
@@ -574,9 +635,11 @@
                 <div class="tab-pane" id="tabs-7" role="tabpanel" wire:ignore.self>
                     <h4>Price Exceptions</h4>
 
-                    <p><a href="{{ route('dashboard.student.rates.index', $student->id) }}">
+                    <p>
+                        <a href="{{ route('dashboard.student.rates.index', $student->id) }}">
                             Manage student price rates through price management section.
-                        </a></p>
+                        </a>
+                    </p>
                 </div>
                 <!--</editor-fold>-->
 

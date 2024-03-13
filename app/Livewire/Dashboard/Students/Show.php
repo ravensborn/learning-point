@@ -8,6 +8,7 @@ use App\Models\City;
 use App\Models\Family;
 use App\Models\Grade;
 use App\Models\School;
+use App\Models\Session;
 use App\Models\Student;
 use App\Models\StudentContact;
 use App\Traits\StudentShowModalFunctions;
@@ -27,6 +28,7 @@ class Show extends Component
     public StudentContactForm $studentContactForm;
     public $documents;
     public Collection $transactions;
+    public Collection $sessions;
 
     public $contacts;
     public $family = null;
@@ -112,6 +114,9 @@ class Show extends Component
         $this->loadFamily();
 
         $this->transactions = $this->student->transactions()->orderBy('created_at', 'desc')->limit(5)->get();
+        $this->sessions = Session::whereHas('attendees', function ($q) {
+            $q->where('student_id', $this->student->id);
+        })->orderBy('created_at', 'desc')->limit(5)->get();
 
     }
 

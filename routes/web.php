@@ -25,6 +25,7 @@ use App\Livewire\Dashboard\Schools\Grades\Index as GradesIndex;
 use App\Livewire\Dashboard\Students\Index as StudentsIndex;
 use App\Livewire\Dashboard\Students\Create as StudentsCreate;
 use App\Livewire\Dashboard\Students\Show as StudentsShow;
+use App\Livewire\Dashboard\Students\Sessions\Index as StudentSessionsIndex;
 use App\Livewire\Dashboard\Students\Transactions\Index as StudentTransactionsIndex;
 use App\Livewire\Dashboard\Students\Rates\Index as StudentsRateIndex;
 
@@ -92,6 +93,7 @@ Route::middleware(['auth'])->group(function() {
         Route::get('/schools', SchoolsIndex::class)->name('schools.index');
         Route::get('/schools/{school}/grades', GradesIndex::class)->name('grades.index');
 
+        Route::get('/students/{student}/sessions', StudentSessionsIndex::class)->name('student.sessions.index');
         Route::get('/students/{student}/transactions', StudentTransactionsIndex::class)->name('student.transactions.index');
         Route::get('/students/{student}/rates', StudentsRateIndex::class)->name('student.rates.index');
 

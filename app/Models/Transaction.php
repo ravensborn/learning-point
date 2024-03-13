@@ -24,6 +24,7 @@ class Transaction extends Model
     const TYPE_PURCHASE = 'purchase';
     const TYPE_TRANSFER_IN = 'transfer-in';
     const TYPE_TRANSFER_OUT = 'transfer-out';
+    const TYPE_SALARY = 'salary';
 
     const TYPES = [
         self::TYPE_WITHDRAW => 'Withdraw',
@@ -31,6 +32,7 @@ class Transaction extends Model
         self::TYPE_PURCHASE => 'Purchase',
         self::TYPE_TRANSFER_IN => 'Transfer In',
         self::TYPE_TRANSFER_OUT => 'Transfer Out',
+        self::TYPE_SALARY => 'Salary',
     ];
 
     const TYPE_COLOR_CLASSES = [
@@ -39,6 +41,7 @@ class Transaction extends Model
         self::TYPE_PURCHASE => 'text-danger',
         self::TYPE_TRANSFER_IN => 'text-success',
         self::TYPE_TRANSFER_OUT => 'text-danger',
+        self::TYPE_SALARY => 'text-success',
     ];
     const TYPE_PREFIX_CHARACTER = [
         self::TYPE_WITHDRAW => '▼',
@@ -46,6 +49,7 @@ class Transaction extends Model
         self::TYPE_PURCHASE => '▼',
         self::TYPE_TRANSFER_IN => '▲',
         self::TYPE_TRANSFER_OUT => '▼',
+        self::TYPE_SALARY => '▲',
     ];
 
 
@@ -87,6 +91,10 @@ class Transaction extends Model
 
            if($this->type == self::TYPE_TRANSFER_OUT) {
                $wallet -= $amount;
+           }
+
+           if($this->type == self::TYPE_SALARY) {
+               $wallet += $amount;
            }
 
            $model->update([
