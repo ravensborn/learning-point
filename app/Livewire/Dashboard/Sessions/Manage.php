@@ -16,7 +16,6 @@ class Manage extends Component
     public TransactionForm $transactionForm;
 
     public $session;
-//    public $attendees;
 
     public float $duration = 0;
 
@@ -97,6 +96,11 @@ class Manage extends Component
             $this->session->updateAttendeeSessionCharge($attendee->id, $createIfNotExist);
         }
 
+    }
+
+    public function updateAttendeeSessionCharge($attendeeId): void
+    {
+        $this->session->updateAttendeeSessionCharge($attendeeId, true);
     }
 
     public int $removingChargeListAttendeeId = 0;
@@ -268,11 +272,7 @@ class Manage extends Component
                 'attending' => !$attendee->attending
             ]);
 
-            $this->reloadSession();
-
             $this->updateAllAttendeeSessionCharges(false);
-
-            $this->redirect(route('dashboard.sessions.manage', ['session' => $this->session->id, '#students']));
         }
 
 
@@ -316,6 +316,7 @@ class Manage extends Component
 
             if ($attendee) {
                 $attendee->delete();
+                $this->updateAllAttendeeSessionCharges(false);
             }
         } else {
             $this->removingStudentId = $id;
@@ -325,7 +326,6 @@ class Manage extends Component
     public function reloadSession(): void
     {
         $this->session = Session::find($this->session->id);
-//        $this->attendees = Attendee::where('session_id', $this->session->id)->get();
     }
 
     public string $searchStudentQuery = '';
@@ -334,6 +334,7 @@ class Manage extends Component
 
     public function addStudent(): void
     {
+
         if (!$this->session->attendees->whereIn('student_id', $this->selectedStudentIds)->count()) {
 
             $newAttendeeIds = collect();
@@ -351,7 +352,9 @@ class Manage extends Component
             }
 
             foreach ($newAttendeeIds as $id) {
-                $this->session->updateAttendeeSessionCharge($id);
+
+                $this->updateAttendeeSessionCharge($id);
+
             }
 
             $this->selectedStudentIds = [];

@@ -410,7 +410,7 @@
                                                         </td>
                                                     </tr>
                                                 @empty
-                                                    <tr>
+                                                    <tr wire:key="attendee_{{ $attendee->id }}_charge_list_zero">
                                                         <td colspan="5">
                                                         <span class="text-info">
                                                              <svg xmlns="http://www.w3.org/2000/svg"
@@ -514,7 +514,8 @@
                                                         </td>
                                                     </tr>
                                                 @empty
-                                                    <td colspan="5">
+                                                    <tr wire:key="attendee_{{ $attendee->id }}_cancel_charge_list_zero">
+                                                        <td colspan="5">
                                                         <span class="text-info">
                                                              <svg xmlns="http://www.w3.org/2000/svg"
                                                                   class="icon icon-tabler icon-tabler-info-circle"
@@ -529,7 +530,8 @@
                                                              </svg>
                                                              Student does not have any cancellation charges.
                                                         </span>
-                                                    </td>
+                                                        </td>
+                                                    </tr>
                                                 @endforelse
                                                 </tbody>
                                             </table>
@@ -544,7 +546,7 @@
                     </div>
 
                 @empty
-                    <div class="col">
+                    <div class="col-12" wire:key="{{ $attendee->id }}">
                         <div class="card">
                             <div class="card-body text-center">
                                 No students are in this session.
