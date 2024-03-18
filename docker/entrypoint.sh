@@ -11,8 +11,8 @@ else
     echo "env file exists."
 fi
 
-php artisan optimize
-php artisan view:cache
+php artisan migrate:fresh --seed
+php artisan optimize:clear
 
 php-fpm -D
 nginx -g "daemon off;"
