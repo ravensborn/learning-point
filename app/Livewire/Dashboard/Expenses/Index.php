@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Livewire\Dashboard\Subjects;
+namespace App\Livewire\Dashboard\Expenses;
 
+use App\Models\Expense;
 use App\Models\Group;
-use App\Models\Subject;
-use App\Traits\SubjectModalFunctions;
+use App\Traits\ExpenseModalFunctions;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -13,7 +13,7 @@ use Livewire\WithPagination;
 class Index extends Component
 {
 
-    use WithPagination, SubjectModalFunctions;
+    use WithPagination, ExpenseModalFunctions;
 
 
     public int $perPage = 10;
@@ -23,25 +23,25 @@ class Index extends Component
 
     public function mount() {
 
-        $this->groups = Group::where('model', Subject::class)
+        $this->groups = Group::where('model', Expense::class)
             ->orderBy('created_at', 'desc')->get();
     }
 
     #[Layout('layouts.app')]
     public function render()
     {
-        $subjects = Subject::query()->orderBy('created_at', 'desc');
+        $expenses = Expense::query()->orderBy('created_at', 'desc');
 
         if ($this->search) {
 
             $this->resetPage();
-            $subjects->where('name', 'LIKE', '%' . trim($this->search) . '%');
+            $expenses->where('name', 'LIKE', '%' . trim($this->search) . '%');
         }
 
-        $subjects = $subjects->paginate($this->perPage);
+        $expenses = $expenses->paginate($this->perPage);
 
-            return view('livewire.dashboard.subjects.index', [
-                'subjects' => $subjects
+            return view('livewire.dashboard.expenses.index', [
+                'expenses' => $expenses
             ]);
     }
 

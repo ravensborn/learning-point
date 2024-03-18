@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Expense;
 use App\Models\Group;
 use App\Models\Subject;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -21,6 +22,15 @@ class GroupSeeder extends Seeder
             Group::factory()->create([
                 'name' => $subjectGroup,
                 'model' => Subject::class
+            ]);
+        }
+
+        $expenseGroups = ['Equipment', 'Internet Package', 'Electricity', 'Other'];
+
+        foreach ($expenseGroups as $expenseGroup) {
+            Group::factory()->create([
+                'name' => $expenseGroup,
+                'model' => Expense::class
             ]);
         }
     }

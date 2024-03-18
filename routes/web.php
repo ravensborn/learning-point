@@ -5,6 +5,7 @@ use App\Livewire\Dashboard\Settings\Index as SettingsIndex;
 use App\Livewire\Dashboard\Users\Index as UsersIndex;
 
 use App\Livewire\Dashboard\Subjects\Index as SubjectsIndex;
+use App\Livewire\Dashboard\Expenses\Index as ExpensesIndex;
 
 use App\Livewire\Dashboard\Sessions\Index as SessionsIndex;
 use App\Livewire\Dashboard\Sessions\Create as SessionsCreate;
@@ -73,6 +74,7 @@ Route::middleware(['auth'])->group(function() {
         Route::get('/users', UsersIndex::class)->name('users.index');
 
         Route::get('/subjects', SubjectsIndex::class)->name('subjects.index');
+        Route::get('/expenses', ExpensesIndex::class)->name('expenses.index');
 
         Route::get('/sessions', SessionsIndex::class)->name('sessions.index');
         Route::get('/sessions/create', SessionsCreate::class)->name('sessions.create');

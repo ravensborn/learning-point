@@ -16,9 +16,6 @@
 
     <!-- CSS files -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css">
-    {{--    <link href="{{ asset('theme/css/tabler-flags.min.css') }}" rel="stylesheet"/>--}}
-    {{--    <link href="{{ asset('theme/css/tabler-payments.min.css') }}" rel="stylesheet"/>--}}
-    {{--    <link href="{{ asset('theme/css/tabler-vendors.min.css')  }}" rel="stylesheet"/>--}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <style>
         @import url('https://rsms.me/inter/inter.css');
@@ -101,7 +98,7 @@
                               style="background-image: url('{{ asset('images/user.png') }}'); box-shadow: unset;"></span>
                         <div class="d-none d-xl-block ps-2">
                             <div>{{ auth()->user()->name }}</div>
-                            <div class="mt-1 small text-muted">Admin User</div>
+                            <div class="mt-1 small text-muted">User</div>
                         </div>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
@@ -130,20 +127,6 @@
                         <div class="dropdown-menu show">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
-                                    <a class="dropdown-item @if(request()->is('*/students*')) active @endif"
-                                       href="{{ route('dashboard.students.index') }}">
-                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                             <i class="ti ti-custom ti-user-star"></i>
-                                         </span>
-                                        Students
-                                    </a>
-                                    <a class="dropdown-item @if(request()->is('*/subjects*')) active @endif"
-                                       href="{{ route('dashboard.subjects.index') }}">
-                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                             <i class="ti ti-custom ti-book-2"></i>
-                                         </span>
-                                        Subjects
-                                    </a>
                                     <a class="dropdown-item @if(request()->is('*/sessions*')) active @endif" href="{{ route('dashboard.sessions.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-chalkboard"></i>
@@ -154,98 +137,6 @@
                             </div>
                         </div>
                     </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle show" href="#navbar-base" data-bs-toggle="dropdown"
-                           data-bs-auto-close="false" role="button" aria-expanded="false">
-                            <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                <i class="ti ti-custom ti-box"></i>
-                            </span>
-                            <span class="nav-link-title">Learning Point</span>
-                        </a>
-                        <div class="dropdown-menu show">
-                            <div class="dropdown-menu-columns">
-                                <div class="dropdown-menu-column">
-                                    <a class="dropdown-item @if(request()->is('*/employees*')) active @endif" href="{{ route('dashboard.employees.index') }}">
-                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                             <i class="ti ti-custom ti-list-details"></i>
-                                         </span>
-                                        Employees
-                                    </a>
-                                    <a class="dropdown-item @if(request()->is('*/teachers*')) active @endif" href="{{ route('dashboard.teachers.index') }}">
-                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                             <i class="ti ti-custom ti-school"></i>
-                                         </span>
-                                        Teachers
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                             <i class="ti ti-custom ti-adjustments-dollar"></i>
-                                         </span>
-                                        Expenses
-                                        <span class="badge badge-sm bg-warning-lt text-uppercase ms-auto">P</span>
-                                    </a>
-                                    <a class="dropdown-item" href="#">
-                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                             <i class="ti ti-custom ti-chart-infographic"></i>
-                                         </span>
-                                        Reports
-                                        <span class="badge badge-sm bg-warning-lt text-uppercase ms-auto">P</span>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle show" href="#navbar-base" data-bs-toggle="dropdown"
-                           data-bs-auto-close="false" role="button" aria-expanded="false">
-                            <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                <i class="ti ti-custom ti-box"></i>
-                            </span>
-                            <span class="nav-link-title">System</span>
-                        </a>
-                        <div class="dropdown-menu show">
-                            <div class="dropdown-menu-columns">
-                                <div class="dropdown-menu-column">
-                                    <a class="dropdown-item @if(request()->is('*/users*')) active @endif"
-                                       href="{{ route('dashboard.users.index') }}">
-                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                             <i class="ti ti-custom ti-users-group"></i>
-                                         </span>
-                                        Users
-                                    </a>
-                                </div>
-                                <a class="dropdown-item @if(request()->is('*/groups*')) active @endif"
-                                   href="{{ route('dashboard.groups.index') }}">
-                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                             <i class="ti ti-custom ti-book-2"></i>
-                                         </span>
-                                    Groups
-                                </a>
-                                <a class="dropdown-item @if(request()->is('*/schools*')) active @endif"
-                                   href="{{ route('dashboard.schools.index') }}">
-                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                             <i class="ti ti-custom ti-list-letters"></i>
-                                         </span>
-                                    Schools
-                                </a>
-                                <a class="dropdown-item @if(request()->is('*/families*')) active @endif"
-                                   href="{{ route('dashboard.families.index') }}">
-                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                             <i class="ti ti-custom ti-friends"></i>
-                                         </span>
-                                    Families
-                                </a>
-                                <a class="dropdown-item @if(request()->is('*/settings*')) active @endif"
-                                   href="{{ route('dashboard.settings.index') }}">
-                                         <span class="nav-link-icon d-md-none d-lg-inline-block">
-                                             <i class="ti ti-custom ti-settings"></i>
-                                         </span>
-                                    Settings
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-
 
                 </ul>
             </div>
