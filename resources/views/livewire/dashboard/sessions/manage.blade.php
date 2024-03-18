@@ -546,7 +546,7 @@
                     </div>
 
                 @empty
-                    <div class="col-12" wire:key="{{ $attendee->id }}">
+                    <div class="col-12" wire:key="0">
                         <div class="card">
                             <div class="card-body text-center">
                                 No students are in this session.
