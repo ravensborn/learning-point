@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Dashboard\Groups;
 
+use App\Models\Expense;
 use App\Models\Group;
 use App\Models\Subject;
 use App\Traits\GroupModalFunctions;
@@ -26,6 +27,10 @@ class Index extends Component
           [
               'name' => 'Subject',
               'model' => Subject::class
+          ],
+          [
+              'name' => 'Expense',
+              'model' => Expense::class
           ]
       ];
     }
