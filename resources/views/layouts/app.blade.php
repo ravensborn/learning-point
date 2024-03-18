@@ -177,12 +177,11 @@
                                          </span>
                                         Teachers
                                     </a>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item @if(request()->is('*/expenses*')) active @endif" href="{{ route('dashboard.expenses.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-adjustments-dollar"></i>
                                          </span>
                                         Expenses
-                                        <span class="badge badge-sm bg-warning-lt text-uppercase ms-auto">P</span>
                                     </a>
                                     <a class="dropdown-item" href="#">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
