@@ -21,7 +21,7 @@ class Index extends Component
         ]);
 
         $this->settings->update([
-            'sessionSettingsCancellationChargeLimit' => $this->sessionSettingsCancellationChargeLimit,
+            'maximum_session_cancellation_charge_limit' => $this->sessionSettingsCancellationChargeLimit,
         ]);
 
         $this->sessionSaveMessage = 'Successfully saved session settings';

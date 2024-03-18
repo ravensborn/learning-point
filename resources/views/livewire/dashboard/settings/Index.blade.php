@@ -41,7 +41,7 @@
                                     Cancellation Charge Limit</label>
                                 <input type="text"
                                        id="sessionSettingsCancellationChargeLimit"
-                                       wire:model.live.debounce.500ms="sessionSettingsCancellationChargeLimit"
+                                       wire:model.live="sessionSettingsCancellationChargeLimit"
                                        class="form-control" placeholder="50">
                                 @error('sessionSettingsCancellationChargeLimit')
                                 <div class="text-danger mt-1">{{ $message }}</div>
