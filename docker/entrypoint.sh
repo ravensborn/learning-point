@@ -11,7 +11,6 @@ else
     echo "env file exists."
 fi
 
-php artisan migrate:fresh --seed
 php artisan optimize:clear
 
 php-fpm -D
