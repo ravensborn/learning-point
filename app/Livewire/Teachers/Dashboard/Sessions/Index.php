@@ -1,0 +1,67 @@
+<?php
+
+namespace App\Livewire\Teachers\Dashboard\Sessions;
+
+use App\Models\Session;
+use App\Models\Student;
+use App\Traits\SessionModalFunctions;
+use Carbon\Carbon;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Livewire\WithPagination;
+
+class Index extends Component
+{
+
+    use WithPagination, SessionModalFunctions;
+
+
+    public int $perPage = 10;
+    public string $search = '';
+
+    public bool $showToday = false;
+
+    public function toggleTodayFilter(): void
+    {
+        $this->showToday = !$this->showToday;
+    }
+
+    public function mount()
+    {
+
+    }
+
+    #[Layout('layouts.teachers-dashboard')]
+    public function render()
+    {
+        $sessions = Session::query()
+            ->whereHas('teacher', function ($query) {
+                $query->where('id', auth()->guard('teacher')->user()->id);
+            })
+            ->orderBy('id', 'desc');
+
+        if ($this->search) {
+
+            $this->resetPage();
+
+            $sessions->whereHas('subject', function ($query) {
+                $query->where('name', 'LIKE', '%' . trim($this->search) . '%');
+            })->orWhereHas('attendees', function ($query) {
+                $query->whereHas('student', function ($q) {
+                    $q->whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($this->search) . "%' ");
+                });
+            });
+        }
+
+        if ($this->showToday) {
+            $sessions->whereDate('created_at', Carbon::today());
+        }
+
+        $sessions = $sessions->paginate($this->perPage);
+
+        return view('livewire.teachers.dashboard.sessions.index', [
+            'sessions' => $sessions
+        ]);
+    }
+
+}

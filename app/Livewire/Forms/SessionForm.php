@@ -11,7 +11,7 @@ class SessionForm extends Form
 
     public $model;
 
-    public string $user_id = '';
+    public string|null $user_id = '';
     public string $teacher_id = '';
     public string $subject_id = '';
     public string $type = '';
@@ -25,7 +25,7 @@ class SessionForm extends Form
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'string', 'exists:users,id'],
+            'user_id' => ['nullable', 'string', 'exists:users,id'],
             'teacher_id' => ['required', 'string', 'exists:teachers,id'],
             'subject_id' => ['required', 'string', 'exists:subjects,id'],
             'type' => ['required', 'string', 'in:' . implode(',', array_keys(Session::TYPES))],

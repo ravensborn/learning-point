@@ -23,8 +23,20 @@ class Manage extends Component
 
     public float $sessionTotal = 0;
 
+    public function setAuthor(): void
+    {
+        $this->session->update([
+            'user_id' => auth()->user()->id,
+        ]);
+    }
+
     public function mount(Session $session): void
     {
+
+        if (!$session->user) {
+            $this->setAuthor();
+        }
+
         if ($session->status == Session::STATUS_COMPLETED) {
             $this->redirectRoute('dashboard.sessions.show-completed', $session->id);
         }

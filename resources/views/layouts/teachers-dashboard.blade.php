@@ -67,7 +67,7 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <h1 class="navbar-brand navbar-brand-autodark">
-                <a href="{{ route('home') }}">
+                <a href="{{ route('teacher.dashboard.home') }}">
                     {{--                    <img src="{{ asset('images/logo.png') }}" width="110" height="auto" alt="Learning Point Logo"--}}
                     {{--                         class="navbar-brand-image">--}}
                     <div class="mt-md-3 mt-0">
@@ -97,12 +97,12 @@
                         <span class="avatar avatar-sm"
                               style="background-image: url('{{ asset('images/user.png') }}'); box-shadow: unset;"></span>
                         <div class="d-none d-xl-block ps-2">
-                            <div>{{ auth()->user()->name }}</div>
+                            <div>{{ auth()->guard('teacher')->user()->name }}</div>
                             <div class="mt-1 small text-muted">User</div>
                         </div>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                        <a href="{{ route('logout') }}" class="dropdown-item">Logout</a>
+                        <a href="{{ route('teacher.logout') }}" class="dropdown-item">Logout</a>
                     </div>
                 </div>
             </div>
@@ -127,7 +127,7 @@
                         <div class="dropdown-menu show">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
-                                    <a class="dropdown-item @if(request()->is('*/sessions*')) active @endif" href="{{ route('dashboard.sessions.index') }}">
+                                    <a class="dropdown-item @if(request()->is('*/sessions*')) active @endif" href="{{ route('teacher.dashboard.sessions.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-chalkboard"></i>
                                          </span>
@@ -173,12 +173,12 @@
                         <span class="avatar avatar-sm"
                               style="background-color: unset; background-image: url('{{ asset('images/user.png') }}'); box-shadow: unset;"></span>
                         <div class="d-none d-xl-block ps-2">
-                            <div>{{ auth()->user()->name }}</div>
-                            <div class="mt-1 small text-muted">Admin User</div>
+                            <div>{{ auth()->guard('teacher')->user()->name }}</div>
+                            <div class="mt-1 small text-muted">{{ auth()->guard('teacher')->user()->email }}</div>
                         </div>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
-                        <a href="./sign-in.html" class="dropdown-item">Logout</a>
+                        <a href="{{ route('teacher.logout') }}" class="dropdown-item">Logout</a>
                     </div>
                 </div>
             </div>

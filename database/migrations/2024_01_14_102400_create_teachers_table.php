@@ -19,8 +19,11 @@ return new class extends Migration
             $table->string('phone_number')->nullable();
             $table->string('address')->nullable();
 
+
+
             $table->double('wallet', 10, 2)->default(0);
 
+            $table->rememberToken();
             $table->timestamps();
         });
     }

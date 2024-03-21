@@ -37,7 +37,7 @@
                                 </div>
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Created By</div>
-                                    <div class="datagrid-content">{{ $session->user->name }}</div>
+                                    <div class="datagrid-content">{{ $session->user->name ?? '' }}</div>
                                 </div>
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Created At</div>
