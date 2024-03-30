@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             CitySeeder::class,
             UserSeeder::class,
             GroupSeeder::class, //Fake
+            ExpenseSeeder::class, //Fake
             SubjectSeeder::class, //Fake
             SchoolSeeder::class, //Fake
             FamilySeeder::class, //Fake

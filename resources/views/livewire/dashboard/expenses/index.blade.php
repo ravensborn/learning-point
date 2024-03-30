@@ -30,6 +30,68 @@
 
     <div class="page-body">
         <div class="container-xl">
+
+            <div wire:loading wire:target="loadExpenseStats">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+            <div class="row row-deck row-cards mb-3" wire:init="loadExpenseStats">
+
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Stats</h3>
+                        </div>
+                        <div class="card-body border-bottom py-3">
+
+                            <div class="row border-bottom py-3">
+                                <div class="col-12">
+                                    <label class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox"
+                                               wire:change="toggleDateFiltering"
+                                               @if($dateFiltering) checked="" @endif>
+                                        <span class="form-check-label">Date Filtering</span>
+                                    </label>
+                                </div>
+                                @if($dateFiltering)
+                                    <div class="mt-5"></div>
+                                    <div class="row">
+                                        <div class="col-6 col-md-3">
+                                            <label for="from_date" class="form-label required">Date Form</label>
+                                            <input type="date" id="from_date" class="form-control" wire:model.live="dateFrom">
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <label for="to_date" class="form-label required">Date To</label>
+                                            <input type="date" id="to_date" class="form-control" wire:model.live="dateTo">
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="row pt-3 g-3">
+                                @foreach($expenseStats as $item)
+                                    <div class="col-3">
+                                        <div class="row g-3 align-items-center">
+                                            <div class="col-auto">
+                                                <span class="badge bg-success"></span>
+                                            </div>
+                                            <div class="col text-truncate">
+                                                <a href="#"
+                                                   class="text-reset d-block text-truncate">{{ $item['name'] }}</a>
+                                                <div class="text-secondary text-truncate mt-n1">
+                                                    ${{ number_format($item['amount'], 2) }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row row-deck row-cards">
 
                 <div class="col-12">

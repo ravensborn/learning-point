@@ -14,7 +14,7 @@ class ExpenseSeeder extends Seeder
      */
     public function run(): void
     {
-        Expense::factory(1)->create([
+        Expense::factory(10)->create([
             'group_id' => Group::where('model', Expense::class)->inRandomOrder()->first()
         ]);
     }

@@ -3,6 +3,7 @@
 use App\Livewire\Dashboard\Home as Home;
 use App\Livewire\Dashboard\Settings\Index as SettingsIndex;
 use App\Livewire\Dashboard\Users\Index as UsersIndex;
+use App\Livewire\Dashboard\Reports\Index as ReportsIndex;
 
 use App\Livewire\Dashboard\Subjects\Index as SubjectsIndex;
 use App\Livewire\Dashboard\Expenses\Index as ExpensesIndex;
@@ -70,6 +71,8 @@ Route::middleware(['auth'])->group(function() {
     Route::prefix('dashboard')->as('dashboard.')->group(function () {
 
         Route::get('/', Home::class)->name('dashboard.home');
+
+        Route::get('/reports', ReportsIndex::class)->name('reports.index');
 
         Route::get('/users', UsersIndex::class)->name('users.index');
 

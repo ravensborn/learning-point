@@ -5,7 +5,13 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
     <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+
     <title>{{ config('app.name') }}</title>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ asset('favicon/site.webmanifest') }}">
 
     <script>
         const theme = localStorage.getItem('theme');
@@ -16,9 +22,6 @@
 
     <!-- CSS files -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css">
-    {{--    <link href="{{ asset('theme/css/tabler-flags.min.css') }}" rel="stylesheet"/>--}}
-    {{--    <link href="{{ asset('theme/css/tabler-payments.min.css') }}" rel="stylesheet"/>--}}
-    {{--    <link href="{{ asset('theme/css/tabler-vendors.min.css')  }}" rel="stylesheet"/>--}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
     <style>
         @import url('https://rsms.me/inter/inter.css');
@@ -183,12 +186,11 @@
                                          </span>
                                         Expenses
                                     </a>
-                                    <a class="dropdown-item" href="#">
+                                    <a class="dropdown-item" href="{{ route('dashboard.reports.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-chart-infographic"></i>
                                          </span>
                                         Reports
-                                        <span class="badge badge-sm bg-warning-lt text-uppercase ms-auto">P</span>
                                     </a>
                                 </div>
                             </div>
