@@ -17,7 +17,7 @@ class PrintTransaction extends Component
     public string $phone = '';
     public string $address = '';
 
-    public string $wallet = '';
+    public float $wallet;
 
 
     public function mount(Transaction $transaction): void
@@ -33,7 +33,7 @@ class PrintTransaction extends Component
             $this->phone = $student->primary_phone_number ?? '';
             $this->address = $student->address ?? '';
 
-            $this->wallet = $student->wallet;
+            $this->wallet = (float) $student->wallet;
         }
     }
 
