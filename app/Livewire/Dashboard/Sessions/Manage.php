@@ -328,6 +328,7 @@ class Manage extends Component
 
             if ($attendee) {
                 $attendee->delete();
+                $this->reloadSession();
                 $this->updateAllAttendeeSessionCharges(false);
             }
         } else {
@@ -371,6 +372,8 @@ class Manage extends Component
 
             $this->selectedStudentIds = [];
         }
+
+        $this->reloadSession();
         $this->updateAllAttendeeSessionCharges(false);
         $this->dispatch('close-all-modals');
     }
