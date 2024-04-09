@@ -76,7 +76,7 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table card-table table-vcenter text-nowrap datatable">
+                            <table class="table card-table table-vcenter datatable">
                                 <thead>
                                 <tr>
 
@@ -86,6 +86,7 @@
                                     <th>Date</th>
                                     <th>Type</th>
                                     <th>Status</th>
+                                    <th>Note</th>
                                     <th>Created</th>
                                     <th></th>
                                 </tr>
@@ -129,10 +130,32 @@
                                             </span>
                                         </td>
                                         <td>
+                                            {{ $session->approval_note }}
+                                        </td>
+                                        <td>
                                             {{ $session->created_at->format('Y-m-d') }}
                                         </td>
 
                                         <td class="text-end">
+{{--                                            @if($session->status != \App\Models\Session::STATUS_COMPLETED)--}}
+{{--                                                <a class="btn align-text-top"--}}
+{{--                                                   href="{{ route('teacher.dashboard.sessions.attendance', ['session' => $session->id]) }}">--}}
+{{--                                                    <!--<editor-fold desc="SVG ICON">-->--}}
+{{--                                                    <svg xmlns="http://www.w3.org/2000/svg"--}}
+{{--                                                         class="icon icon-tabler icon-tabler-notebook" width="24"--}}
+{{--                                                         height="24" viewBox="0 0 24 24" stroke-width="2"--}}
+{{--                                                         stroke="currentColor" fill="none" stroke-linecap="round"--}}
+{{--                                                         stroke-linejoin="round">--}}
+{{--                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>--}}
+{{--                                                        <path--}}
+{{--                                                            d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18"/>--}}
+{{--                                                        <path d="M13 8l2 0"/>--}}
+{{--                                                        <path d="M13 12l2 0"/>--}}
+{{--                                                    </svg>--}}
+{{--                                                    <!--</editor-fold>-->--}}
+{{--                                                    Manage Attendance--}}
+{{--                                                </a>--}}
+{{--                                            @endif--}}
                                             @if($session->status != \App\Models\Session::STATUS_COMPLETED)
                                                 <a class="btn align-text-top"
                                                    href="{{ route('teacher.dashboard.sessions.edit', ['session' => $session->id]) }}">
@@ -156,7 +179,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">
+                                        <td colspan="8" class="text-center">
                                             There are no items at the moment.
                                         </td>
                                     </tr>

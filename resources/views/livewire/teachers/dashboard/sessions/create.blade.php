@@ -88,6 +88,17 @@
                             </div>
                         </div>
 
+
+                        <div class="mb-3 row">
+                            <label for="note" class="col-sm-2 col-form-label">Note</label>
+                            <div class="col-sm-10">
+                                <textarea id="note" class="form-control" wire:model="sessionForm.note"></textarea>
+                                @error('sessionForm.note')
+                                <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -154,15 +165,26 @@
                                     <th>#</th>
                                     <th>Student</th>
                                     <th>Wallet</th>
+                                    <th>Attending</th>
                                     <th></th>
                                 </tr>
                                 </thead>
                                 <tbody>
+
                                 @forelse($students as $student)
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $student->full_name }}</td>
                                         <td>${{ number_format($student->wallet, 2) }}</td>
+                                        <td>
+                                            <label class="form-check form-switch mb-0">
+                                                <input wire:change="toggleStudentAttending({{ $student->id }})"
+                                                       @if(!in_array($student->id, $nonAttendingStudentIds)) checked="" @endif
+                                                       class="form-check-input"
+                                                       type="checkbox">
+                                                <span class="form-check-label"></span>
+                                            </label>
+                                        </td>
                                         <td>
                                             <button class="btn btn-sm btn-danger"
                                                     wire:click="removeStudent({{ $student->id }})">

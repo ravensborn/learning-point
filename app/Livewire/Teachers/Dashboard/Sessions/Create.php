@@ -21,7 +21,21 @@ class Create extends Component
 
     public string $studentSearchQuery = '';
     public $foundStudents;
+    public array $nonAttendingStudentIds = [];
     public $students;
+
+    public function toggleStudentAttending($studentId): void
+    {
+        if (in_array($studentId, $this->nonAttendingStudentIds)) {
+            foreach ($this->nonAttendingStudentIds as $key => $id) {
+                if ($id == $studentId) {
+                    unset($this->nonAttendingStudentIds[$key]);
+                }
+            }
+        } else {
+            $this->nonAttendingStudentIds[] = $studentId;
+        }
+    }
 
     public function store(): void
     {
@@ -48,10 +62,15 @@ class Create extends Component
                 'managed' => true,
             ];
 
+            $attending = true;
+            if (in_array($student->id, $this->nonAttendingStudentIds)) {
+                $attending = false;
+            }
+
             Attendee::create([
                 'session_id' => $sessionId,
                 'student_id' => $student->id,
-                'attending' => true,
+                'attending' => $attending,
                 'charged' => true,
                 'charge_list' => $chargeList,
                 'cancellation_charge_list' => [],

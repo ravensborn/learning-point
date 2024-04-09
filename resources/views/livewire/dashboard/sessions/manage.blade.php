@@ -260,6 +260,7 @@
 
                                     </div>
                                     <div>
+                                        {{--                                        {{ array_search(true, array_column($attendee->charge_list, 'managed')) }}--}}
                                         @if($attendee->attending && $attendee->charged)
                                             <a href="#" class="btn btn-sm btn-ghost-info"
                                                wire:click.prevent="updateAttendeeSessionCharge({{ $attendee->id }})">
@@ -274,7 +275,7 @@
                                                     <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"/>
                                                 </svg>
                                                 <!--</editor-fold>-->
-                                                Update Session Charge
+                                                Reset System Charge
                                             </a>
                                         @endif
                                         @if($attendee->charged)
@@ -331,7 +332,11 @@
                                             <path d="M12 9h.01"/>
                                             <path d="M11 12h1v4h1"/>
                                         </svg>
-                                        Student will not be charged.
+                                        @if($attendee->attending)
+                                            Free Session
+                                        @else
+                                            Ghost Student
+                                        @endif
                                     </div>
 
                                 @else
@@ -347,13 +352,15 @@
                                                             {{ $item['name'] }}
                                                             @if($item['managed'])
                                                                 <span class="text-success">
-                                                            <svg xmlns="http://www.w3.org/2000/svg"
-                                                                 class="icon icon-tabler icon-tabler-bolt" width="24"
-                                                                 height="24" viewBox="0 0 24 24" stroke-width="2"
-                                                                 stroke="currentColor" fill="none"
-                                                                 stroke-linecap="round" stroke-linejoin="round"><path
-                                                                    stroke="none" d="M0 0h24v24H0z" fill="none"/><path
-                                                                    d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11"/></svg>
+                                                                <svg xmlns="http://www.w3.org/2000/svg"
+                                                                     class="icon icon-tabler icon-tabler-bolt"
+                                                                     width="24"
+                                                                     height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                                     stroke="currentColor" fill="none"
+                                                                     stroke-linecap="round" stroke-linejoin="round">
+                                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                                    <path d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11"/>
+                                                                </svg>
                                                             </span>
                                                             @endif
                                                         </td>
@@ -636,7 +643,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Charge</h5>
+                    <h5 class="modal-title">{{ $chargeModalTitle }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">

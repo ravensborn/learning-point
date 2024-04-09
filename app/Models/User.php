@@ -32,6 +32,10 @@ class User extends Authenticatable  implements HasMedia
         'password' => 'hashed',
     ];
 
+    const roles = [
+        'system admin', 'accountant'
+    ];
+
 
     public static function getAvatarsArray($gender): array
     {

@@ -15,10 +15,8 @@ class Index extends Component
 
     public $student;
 
-
     public int $perPage = 10;
     public string $search = '';
-
 
     public function mount(Student $student): void
     {

@@ -113,7 +113,13 @@
                     </div>
                     <div class="mb-2">
                         <!--<editor-fold desc="SVG ICON">-->
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2 text-secondary" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 9.314l-2.343 -2.344a3.314 3.314 0 0 0 -4.686 4.686l2.343 2.344l4.686 4.686l7.03 -7.03a3.314 3.314 0 0 0 -4.687 -4.685l-7.03 7.029" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon me-2 text-secondary" width="24" height="24"
+                             viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path
+                                d="M12 9.314l-2.343 -2.344a3.314 3.314 0 0 0 -4.686 4.686l2.343 2.344l4.686 4.686l7.03 -7.03a3.314 3.314 0 0 0 -4.687 -4.685l-7.03 7.029"/>
+                        </svg>
                         <!--</editor-fold>-->
                         Health & Conditions:
                         @if($student->health_and_conditions)
@@ -128,6 +134,11 @@
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                         <path d="M6 10l6 6l6 -6h-12"/></svg>
                                 </span>
+                                <div x-show="show" @click="show = !show">
+                                    <span class="cursor-pointer">
+                                        Show less
+                                    </span>
+                                </div>
                             </div>
                         @else
                             No complications

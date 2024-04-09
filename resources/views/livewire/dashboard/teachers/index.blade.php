@@ -71,6 +71,7 @@
                                     <th>Series</th>
                                     <th>Name</th>
                                     <th>Wallet</th>
+                                    <th>Sessions</th>
                                     <th>E-Mail</th>
                                     <th>Phone Number</th>
                                     <th>Address</th>
@@ -97,12 +98,15 @@
                                             ${{ number_format($teacher->wallet, 2) }}
                                         </td>
                                         <td>
+                                            {{ $teacher->sessions->count() }}
+                                        </td>
+                                        <td>
                                             {{ $teacher->email }}
                                         </td>
                                         <td>
                                             {{ $teacher->phone_number }}
                                         </td>
-                                        <td style="width: 200px !important; word-wrap: break-word !important;">
+                                        <td>
                                             {{ $teacher->address }}
                                         </td>
                                         <td>
@@ -127,7 +131,22 @@
                                                 <!--</editor-fold>-->
                                                 Transactions
                                             </a>
-                                                <span class="dropdown">
+                                            <a class="btn align-text-top"
+                                               href="{{ route('dashboard.teacher.sessions.index', ['teacher' => $teacher->id]) }}">
+                                                <!--<editor-fold desc="SVG ICON">-->
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-list" width="44" height="44" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                    <path d="M9 6l11 0" />
+                                                    <path d="M9 12l11 0" />
+                                                    <path d="M9 18l11 0" />
+                                                    <path d="M5 6l0 .01" />
+                                                    <path d="M5 12l0 .01" />
+                                                    <path d="M5 18l0 .01" />
+                                                </svg>
+                                                <!--</editor-fold>-->
+                                                Sessions
+                                            </a>
+                                            <span class="dropdown">
                                                   <button class="btn dropdown-toggle align-text-top"
                                                           data-bs-boundary="viewport"
                                                           data-bs-toggle="dropdown">Actions</button>
@@ -142,7 +161,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">
+                                        <td colspan="10" class="text-center">
                                             There are no items at the moment.
                                         </td>
                                     </tr>
@@ -212,7 +231,8 @@
                             <div class="col-12 col-md-6 mb-3">
                                 <div>
                                     <label for="phone_number" class="form-label">Phone Number</label>
-                                    <input type="text" wire:model="form.phone_number" class="form-control" id="phone_number"
+                                    <input type="text" wire:model="form.phone_number" class="form-control"
+                                           id="phone_number"
                                            placeholder="Phone Number">
                                     @error('form.phone_number')
                                     <div class="text-danger mt-1">
@@ -299,7 +319,8 @@
                             <div class="col-12 col-md-6 mb-3">
                                 <div>
                                     <label for="phone_number" class="form-label">Phone Number</label>
-                                    <input type="text" wire:model="form.phone_number" class="form-control" id="phone_number"
+                                    <input type="text" wire:model="form.phone_number" class="form-control"
+                                           id="phone_number"
                                            placeholder="Phone Number">
                                     @error('form.phone_number')
                                     <div class="text-danger mt-1">

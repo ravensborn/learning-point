@@ -20,6 +20,7 @@ class Index extends Component
 
     public Collection $groups;
 
+    public int $filterByGroupId = 0;
     public bool $dateFiltering = false;
     public $dateTo;
     public $dateFrom;
@@ -32,14 +33,24 @@ class Index extends Component
 
     public function loadExpenseStats(): void
     {
-
         $total = 0;
+        $this->expenseStats = [];
 
         foreach ($this->groups as $group) {
 
-            $amount = $group->expenses->sum('amount');
+            $expenses = $group->expenses();
+
+            if ($this->dateFiltering && ($this->dateTo && $this->dateFrom)) {
+                $amount = $expenses->whereBetween('date', [
+                    $this->dateFrom,
+                    $this->dateTo
+                ])->sum('amount');
+            } else {
+                $amount = $expenses->sum('amount');
+            }
 
             $this->expenseStats[] = [
+                'groupId' => $group->id,
                 'name' => $group->name,
                 'amount' => $amount,
             ];
@@ -48,9 +59,18 @@ class Index extends Component
         }
 
         $this->expenseStats[] = [
-            'name' =>  'Total',
+            'groupId' => 0,
+            'name' => 'Total',
             'amount' => $total,
         ];
+    }
+
+    public function filterByGroup($groupId): void
+    {
+        if ($this->groups->contains('id', $groupId)) {
+            $this->filterByGroupId = $groupId;
+        } else
+            $this->filterByGroupId = 0;
     }
 
     public function mount(): void
@@ -63,14 +83,21 @@ class Index extends Component
     #[Layout('layouts.app')]
     public function render()
     {
-        $expenses = Expense::query()->orderBy('created_at', 'desc');
+        $expenses = Expense::query()->orderBy('date', 'desc');
+
+        if ($this->filterByGroupId) {
+            $expenses->where('group_id', $this->filterByGroupId);
+        }
 
         if ($this->dateFiltering && ($this->dateTo && $this->dateFrom)) {
-            $expenses->whereBetween('created_at', [
+            $expenses->whereBetween('date', [
                 $this->dateFrom,
                 $this->dateTo
             ]);
         }
+
+        $this->loadExpenseStats();
+
         if ($this->search) {
 
             $this->resetPage();

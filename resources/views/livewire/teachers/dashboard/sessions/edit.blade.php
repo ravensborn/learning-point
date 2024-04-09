@@ -5,7 +5,7 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Edit Session / {{ $session->number }}
+                        Session / {{ $session->number }} / Edit
                     </h2>
                 </div>
                 <!-- Page title actions -->
@@ -92,6 +92,16 @@
                                 <div class="col-sm-10">
                                     <input type="datetime-local" class="form-control" id="time-out" wire:model="sessionForm.time_out">
                                     @error('sessionForm.time_out')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="mb-3 row">
+                                <label for="note" class="col-sm-2 col-form-label">Note</label>
+                                <div class="col-sm-10">
+                                    <textarea id="note" class="form-control" wire:model="sessionForm.note"></textarea>
+                                    @error('sessionForm.note')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>

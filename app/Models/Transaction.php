@@ -25,6 +25,8 @@ class Transaction extends Model
     const TYPE_TRANSFER_IN = 'transfer-in';
     const TYPE_TRANSFER_OUT = 'transfer-out';
     const TYPE_SALARY = 'salary';
+    const TYPE_BONUS = 'bonus';
+    const TYPE_DEDUCTION = 'deduction';
 
     const TYPES = [
         self::TYPE_WITHDRAW => 'Withdraw',
@@ -33,6 +35,8 @@ class Transaction extends Model
         self::TYPE_TRANSFER_IN => 'Transfer In',
         self::TYPE_TRANSFER_OUT => 'Transfer Out',
         self::TYPE_SALARY => 'Salary',
+        self::TYPE_BONUS => 'Bonus',
+        self::TYPE_DEDUCTION => 'Deduction',
     ];
 
     const TYPE_COLOR_CLASSES = [
@@ -42,6 +46,8 @@ class Transaction extends Model
         self::TYPE_TRANSFER_IN => 'text-success',
         self::TYPE_TRANSFER_OUT => 'text-danger',
         self::TYPE_SALARY => 'text-success',
+        self::TYPE_BONUS => 'text-success',
+        self::TYPE_DEDUCTION => 'text-danger',
     ];
     const TYPE_PREFIX_CHARACTER = [
         self::TYPE_WITHDRAW => '▼',
@@ -50,6 +56,8 @@ class Transaction extends Model
         self::TYPE_TRANSFER_IN => '▲',
         self::TYPE_TRANSFER_OUT => '▼',
         self::TYPE_SALARY => '▲',
+        self::TYPE_BONUS => '▲',
+        self::TYPE_DEDUCTION => '▼',
     ];
 
 
@@ -95,6 +103,14 @@ class Transaction extends Model
 
            if($this->type == self::TYPE_SALARY) {
                $wallet += $amount;
+           }
+
+           if($this->type == self::TYPE_BONUS) {
+               $wallet += $amount;
+           }
+
+           if($this->type == self::TYPE_DEDUCTION) {
+               $wallet -= $amount;
            }
 
            $model->update([

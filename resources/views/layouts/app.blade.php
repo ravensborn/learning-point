@@ -114,8 +114,8 @@
             </div>
             <div class="collapse navbar-collapse" id="sidebar-menu">
                 <ul class="navbar-nav pt-lg-3">
-                    <li class="nav-item">
-                        <a class="nav-link" href="./">
+                    <li class="nav-item @if(request()->routeIs('home')) active @endif">
+                        <a class="nav-link" href="{{ route('home') }}">
                           <span class="nav-link-icon d-md-none d-lg-inline-block">
                               <i class="ti ti-custom ti-home"></i>
                           </span>
@@ -133,26 +133,33 @@
                         <div class="dropdown-menu show">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
-                                    <a class="dropdown-item @if(request()->is('*/students*')) active @endif"
-                                       href="{{ route('dashboard.students.index') }}">
+                                    @can('manage students')
+                                        <a class="dropdown-item @if(request()->is('*/students*')) active @endif"
+                                           href="{{ route('dashboard.students.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-user-star"></i>
                                          </span>
-                                        Students
-                                    </a>
-                                    <a class="dropdown-item @if(request()->is('*/subjects*')) active @endif"
-                                       href="{{ route('dashboard.subjects.index') }}">
+                                            Students
+                                        </a>
+                                    @endcan
+                                    @can('manage subjects')
+                                        <a class="dropdown-item @if(request()->is('*/subjects*')) active @endif"
+                                           href="{{ route('dashboard.subjects.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-book-2"></i>
                                          </span>
-                                        Subjects
-                                    </a>
-                                    <a class="dropdown-item @if(request()->is('*/sessions*')) active @endif" href="{{ route('dashboard.sessions.index') }}">
+                                            Subjects
+                                        </a>
+                                    @endcan
+                                    @can('manage sessions')
+                                        <a class="dropdown-item @if(request()->is('*/sessions*')) active @endif"
+                                           href="{{ route('dashboard.sessions.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-chalkboard"></i>
                                          </span>
-                                        Sessions
-                                    </a>
+                                            Sessions
+                                        </a>
+                                    @endcan
                                 </div>
                             </div>
                         </div>
@@ -168,30 +175,41 @@
                         <div class="dropdown-menu show">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
-                                    <a class="dropdown-item @if(request()->is('*/employees*')) active @endif" href="{{ route('dashboard.employees.index') }}">
+                                    @can('manage employees')
+                                        <a class="dropdown-item @if(request()->is('*/employees*')) active @endif"
+                                           href="{{ route('dashboard.employees.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-list-details"></i>
                                          </span>
-                                        Employees
-                                    </a>
-                                    <a class="dropdown-item @if(request()->is('*/teachers*')) active @endif" href="{{ route('dashboard.teachers.index') }}">
+                                            Employees
+                                        </a>
+                                    @endcan
+                                    @can('manage teachers')
+                                        <a class="dropdown-item @if(request()->is('*/teachers*')) active @endif"
+                                           href="{{ route('dashboard.teachers.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-school"></i>
                                          </span>
-                                        Teachers
-                                    </a>
-                                    <a class="dropdown-item @if(request()->is('*/expenses*')) active @endif" href="{{ route('dashboard.expenses.index') }}">
+                                            Teachers
+                                        </a>
+                                    @endcan
+                                    @can('manage expenses')
+                                        <a class="dropdown-item @if(request()->is('*/expenses*')) active @endif"
+                                           href="{{ route('dashboard.expenses.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-adjustments-dollar"></i>
                                          </span>
-                                        Expenses
-                                    </a>
-                                    <a class="dropdown-item" href="{{ route('dashboard.reports.index') }}">
+                                            Expenses
+                                        </a>
+                                    @endcan
+                                    @can('view reports')
+                                        <a class="dropdown-item" href="{{ route('dashboard.reports.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-chart-infographic"></i>
                                          </span>
-                                        Reports
-                                    </a>
+                                            Reports
+                                        </a>
+                                    @endcan
                                 </div>
                             </div>
                         </div>
@@ -207,42 +225,52 @@
                         <div class="dropdown-menu show">
                             <div class="dropdown-menu-columns">
                                 <div class="dropdown-menu-column">
-                                    <a class="dropdown-item @if(request()->is('*/users*')) active @endif"
-                                       href="{{ route('dashboard.users.index') }}">
+                                    @can('manage users')
+                                        <a class="dropdown-item @if(request()->is('*/users*')) active @endif"
+                                           href="{{ route('dashboard.users.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-users-group"></i>
                                          </span>
-                                        Users
-                                    </a>
-                                </div>
-                                <a class="dropdown-item @if(request()->is('*/groups*')) active @endif"
-                                   href="{{ route('dashboard.groups.index') }}">
+                                            Users
+                                        </a>
+                                    @endcan
+                                    @can('manage groups')
+                                        <a class="dropdown-item @if(request()->is('*/groups*')) active @endif"
+                                           href="{{ route('dashboard.groups.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-book-2"></i>
                                          </span>
-                                    Groups
-                                </a>
-                                <a class="dropdown-item @if(request()->is('*/schools*')) active @endif"
-                                   href="{{ route('dashboard.schools.index') }}">
+                                            Groups
+                                        </a>
+                                    @endcan
+                                    @can('manage schools')
+                                        <a class="dropdown-item @if(request()->is('*/schools*')) active @endif"
+                                           href="{{ route('dashboard.schools.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-list-letters"></i>
                                          </span>
-                                    Schools
-                                </a>
-                                <a class="dropdown-item @if(request()->is('*/families*')) active @endif"
-                                   href="{{ route('dashboard.families.index') }}">
+                                            Schools
+                                        </a>
+                                    @endcan
+                                    @can('manage families')
+                                        <a class="dropdown-item @if(request()->is('*/families*')) active @endif"
+                                           href="{{ route('dashboard.families.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-friends"></i>
                                          </span>
-                                    Families
-                                </a>
-                                <a class="dropdown-item @if(request()->is('*/settings*')) active @endif"
-                                   href="{{ route('dashboard.settings.index') }}">
+                                            Families
+                                        </a>
+                                    @endcan
+                                    @can('manage settings')
+                                        <a class="dropdown-item @if(request()->is('*/settings*')) active @endif"
+                                           href="{{ route('dashboard.settings.index') }}">
                                          <span class="nav-link-icon d-md-none d-lg-inline-block">
                                              <i class="ti ti-custom ti-settings"></i>
                                          </span>
-                                    Settings
-                                </a>
+                                            Settings
+                                        </a>
+                                    @endcan
+                                </div>
                             </div>
                         </div>
                     </li>

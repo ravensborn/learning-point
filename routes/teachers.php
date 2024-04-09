@@ -6,6 +6,7 @@ use App\Livewire\Teachers\Dashboard\Login;
 use App\Livewire\Teachers\Dashboard\Sessions\Index as SessionsIndex;
 use App\Livewire\Teachers\Dashboard\Sessions\Create as SessionsCreate;
 use App\Livewire\Teachers\Dashboard\Sessions\Edit as SessionsEdit;
+use App\Livewire\Teachers\Dashboard\Sessions\Attendance as SessionsAttendance;
 
 use Illuminate\Support\Facades\Route;
 
@@ -38,6 +39,7 @@ Route::middleware(['auth-teacher'])->prefix('dashboard')->as('dashboard.')->grou
     Route::get('/sessions', SessionsIndex::class)->name('sessions.index');
     Route::get('/sessions/create', SessionsCreate::class)->name('sessions.create');
     Route::get('/sessions/{session}/edit', SessionsEdit::class)->name('sessions.edit');
+//    Route::get('/sessions/{session}/attendance', SessionsAttendance::class)->name('sessions.attendance');
 
 });
 

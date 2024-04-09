@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +20,9 @@ class ExpenseFactory extends Factory
         return [
             'name' => $this->faker->word,
             'amount' => $this->faker->numberBetween(100,200),
+            'date' => Carbon::today(),
             'group_id' => 1,
+            'note' => $this->faker->paragraph
         ];
     }
 }

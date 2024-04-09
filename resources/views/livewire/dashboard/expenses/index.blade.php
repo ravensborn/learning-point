@@ -31,12 +31,8 @@
     <div class="page-body">
         <div class="container-xl">
 
-            <div wire:loading wire:target="loadExpenseStats">
-                <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Loading...</span>
-                </div>
-            </div>
-            <div class="row row-deck row-cards mb-3" wire:init="loadExpenseStats">
+
+            <div class="row row-deck row-cards mb-3">
 
                 <div class="col-12">
                     <div class="card">
@@ -59,17 +55,22 @@
                                     <div class="row">
                                         <div class="col-6 col-md-3">
                                             <label for="from_date" class="form-label required">Date Form</label>
-                                            <input type="date" id="from_date" class="form-control" wire:model.live="dateFrom">
+                                            <input type="date" id="from_date" class="form-control"
+                                                   wire:model.live="dateFrom">
                                         </div>
                                         <div class="col-6 col-md-3">
                                             <label for="to_date" class="form-label required">Date To</label>
-                                            <input type="date" id="to_date" class="form-control" wire:model.live="dateTo">
+                                            <input type="date" id="to_date" class="form-control"
+                                                   wire:model.live="dateTo">
                                         </div>
                                     </div>
                                 @endif
                             </div>
 
-                            <div class="row pt-3 g-3">
+                            <div class="row pt-3 g-3"
+                                 wire:loading.remove
+                                 wire:target="loadExpenseStats, dateFrom, dateTo">
+
                                 @foreach($expenseStats as $item)
                                     <div class="col-3">
                                         <div class="row g-3 align-items-center">
@@ -78,7 +79,16 @@
                                             </div>
                                             <div class="col text-truncate">
                                                 <a href="#"
-                                                   class="text-reset d-block text-truncate">{{ $item['name'] }}</a>
+                                                   wire:click.prevent="filterByGroup({{ $item['groupId'] }})"
+                                                   class="text-reset d-block text-truncate">
+                                                    @if($item['groupId'] == $filterByGroupId)
+                                                        <span class="text-info fw-bold">
+                                                            {{ $item['name'] }}
+                                                        </span>
+                                                    @else
+                                                        {{ $item['name'] }}
+                                                    @endif
+                                                </a>
                                                 <div class="text-secondary text-truncate mt-n1">
                                                     ${{ number_format($item['amount'], 2) }}
                                                 </div>
@@ -86,6 +96,14 @@
                                         </div>
                                     </div>
                                 @endforeach
+                            </div>
+                            <div wire:loading wire:target="loadExpenseStats, dateFrom, dateTo">
+                                <div class="mt-3 spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <span class="ms-2">
+                                    Loading...
+                                </span>
                             </div>
                         </div>
                     </div>
@@ -125,7 +143,7 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table card-table table-vcenter text-nowrap datatable">
+                            <table class="table card-table table-vcenter datatable">
                                 <thead>
                                 <tr>
                                     <th class="w-1">No.</th>
@@ -133,7 +151,9 @@
                                         Name
                                     </th>
                                     <th>Amount</th>
+                                    <th>Date</th>
                                     <th>Group</th>
+                                    <th>Note</th>
                                     <th>Created</th>
                                     <th></th>
                                 </tr>
@@ -154,7 +174,13 @@
                                             ${{ number_format($expense->amount, 2) }}
                                         </td>
                                         <td>
+                                            {{ $expense->date->format('Y-m-d') }}
+                                        </td>
+                                        <td>
                                             {{ ucfirst($expense->group->name) }}
+                                        </td>
+                                        <td>
+                                            {{ $expense->note }}
                                         </td>
                                         <td>
                                             {{ $expense->created_at->format('Y-m-d') }}
@@ -221,9 +247,9 @@
                         <div class="row mb-3">
                             <div class="col-12 col-md-6 mb-3 mb-md-0">
                                 <div>
-                                    <label for="name" class="form-label">Name</label>
+                                    <label for="name" class="form-label required">Name</label>
                                     <input type="text" wire:model="form.name" class="form-control" id="name"
-                                           placeholder="Subject name">
+                                           placeholder="Expense name">
                                     @error('form.name')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
@@ -245,9 +271,21 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="col-12 col-md-6 mb-3">
+                                <div>
+                                    <label for="date" class="form-label required">Date</label>
+                                    <input type="date" wire:model="form.date" class="form-control"
+                                           id="date">
+                                    @error('form.date')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="col-12 col-md-6">
                                 <div>
-                                    <label for="group_id" class="form-label">Group</label>
+                                    <label for="group_id" class="form-label required">Group</label>
                                     <select wire:model="form.group_id" id="group_id" class="form-control">
                                         <option value="">-- Select a group --</option>
                                         @foreach($groups as $group)
@@ -255,6 +293,17 @@
                                         @endforeach
                                     </select>
                                     @error('form.group_id')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div>
+                                    <label for="note" class="form-label">Note</label>
+                                    <textarea id="note" cols="30" rows="3" class="form-control" wire:model="form.note"></textarea>
+                                    @error('form.note')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>
@@ -293,7 +342,7 @@
         <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Editing subject {{ $form->name }} </h5>
+                    <h5 class="modal-title">Editing Expense {{ $form->name }} </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -302,9 +351,9 @@
                         <div class="row mb-3">
                             <div class="col-12 col-md-6 mb-3 mb-md-0">
                                 <div>
-                                    <label for="name" class="form-label">Name</label>
+                                    <label for="name" class="form-label required">Name</label>
                                     <input type="text" wire:model="form.name" class="form-control" id="name"
-                                           placeholder="Your full name">
+                                           placeholder="Expense name">
                                     @error('form.name')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
@@ -326,9 +375,21 @@
                                     @enderror
                                 </div>
                             </div>
+                            <div class="col-12 col-md-6 mb-3">
+                                <div>
+                                    <label for="date" class="form-label required">Date</label>
+                                    <input type="date" wire:model="form.date" class="form-control"
+                                           id="date">
+                                    @error('form.date')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
                             <div class="col-12 col-md-6">
                                 <div>
-                                    <label for="group_id" class="form-label">Group</label>
+                                    <label for="group_id" class="form-label required">Group</label>
                                     <select wire:model="form.group_id" id="group_id" class="form-control">
                                         <option value="">-- Select a group --</option>
                                         @foreach($groups as $group)
@@ -336,6 +397,17 @@
                                         @endforeach
                                     </select>
                                     @error('form.group_id')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div>
+                                    <label for="note" class="form-label required">Note</label>
+                                    <textarea id="note" cols="30" rows="3" class="form-control" wire:model="form.note"></textarea>
+                                    @error('form.note')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>

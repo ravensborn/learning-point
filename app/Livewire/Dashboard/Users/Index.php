@@ -13,8 +13,15 @@ class Index extends Component
 
     use WithPagination, UserModalFunctions;
 
+    public array $roles = [];
+
     public int $perPage = 12;
     public string $search = '';
+
+    public function mount(): void
+    {
+        $this->roles = User::roles;
+    }
     #[Layout('layouts.app')]
     public function render()
     {

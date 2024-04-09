@@ -15,9 +15,10 @@ class UserForm extends Form
 
     public string $name = '';
     public string $email = '';
+    public string $gender = '';
     public string $password = '';
     public string $password_confirmation = '';
-    public string $gender = '';
+    public string $role = User::roles[0];
 
     public function rules(): array
     {
@@ -27,6 +28,7 @@ class UserForm extends Form
             'gender' => ['required', 'string', 'in:male,female'],
             'password' => ['sometimes', 'string', 'confirmed', 'max:50'],
             'password_confirmation' => ['sometimes', 'string', 'max:50'],
+            'role' => ['required', 'string', 'in:' . implode(',', User::roles)],
         ];
     }
 
@@ -38,6 +40,7 @@ class UserForm extends Form
             'gender' => 'gender',
             'password' => 'password',
             'password_confirmation' => 'password confirmation',
+            'role' => 'role',
         ];
     }
 
@@ -48,6 +51,9 @@ class UserForm extends Form
         $this->name = $model->name;
         $this->email = $model->email;
         $this->gender = $model->gender;
+
+        $roles = $model->getRoleNames();
+        $this->role = $roles->first() ?? '';
 
         $this->model = $model;
     }
@@ -74,7 +80,7 @@ class UserForm extends Form
             ->preservingOriginal()
             ->toMediaCollection('avatar');
 
-        $model->assignRole('system user');
+        $model->assignRole($this->role);
 
         return $model;
     }
@@ -82,6 +88,8 @@ class UserForm extends Form
     public function update()
     {
         $this->validate();
+
+        $this->model->syncRoles($this->role);
 
         return $this->model->update($this->only('name', 'email'));
     }

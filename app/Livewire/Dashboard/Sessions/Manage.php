@@ -8,11 +8,13 @@ use App\Models\Session;
 use App\Models\Setting;
 use App\Models\Student;
 use App\Models\Transaction;
+use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
 class Manage extends Component
 {
+    use LivewireAlert;
     public TransactionForm $transactionForm;
 
     public $session;
@@ -22,6 +24,8 @@ class Manage extends Component
     public $settings;
 
     public float $sessionTotal = 0;
+
+    public string $chargeModalTitle = 'Add Charge';
 
     public function setAuthor(): void
     {
@@ -170,6 +174,17 @@ class Manage extends Component
 
     public function showAddChargeModal($attendeeId): void
     {
+
+        $this->chargeModalTitle = 'Add Charge';
+
+        if($attendeeId == 'all') {
+            $this->chargeModalTitle = 'Add Bulk Charge';
+        }
+
+        if($attendeeId == 'all-cancellation') {
+            $this->chargeModalTitle = 'Add Bulk Cancellation Charge';
+        }
+        
         $this->attendeeToAddChargeId = $attendeeId;
         $this->dispatch('toggle-modal-charge-student');
     }
@@ -431,6 +446,8 @@ class Manage extends Component
     public function completeSession(): void
     {
 
+        $complete = true;
+
         foreach ($this->session->attendees as $attendee) {
 
             if ($attendee->charged) {
@@ -441,23 +458,30 @@ class Manage extends Component
                     $description = 'Session Cancellation ' . $this->session->number . '.';
                 }
 
-                if ($amount > 0) {
+                if($amount <= 0) {
+                    $this->alert('error', 'Student ' . $attendee->student->full_name . ' charge total is zero.');
+                    $complete = false;
+                } else {
                     $this->makeTransaction($attendee->student_id, $amount, $description);
                 }
 
             } else {
-                $this->makeTransaction($attendee->student_id, 0, 'Free Session ' . $this->session->number . '.');
+                if($attendee->attending) {
+                    $this->makeTransaction($attendee->student_id, 0, 'Free Session ' . $this->session->number . '.');
+                }
             }
 
 
         }
 
-        $this->session->update([
-            'total' => $this->sessionTotal,
-            'status' => Session::STATUS_COMPLETED,
-        ]);
+       if($complete) {
+           $this->session->update([
+               'total' => $this->sessionTotal,
+               'status' => Session::STATUS_COMPLETED,
+           ]);
 
-        $this->redirectRoute('dashboard.sessions.show-completed', $this->session->id);
+           $this->redirectRoute('dashboard.sessions.show-completed', $this->session->id);
+       }
 
     }
 

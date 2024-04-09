@@ -91,6 +91,11 @@ class Login extends Component
 
     public function mount(): void
     {
+
+        //DELETE THIS LINE
+//        Auth::guard('teacher')
+//            ->login(Teacher::first(), true);
+
         if(\auth()->guard('teacher')->check()) {
             $this->redirectRoute('teacher.dashboard.home');
         }

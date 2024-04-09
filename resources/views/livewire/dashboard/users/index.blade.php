@@ -200,6 +200,25 @@
 
                             </div>
                         </div>
+                        <div class="row mb-3">
+                            <div class="col-12 mb-3 mb-md-0">
+                                <div>
+                                    <label for="role" class="form-label">Role</label>
+                                    <select id="role" class="form-control" wire:model="form.role">
+                                        @foreach($roles as $role)
+                                            <option value="{{ $role }}">
+                                                {{ ucwords($role) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('form.role')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
                     </form>
 
                 </div>
@@ -250,12 +269,29 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="col-12 col-md-6">
+                            <div class="col-12 col-md-6 mb-3">
                                 <div>
                                     <label for="email" class="form-label">E-Mail Address</label>
                                     <input type="email" wire:model="form.email" class="form-control" id="email"
                                            placeholder="Your email address">
                                     @error('form.email')
+                                    <div class="text-danger mt-1">
+                                        {{ $message }}
+                                    </div>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div>
+                                    <label for="role" class="form-label">Role</label>
+                                    <select id="role" class="form-control" wire:model="form.role">
+                                        @foreach($roles as $role)
+                                            <option value="{{ $role }}">
+                                                {{ ucwords($role) }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('form.role')
                                     <div class="text-danger mt-1">
                                         {{ $message }}
                                     </div>

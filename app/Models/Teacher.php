@@ -17,6 +17,11 @@ class Teacher extends Authenticatable
         return $this->morphMany(Transaction::class, 'transactable');
     }
 
+    public function sessions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Session::class);
+    }
+
     public static function generateNumber(): string
     {
         $last =  self::orderBy('id', 'DESC')->first();

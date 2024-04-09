@@ -5,16 +5,95 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Manage {{ ucfirst($student->full_name) }} Sessions
+                        Manage {{ ucfirst($teacher->name) }} Sessions
                     </h2>
                 </div>
-
             </div>
         </div>
     </div>
 
     <div class="page-body">
         <div class="container-xl">
+
+            <div class="row row-deck row-cards mb-3">
+
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Stats</h3>
+                        </div>
+                        <div class="card-body border-bottom py-3">
+
+                            <div class="row border-bottom py-3">
+                                <div class="col-12">
+                                    <label class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox"
+                                               wire:change="toggleDateFiltering"
+                                               @if($dateFiltering) checked="" @endif>
+                                        <span class="form-check-label">Date Filtering</span>
+                                    </label>
+                                </div>
+                                @if($dateFiltering)
+                                    <div class="mt-5"></div>
+                                    <div class="row">
+                                        <div class="col-6 col-md-3">
+                                            <label for="from_date" class="form-label required">Date Form</label>
+                                            <input type="date" id="from_date" class="form-control"
+                                                   wire:model.live="dateFrom">
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <label for="to_date" class="form-label required">Date To</label>
+                                            <input type="date" id="to_date" class="form-control"
+                                                   wire:model.live="dateTo">
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="row pt-3 g-3"
+                                 wire:loading.remove
+                                 wire:target="loadTeacherStats, dateFrom, dateTo">
+
+                                <div class="col-3">
+                                    <div class="row g-3 align-items-center">
+                                        <div class="col-auto">
+                                            <span class="badge bg-success"></span>
+                                        </div>
+                                        <div class="col text-truncate">
+                                            Number of Sessions
+                                            <div class="text-secondary text-truncate mt-n1">
+                                                {{ $numberOfSessions }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="row g-3 align-items-center">
+                                        <div class="col-auto">
+                                            <span class="badge bg-success"></span>
+                                        </div>
+                                        <div class="col text-truncate">
+                                            Total Hours
+                                            <div class="text-secondary text-truncate mt-n1">
+                                                {{ $numberOfHours }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div wire:loading wire:target="loadTeacherStats, dateFrom, dateTo">
+                                <div class="mt-3 spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <span class="ms-2">
+                                    Loading...
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row row-deck row-cards">
 
                 <div class="col-12">
@@ -58,11 +137,9 @@
                                     <th>Series</th>
                                     <th>Teacher</th>
                                     <th>Subject</th>
-                                    <th>Attended</th>
-                                    <th>Date</th>
                                     <th>Status</th>
                                     <th>User</th>
-                                    <th>Created</th>
+                                    <th>Date</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -77,21 +154,6 @@
                                         <td>{{ $session->number }}</td>
                                         <td>{{ ucfirst($session->teacher?->name ?? '-') }}</td>
                                         <td>{{ ucfirst($session->subject?->name ?? '-') }}</td>
-                                        <td>
-                                            {{ $session->attendees->where('student_id', $student->id)->where('attending', true)->count() ? 'Yes' : 'No' }}
-                                        </td>
-                                        <td>
-                                            <div>
-                                                {{ $session->time_in->format('Y-m-d h:i A') }}
-                                            </div>
-                                            <div>
-                                                {{ $session->time_out->format('Y-m-d h:i A') }}
-                                            </div>
-                                            <div>
-                                                Duration: {{ round($session->time_out->floatDiffInRealHours($session->time_in), 2) }}
-                                                h
-                                            </div>
-                                        </td>
                                         <td>
                                             <span class="badge text-white {{ $session->status_color_class }}">
                                                 {{ $session->status_name }}
@@ -110,7 +172,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">
+                                        <td colspan="7" class="text-center">
                                             There are no items at the moment.
                                         </td>
                                     </tr>

@@ -23,12 +23,11 @@ class Index extends Component
 
     public string $memberSearchQuery = '';
     public Collection $searchedMemberList;
-    public int $selectedMemberId = 0;
+    public array $selectedMemberIds = [];
 
     public function selectSearchedMember($id): void
     {
-        $this->selectedMemberId = $id;
-        $this->form->student_id = $id;
+        $this->selectedMemberIds[] = $id;
     }
 
     public function updatedMemberSearchQuery(): void
@@ -56,7 +55,6 @@ class Index extends Component
     public function render()
     {
         $students = Student::query()->where('family_id', $this->family->id)
-
             ->orderBy('created_at', 'desc');
 
         if ($this->search) {
@@ -77,7 +75,12 @@ class Index extends Component
     public function store(): void
     {
         $this->form->family_id = $this->family->id;
-        $this->form->store();
+        foreach ($this->selectedMemberIds as $studentId) {
+
+            $this->form->student_id = $studentId;
+            $this->form->store();
+        }
+
         $this->family = Family::find($this->family->id);
 
         $this->dispatch('toggle-modal-create');

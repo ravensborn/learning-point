@@ -167,7 +167,7 @@
 
                                     @forelse($searchedMemberList as $student)
 
-                                        @if($student->id == $selectedMemberId)
+                                        @if(in_array($student->id, $selectedMemberIds))
                                             <div class="badge border-success">
                                                 <!--<editor-fold desc="SVG ICON">-->
                                                 <svg xmlns="http://www.w3.org/2000/svg"

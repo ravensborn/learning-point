@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->double('amount', 8, 2);
+            $table->date('date');
             $table->unsignedBigInteger('group_id');
             $table->foreign('group_id')
                 ->references('id')
                 ->on('groups')
                 ->cascadeOnDelete();
+            $table->longText('note')->nullable();
             $table->timestamps();
         });
     }

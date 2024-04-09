@@ -102,7 +102,7 @@
                                         <td>
                                             {{ $employee->phone_number }}
                                         </td>
-                                        <td style="width: 200px !important; word-wrap: break-word !important;">
+                                        <td>
                                             {{ $employee->address }}
                                         </td>
                                         <td>

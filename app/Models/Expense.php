@@ -9,7 +9,11 @@ class Expense extends Model
 {
     use HasFactory;
 
+    protected $casts = [
+        'date' => 'date'
+    ];
     protected $guarded = ['id'];
+
 
     public function group(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
