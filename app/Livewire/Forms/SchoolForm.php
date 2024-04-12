@@ -18,7 +18,7 @@ class SchoolForm extends Form
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'min:1', 'max:50'],
+            'name' => ['required', 'string', 'min:1', 'max:50', 'unique:schools,name' . (!empty($this->model) ? ',' . $this->model->id : '')],
             'url' => ['nullable', 'url', 'min:1', 'max:50'],
         ];
     }

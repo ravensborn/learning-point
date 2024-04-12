@@ -3,6 +3,7 @@
 namespace App\Livewire\Forms;
 
 use App\Models\Subject;
+use Illuminate\Validation\Rule as ValidationRule;
 use Livewire\Form;
 
 class SubjectForm extends Form
@@ -16,9 +17,16 @@ class SubjectForm extends Form
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'min:1', 'max:50'],
+            'name' => ['required', 'string', 'min:1', 'max:50',
+                ValidationRule::unique('subjects', 'name')
+                    ->where('group_id', $this->group_id)
+                    ->where('name', $this->name)
+                    ->when(!empty($this->model), function ($query) {
+                        $query->ignore($this->model->id);
+                    })
+            ],
             'group_id' => ['required', 'string', 'exists:groups,id'],
-            ];
+        ];
     }
 
     public function validationAttributes(): array

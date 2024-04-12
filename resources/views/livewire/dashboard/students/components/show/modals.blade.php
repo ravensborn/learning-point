@@ -632,7 +632,8 @@
                         <div class="col-12 mb-3">
                             <div>
                                 <label for="health_and_conditions" class="form-label">Health & Conditions</label>
-                                <textarea type="text" wire:model="studentForm.health_and_conditions" class="form-control"
+                                <textarea type="text" wire:model="studentForm.health_and_conditions"
+                                          class="form-control"
                                           id="health_and_conditions"
                                           autocomplete="off"
                                           placeholder="" rows="3">
@@ -825,6 +826,13 @@
                                             Upload a new profile picture.
                                         </a>
                                     </li>
+                                    @if($studentForm->model?->getFirstMedia('avatar'))
+                                        <li>
+                                            <a class="link mb-1" href="#" wire:click.prevent="clearStudentAvatar()">
+                                                Remove Picture.
+                                            </a>
+                                        </li>
+                                    @endif
                                 </ul>
 
                             </div>
@@ -896,7 +904,8 @@
                                 x-on:livewire-upload-progress="progress = $event.detail.progress"
                             >
 
-                                <label for="document_{{ $uploadInputIteration }}" class="form-label required">Select file</label>
+                                <label for="document_{{ $uploadInputIteration }}" class="form-label required">Select
+                                    file</label>
                                 <input x-show="!uploading" type="file" wire:model.live="document" class="form-control"
                                        id="document_{{ $uploadInputIteration }}">
 

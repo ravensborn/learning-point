@@ -24,7 +24,13 @@ class Index extends Component
     public function mount(Student $student): void
     {
         $this->student = $student;
-        $this->availableTransactionTypes = Transaction::TYPES;
+        $this->availableTransactionTypes = [
+            Transaction::TYPE_WITHDRAW => 'Withdraw',
+            Transaction::TYPE_DEPOSIT => 'Deposit',
+            Transaction::TYPE_PURCHASE => 'Purchase',
+            Transaction::TYPE_TRANSFER_IN => 'Transfer In',
+            Transaction::TYPE_TRANSFER_OUT => 'Transfer Out',
+        ];
         $this->transferToList = collect();
     }
 

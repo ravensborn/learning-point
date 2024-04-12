@@ -3,6 +3,7 @@
 namespace App\Livewire\Forms;
 
 use App\Models\Group;
+use Illuminate\Validation\Rule as ValidationRule;
 use Livewire\Form;
 
 class GroupForm extends Form
@@ -16,9 +17,16 @@ class GroupForm extends Form
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'min:1', 'max:50'],
+            'name' => ['required', 'string', 'min:1', 'max:50',
+                ValidationRule::unique('groups', 'name')
+                    ->where('model', $this->modelName)
+                    ->where('name', $this->name)
+                    ->when(!empty($this->model), function ($query) {
+                        $query->ignore($this->model->id);
+                    })
+            ],
             'modelName' => ['required', 'string'],
-            ];
+        ];
     }
 
     public function validationAttributes(): array

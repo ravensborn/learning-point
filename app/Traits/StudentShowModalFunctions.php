@@ -248,6 +248,12 @@ trait StudentShowModalFunctions
         $this->reloadStudent();
     }
 
+    public function clearStudentAvatar(): void
+    {
+        $this->studentForm->clearProfilePicture();
+        $this->reloadStudent();
+    }
+
 
     //Upload document
 

@@ -20,10 +20,10 @@ class EmployeeForm extends Form
     {
         return [
             'name' => ['required', 'string', 'min:1', 'max:50'],
-            'email' => ['nullable', 'email', 'max:50'],
+            'email' => ['nullable', 'email', 'max:50', 'unique:employees,email' . (!empty($this->model) ? ',' . $this->model->id : '')],
             'phone_number' => ['nullable', 'string', (new Phone)->international()],
             'address' => ['nullable', 'string', 'min:1', 'max:100'],
-            ];
+        ];
     }
 
     public function validationAttributes(): array

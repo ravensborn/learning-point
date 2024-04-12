@@ -130,7 +130,7 @@ class StudentForm extends Form
         $this->model = $model;
     }
 
-    public function resetProfilePicture(): void
+    public function resetAvatarMediaCollection(): void
     {
         $this->model->clearMediaCollection('avatar');
     }
@@ -139,16 +139,21 @@ class StudentForm extends Form
     {
         if ($this->avatar) {
 
-            $this->resetProfilePicture();
+            $this->resetAvatarMediaCollection();
 
             $media = $this->model->addMedia($this->avatar)
                 ->usingName('avatar')
-                ->usingFileName('avatar' . $this->avatar->getClientOriginalExtension())
+                ->usingFileName('avatar' . '.' . $this->avatar->getClientOriginalExtension())
                 ->toMediaCollection('avatar');
 
             $this->avatarUrl = $media->getUrl();
             $this->avatar = null;
         }
+    }
+
+    public function clearProfilePicture(): void
+    {
+        $this->resetAvatarMediaCollection();
     }
 
     public function store()

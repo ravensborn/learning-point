@@ -159,7 +159,7 @@
                                                 {{ $session->status_name }}
                                             </span>
                                         </td>
-                                        <td>{{ ucfirst($session->user->name) }}</td>
+                                        <td>{{ ucfirst($session->user->name ?? '-') }}</td>
                                         <td>{{ $session->created_at->format('Y-m-d / h:i A') }}</td>
 
                                         <td class="text-end">
