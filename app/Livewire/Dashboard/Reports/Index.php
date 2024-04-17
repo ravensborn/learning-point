@@ -4,6 +4,7 @@ namespace App\Livewire\Dashboard\Reports;
 
 use App\Models\Employee;
 use App\Models\Family;
+use App\Models\School;
 use App\Models\Session;
 use App\Models\Student;
 use App\Models\Subject;
@@ -39,7 +40,7 @@ class Index extends Component
             ],
             [
                 'title' => 'Schools',
-                'data' => Subject::count(),
+                'data' => School::count(),
             ],
             [
                 'title' => 'Subjects',
