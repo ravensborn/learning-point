@@ -27,6 +27,8 @@ class Transaction extends Model
     const TYPE_SALARY = 'salary';
     const TYPE_BONUS = 'bonus';
     const TYPE_DEDUCTION = 'deduction';
+    const TYPE_NEGATIVE_OPENING_BALANCE = 'negative_opening_balance';
+    const TYPE_POSITIVE_OPENING_BALANCE = 'positive_opening_balance';
 
     const TYPES = [
         self::TYPE_WITHDRAW => 'Withdraw',
@@ -37,6 +39,8 @@ class Transaction extends Model
         self::TYPE_SALARY => 'Salary',
         self::TYPE_BONUS => 'Bonus',
         self::TYPE_DEDUCTION => 'Deduction',
+        self::TYPE_NEGATIVE_OPENING_BALANCE => 'Opening Balance / N',
+        self::TYPE_POSITIVE_OPENING_BALANCE => 'Opening Balance / P',
     ];
 
     const TYPE_COLOR_CLASSES = [
@@ -48,6 +52,8 @@ class Transaction extends Model
         self::TYPE_SALARY => 'text-success',
         self::TYPE_BONUS => 'text-success',
         self::TYPE_DEDUCTION => 'text-danger',
+        self::TYPE_NEGATIVE_OPENING_BALANCE => 'text-danger',
+        self::TYPE_POSITIVE_OPENING_BALANCE => 'text-success',
     ];
     const TYPE_PREFIX_CHARACTER = [
         self::TYPE_WITHDRAW => '▼',
@@ -58,6 +64,8 @@ class Transaction extends Model
         self::TYPE_SALARY => '▲',
         self::TYPE_BONUS => '▲',
         self::TYPE_DEDUCTION => '▼',
+        self::TYPE_NEGATIVE_OPENING_BALANCE => '▼',
+        self::TYPE_POSITIVE_OPENING_BALANCE => '▲',
     ];
 
 
@@ -110,6 +118,14 @@ class Transaction extends Model
            }
 
            if($this->type == self::TYPE_DEDUCTION) {
+               $wallet -= $amount;
+           }
+
+           if($this->type == self::TYPE_POSITIVE_OPENING_BALANCE) {
+               $wallet += $amount;
+           }
+
+           if($this->type == self::TYPE_NEGATIVE_OPENING_BALANCE) {
                $wallet -= $amount;
            }
 

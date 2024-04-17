@@ -21,4 +21,9 @@ class Subject extends Model
     {
         return $this->hasMany(SubjectRate::class);
     }
+
+    public function sessions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Session::class);
+    }
 }

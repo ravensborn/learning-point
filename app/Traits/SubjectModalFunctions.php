@@ -18,11 +18,21 @@ trait SubjectModalFunctions {
 
     public int $itemToDeleteId = 0;
 
-    public function startItemDeletion(): void
+    public function startItemDeletion(): bool
     {
         $item = Subject::findOrFail($this->itemToDeleteId);
+
+        if($item->sessions->count()) {
+
+            $this->addError('delete', 'Cannot be deleted, this session has related sessions.');
+
+            return false;
+        }
+
         $item->delete();
         $this->dispatch('toggle-modal-delete-confirmation-hide');
+
+        return true;
     }
 
     public function prepareItemDeletion($id): void

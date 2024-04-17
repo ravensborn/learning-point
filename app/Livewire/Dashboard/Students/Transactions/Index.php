@@ -30,6 +30,8 @@ class Index extends Component
             Transaction::TYPE_PURCHASE => 'Purchase',
             Transaction::TYPE_TRANSFER_IN => 'Transfer In',
             Transaction::TYPE_TRANSFER_OUT => 'Transfer Out',
+            Transaction::TYPE_POSITIVE_OPENING_BALANCE => 'Opening Balance / P',
+            Transaction::TYPE_NEGATIVE_OPENING_BALANCE => 'Opening Balance / N',
         ];
         $this->transferToList = collect();
     }
