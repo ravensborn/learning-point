@@ -54,11 +54,11 @@ class Index extends Component
 
     public function store(): void
     {
-//        if (SubjectRate::where('number_of_students', $this->form->number_of_students)
-//            ->where('subject_id', $this->subject->id)
-//            ->first()) {
-//            throw ValidationException::withMessages(['form.number_of_students' => 'Price rate for the number of students already exists.']);
-//        }
+        if (SubjectRate::where('number_of_students', $this->form->number_of_students)
+            ->where('subject_id', $this->subject->id)
+            ->first()) {
+            throw ValidationException::withMessages(['form.number_of_students' => 'Price rate for the number of students already exists.']);
+        }
 //
 //        if (SubjectRate::where('rate', $this->form->rate)
 //            ->where('number_of_students', $this->form->number_of_students)

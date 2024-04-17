@@ -18,7 +18,7 @@ class SubjectRateForm extends Form
     {
         return [
             'rate' => ['required', 'numeric', 'gt:0', 'regex:/^[0-9]+(\.[0-9]{1,2})?$/'],
-            'number_of_students' => ['required', 'integer', 'gt:0', 'unique:subject_rates,number_of_students' . (!empty($this->model) ? ',' . $this->model->id : '')],
+            'number_of_students' => ['required', 'integer', 'gt:0'],
             'subject_id' => ['required', 'integer', 'exists:subjects,id'],
         ];
     }
