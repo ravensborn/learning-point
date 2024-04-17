@@ -30,7 +30,7 @@ trait SubjectModalFunctions {
         }
 
         $item->delete();
-        $this->dispatch('toggle-modal-delete-confirmation-hide');
+        $this->dispatch('toggle-modal-delete-confirmation');
 
         return true;
     }
