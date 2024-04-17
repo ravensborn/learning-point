@@ -5,9 +5,9 @@ namespace App\Traits;
 use App\Livewire\Forms\SubjectForm;
 use App\Models\Subject;
 
-trait SubjectModalFunctions {
-
-
+trait SubjectModalFunctions
+{
+    
     public SubjectForm $form;
 
     public function prepareItemEditing($id): void
@@ -18,21 +18,19 @@ trait SubjectModalFunctions {
 
     public int $itemToDeleteId = 0;
 
-    public function startItemDeletion(): bool
+    public function startItemDeletion(): void
     {
         $item = Subject::findOrFail($this->itemToDeleteId);
 
-        if($item->sessions->count()) {
+        if ($item->sessions->count()) {
 
             $this->addError('delete', 'Cannot be deleted, this session has related sessions.');
 
-            return false;
+        } else {
+
+            $item->delete();
+            $this->dispatch('toggle-modal-delete-confirmation-hide');
         }
-
-        $item->delete();
-        $this->dispatch('toggle-modal-delete-confirmation');
-
-        return true;
     }
 
     public function prepareItemDeletion($id): void
