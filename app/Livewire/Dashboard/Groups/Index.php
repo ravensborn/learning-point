@@ -18,21 +18,23 @@ class Index extends Component
 
     public int $perPage = 10;
     public string $search = '';
+    public string $selectedModelName = 'all';
 
     public array $availableModels;
 
-    public function mount() {
+    public function mount()
+    {
 
-      $this->availableModels = [
-          [
-              'name' => 'Subject',
-              'model' => Subject::class
-          ],
-          [
-              'name' => 'Expense',
-              'model' => Expense::class
-          ]
-      ];
+        $this->availableModels = [
+            [
+                'name' => 'Subject',
+                'model' => Subject::class
+            ],
+            [
+                'name' => 'Expense',
+                'model' => Expense::class
+            ]
+        ];
     }
 
     #[Layout('layouts.app')]
@@ -45,6 +47,13 @@ class Index extends Component
             $this->resetPage();
 
             $groups->where('name', 'LIKE', '%' . trim($this->search) . '%');
+        }
+
+        if ($this->selectedModelName && $this->selectedModelName != 'all' && collect($this->availableModels)->where('model', $this->selectedModelName)->first()) {
+
+            $this->resetPage();
+
+            $groups->where('model', '=', $this->selectedModelName);
         }
 
         $groups = $groups->paginate($this->perPage);

@@ -55,6 +55,16 @@ class Index extends Component
 
     public function update(): void
     {
+
+        if (StudentRate::where('rate', $this->form->rate)
+            ->where('student_id', $this->student->id)
+            ->where('number_of_students', $this->form->number_of_students)
+            ->where('subject_id', $this->form->subject_id)
+            ->where('id', '!=', $this->form->model->id)
+            ->first()) {
+            throw ValidationException::withMessages(['form.rate' => 'Price rating with the same values already exist.']);
+        }
+
         $this->form->update();
 
         $this->dispatch('toggle-modal-edit');

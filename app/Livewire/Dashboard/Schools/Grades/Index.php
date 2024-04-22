@@ -5,6 +5,7 @@ namespace App\Livewire\Dashboard\Schools\Grades;
 use App\Models\Grade;
 use App\Models\School;
 use App\Traits\GradeModalFunctions;
+use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -18,7 +19,8 @@ class Index extends Component
     public string $search = '';
     public School $school;
 
-    public function mount(School $school) {
+    public function mount(School $school)
+    {
 
         $this->school = $school;
     }
@@ -45,6 +47,14 @@ class Index extends Component
 
     public function update(): void
     {
+
+        if (Grade::where('name', trim($this->form->name))
+            ->where('school_id', $this->school->id)
+            ->where('id', '!=', $this->form->model->id)
+            ->first()) {
+            throw ValidationException::withMessages(['form.name' => 'Grade with the same name already exist.']);
+        }
+
         $this->form->update();
 
         $this->dispatch('toggle-modal-edit');
@@ -52,6 +62,12 @@ class Index extends Component
 
     public function store(): void
     {
+        if (Grade::where('name', trim($this->form->name))
+            ->where('school_id', $this->school->id)
+            ->first()) {
+            throw ValidationException::withMessages(['form.name' => 'Grade with the same name already exist.']);
+        }
+
         $this->form->school_id = $this->school->id;
         $this->form->store();
 

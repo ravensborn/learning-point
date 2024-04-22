@@ -38,7 +38,7 @@
                             <h3 class="card-title">Subject List</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
-                            <div class="d-flex">
+                            <div class="d-flex justify-content-between">
                                 <div class="text-secondary">
                                     Show
                                     <div class="mx-2 d-inline-block">
@@ -52,12 +52,27 @@
                                     </div>
                                     entries
                                 </div>
-                                <div class="ms-auto text-secondary">
-                                    Search:
-                                    <div class="ms-2 d-inline-block">
-                                        <input wire:model.live="search" type="search"
-                                               class="form-control form-control-sm"
-                                               aria-label="Search items">
+                                <div class="d-flex text-secondary">
+                                    <div class="ms-4">
+                                        Search:
+                                        <div class="ms-2 d-inline-block">
+                                            <input wire:model.live="search" type="search"
+                                                   class="form-control form-control-sm"
+                                                   aria-label="Search items">
+                                        </div>
+                                    </div>
+                                    <div class="ms-4">
+                                        Model:
+                                        <div class="ms-2 d-inline-block">
+                                            <select wire:model.live="selectedGroupId"
+                                                    class="form-control form-control-sm"
+                                                    aria-label="Select Group">
+                                                <option value="all">All</option>
+                                                @foreach($groups as $group)
+                                                    <option value="{{ $group->id }}">{{ $group->name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -119,7 +134,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">
+                                        <td colspan="6" class="text-center">
                                             There are no items at the moment.
                                         </td>
                                     </tr>

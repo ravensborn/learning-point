@@ -16,7 +16,7 @@ class GradeForm extends Form
     {
         return [
             'school_id' => ['required', 'integer', 'exists:schools,id'],
-            'name' => ['required', 'string', 'min:1', 'max:50', 'unique:grades,name' . (!empty($this->model) ? ',' . $this->model->id : '')],
+            'name' => ['required', 'string', 'min:1', 'max:50'],
             ];
     }
 

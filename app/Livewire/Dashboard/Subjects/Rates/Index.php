@@ -47,6 +47,14 @@ class Index extends Component
 
     public function update(): void
     {
+
+        if (SubjectRate::where('number_of_students', $this->form->number_of_students)
+            ->where('subject_id', $this->subject->id)
+            ->where('id', '!=', $this->form->model->id)
+            ->first()) {
+            throw ValidationException::withMessages(['form.number_of_students' => 'Price rate for the number of students already exists.']);
+        }
+
         $this->form->update();
 
         $this->dispatch('toggle-modal-edit');

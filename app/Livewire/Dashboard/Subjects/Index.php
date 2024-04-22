@@ -20,8 +20,10 @@ class Index extends Component
     public string $search = '';
 
     public Collection $groups;
+    public int $selectedGroupId = 0;
 
-    public function mount() {
+    public function mount()
+    {
 
         $this->groups = Group::where('model', Subject::class)
             ->orderBy('created_at', 'desc')->get();
@@ -38,11 +40,17 @@ class Index extends Component
             $subjects->where('name', 'LIKE', '%' . trim($this->search) . '%');
         }
 
+        if ($this->selectedGroupId) {
+
+            $this->resetPage();
+            $subjects->where('group_id', '=', $this->selectedGroupId);
+        }
+
         $subjects = $subjects->paginate($this->perPage);
 
-            return view('livewire.dashboard.subjects.index', [
-                'subjects' => $subjects
-            ]);
+        return view('livewire.dashboard.subjects.index', [
+            'subjects' => $subjects
+        ]);
     }
 
 

@@ -38,7 +38,7 @@
                             <h3 class="card-title">Group List</h3>
                         </div>
                         <div class="card-body border-bottom py-3">
-                            <div class="d-flex">
+                            <div class="d-flex justify-content-between">
                                 <div class="text-secondary">
                                     Show
                                     <div class="mx-2 d-inline-block">
@@ -52,12 +52,27 @@
                                     </div>
                                     entries
                                 </div>
-                                <div class="ms-auto text-secondary">
-                                    Search:
-                                    <div class="ms-2 d-inline-block">
-                                        <input wire:model.live="search" type="search"
-                                               class="form-control form-control-sm"
-                                               aria-label="Search items">
+                                <div class="d-flex text-secondary">
+                                    <div class="ms-4">
+                                        Search:
+                                        <div class="ms-2 d-inline-block">
+                                            <input wire:model.live="search" type="search"
+                                                   class="form-control form-control-sm"
+                                                   aria-label="Search items">
+                                        </div>
+                                    </div>
+                                    <div class="ms-4">
+                                        Model:
+                                        <div class="ms-2 d-inline-block">
+                                            <select wire:model="selectedModelName"
+                                                    class="form-control form-control-sm"
+                                                    aria-label="Select Group Name">
+                                                <option value="all">All</option>
+                                                @foreach($availableModels as $model)
+                                                    <option value="{{ $model['model'] }}">{{ $model['name'] }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -68,12 +83,9 @@
                                 <tr>
 
                                     <th class="w-1">No.</th>
-                                    <th>
-                                        Name
-                                    </th>
-                                    <th>
-                                        Model
-                                    </th>
+                                    <th>Name</th>
+                                    <th>Model</th>
+                                    <th>Items Linked</th>
                                     <th>Created</th>
                                     <th></th>
                                 </tr>
@@ -83,19 +95,20 @@
                                     <tr wire:key="{{ $group->id }}">
 
                                         <td>
-                                                <span class="text-secondary">
-                                                    {{ ($groups->currentpage()-1) * $groups->perpage() + $loop->index + 1 }}
-                                                </span>
+                                            <span
+                                                class="text-secondary">
+                                                {{ ($groups->currentpage()-1) * $groups->perpage() + $loop->index + 1 }}
+                                            </span>
                                         </td>
-                                        <td>
-                                            {{ ucfirst($group->name) }}
-                                        </td>
-                                        <td>
-                                            {{ $group->model }}
-                                        </td>
-                                        <td>
-                                            {{ $group->created_at->format('Y-m-d') }}
-                                        </td>
+                                        <td>{{ ucfirst($group->name) }}</td>
+                                        <td>{{ $group->model }}</td>
+                                        @if($group->model == \App\Models\Expense::class)
+                                            <td>{{ $group->expenses()->count() }}</td>
+                                        @endif
+                                        @if($group->model == \App\Models\Subject::class)
+                                            <td>{{ $group->subjects()->count() }}</td>
+                                        @endif
+                                        <td>{{ $group->created_at->format('Y-m-d') }}</td>
 
                                         <td class="text-end">
                                                 <span class="dropdown">
@@ -286,9 +299,9 @@
                         undone.
                     </div>
                     @error('delete')
-                        <div class="text-danger mt-3">
-                            {{ $message }}
-                        </div>
+                    <div class="text-danger mt-3">
+                        {{ $message }}
+                    </div>
                     @enderror
                 </div>
                 <div class="modal-footer">
