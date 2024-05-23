@@ -22,10 +22,8 @@
         <div class="container-xl">
             <div class="row row-deck row-cards">
 
-                <div class="d-inline-flex flex-row gap-3">
                     @foreach($subjectGroups as $group)
-
-                        <div wire:key="{{ $group->name }}">
+                        <div class="col-3" wire:key="{{ $group->name }}">
                             <div class="card h-100">
                                 <div class="card-header">
                                     <h3 class="card-title">{{ $group->name }}</h3>
@@ -56,7 +54,7 @@
                         </div>
 
                     @endforeach
-                </div>
+
 
 
             </div>
