@@ -1,48 +1,38 @@
 <?php
 
-use App\Livewire\Dashboard\Home as Home;
-use App\Livewire\Dashboard\Settings\Index as SettingsIndex;
-use App\Livewire\Dashboard\Users\Index as UsersIndex;
-use App\Livewire\Dashboard\Reports\Index as ReportsIndex;
-
-use App\Livewire\Dashboard\Subjects\Index as SubjectsIndex;
-use App\Livewire\Dashboard\Subjects\Rates\Index as SubjectsRateIndex;
-
-use App\Livewire\Dashboard\Expenses\Index as ExpensesIndex;
-
-use App\Livewire\Dashboard\Sessions\Index as SessionsIndex;
-use App\Livewire\Dashboard\Sessions\Create as SessionsCreate;
-use App\Livewire\Dashboard\Sessions\Edit as SessionsEdit;
-use App\Livewire\Dashboard\Sessions\Manage as SessionsManage;
-use App\Livewire\Dashboard\Sessions\ShowCompleted as SessionsShowCompleted;
-
-use App\Livewire\Dashboard\Teachers\Index as TeachersIndex;
-use App\Livewire\Dashboard\Teachers\Transactions\Index as TeacherTransactionsIndex;
-use App\Livewire\Dashboard\Teachers\Sessions\Index as TeacherSessionsIndex;
-
 use App\Livewire\Dashboard\Employees\Index as EmployeesIndex;
 use App\Livewire\Dashboard\Employees\Transactions\Index as EmployeeTransactionsIndex;
-
-
-use App\Livewire\Dashboard\Groups\Index as GroupsIndex;
-use App\Livewire\Dashboard\Schools\Index as SchoolsIndex;
-use App\Livewire\Dashboard\Schools\Grades\Index as GradesIndex;
-
-use App\Livewire\Dashboard\Students\Index as StudentsIndex;
-use App\Livewire\Dashboard\Students\Create as StudentsCreate;
-use App\Livewire\Dashboard\Students\Show as StudentsShow;
-use App\Livewire\Dashboard\Students\Sessions\Index as StudentSessionsIndex;
-use App\Livewire\Dashboard\Students\Transactions\Index as StudentTransactionsIndex;
-use App\Livewire\Dashboard\Students\Rates\Index as StudentsRateIndex;
-
-use App\Livewire\Dashboard\Transactions\PrintTransaction as TransactionsPrint;
-
+use App\Livewire\Dashboard\Expenses\Index as ExpensesIndex;
 use App\Livewire\Dashboard\Families\Index as FamiliesIndex;
 use App\Livewire\Dashboard\Families\Students\Index as FamilyStudentsIndex;
-
-
+use App\Livewire\Dashboard\Groups\Index as GroupsIndex;
+use App\Livewire\Dashboard\Home as Home;
+use App\Livewire\Dashboard\Reports\Index as ReportsIndex;
+use App\Livewire\Dashboard\Schools\Grades\Index as GradesIndex;
+use App\Livewire\Dashboard\Schools\Index as SchoolsIndex;
+use App\Livewire\Dashboard\Sessions\Create as SessionsCreate;
+use App\Livewire\Dashboard\Sessions\Edit as SessionsEdit;
+use App\Livewire\Dashboard\Sessions\Index as SessionsIndex;
+use App\Livewire\Dashboard\Sessions\Manage as SessionsManage;
+use App\Livewire\Dashboard\Sessions\ShowCompleted as SessionsShowCompleted;
+use App\Livewire\Dashboard\Settings\Index as SettingsIndex;
+use App\Livewire\Dashboard\Students\Create as StudentsCreate;
+use App\Livewire\Dashboard\Students\Index as StudentsIndex;
+use App\Livewire\Dashboard\Students\Rates\Index as StudentsRateIndex;
+use App\Livewire\Dashboard\Students\Sessions\Index as StudentSessionsIndex;
+use App\Livewire\Dashboard\Students\Show as StudentsShow;
+use App\Livewire\Dashboard\Students\Transactions\Index as StudentTransactionsIndex;
+use App\Livewire\Dashboard\Subjects\BulkAssign as SubjectsBulkAssign;
+use App\Livewire\Dashboard\Subjects\Index as SubjectsIndex;
+use App\Livewire\Dashboard\Subjects\Rates\Index as SubjectsRateIndex;
+use App\Livewire\Dashboard\Teachers\Index as TeachersIndex;
+use App\Livewire\Dashboard\Teachers\Sessions\Index as TeacherSessionsIndex;
+use App\Livewire\Dashboard\Teachers\Transactions\Index as TeacherTransactionsIndex;
+use App\Livewire\Dashboard\Transactions\PrintTransaction as TransactionsPrint;
+use App\Livewire\Dashboard\Users\Index as UsersIndex;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -87,10 +77,15 @@ Route::middleware(['auth'])->group(function () {
             ->middleware(['can:manage users']);
 
         Route::middleware('can:manage subjects')->group(function () {
+
             Route::get('/subjects', SubjectsIndex::class)
                 ->name('subjects.index');
+
             Route::get('/subjects/{subject}/rates', SubjectsRateIndex::class)
                 ->name('subjects.rates.index');
+
+            Route::get('/subjects/bulk-assign', SubjectsBulkAssign::class)
+                ->name('subjects.bulk-assign');
         });
 
         Route::get('/expenses', ExpensesIndex::class)
