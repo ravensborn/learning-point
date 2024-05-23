@@ -25,10 +25,10 @@
                     @foreach($subjectGroups as $group)
                         <div class="col-3" wire:key="{{ $group->name }}">
                             <div class="card h-100">
-                                <div class="card-header">
+                                <div class="card-header p-2">
                                     <h3 class="card-title">{{ $group->name }}</h3>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body p-2">
                                     @foreach($group->subjects as $subject)
                                         @php
                                             $checked = in_array($subject->id, $selectedSubjectIds);
