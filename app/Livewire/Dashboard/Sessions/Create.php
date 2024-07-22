@@ -6,9 +6,13 @@ use App\Livewire\Forms\SessionForm;
 use App\Models\Attendee;
 use App\Models\Group;
 use App\Models\Session;
+use App\Models\SessionTag;
 use App\Models\Student;
 use App\Models\Subject;
+use App\Models\SubjectTag;
 use App\Models\Teacher;
+use Barryvdh\Reflection\DocBlock\Tag;
+use Illuminate\Support\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -19,11 +23,13 @@ class Create extends Component
 
     public $availableTeachers;
     public $availableSubjects;
+    public Collection $availableTags;
     public $availableTypes;
 
     public string $studentSearchQuery = '';
     public $foundStudents;
     public $students;
+    public array $selectedTagIds = [];
 
     public function store(): void
     {
@@ -31,6 +37,15 @@ class Create extends Component
         $model = $this->sessionForm->store();
 
         $this->storeAttendees($model->id);
+
+           $tags = SubjectTag::whereIn('id', $this->selectedTagIds)->get();
+           foreach ($tags as $tag) {
+               SessionTag::create([
+                   'name' => $tag->name,
+                   'session_id' => $model->id
+               ]);
+           }
+
 
         $this->redirectRoute('dashboard.sessions.manage', $model->id);
     }
@@ -68,6 +83,18 @@ class Create extends Component
         $this->sessionForm->time_out = $this->sessionForm->time_in;
     }
 
+    public function updatedSessionFormSubjectId(): void
+    {
+        $subject = Subject::find($this->sessionForm->subject_id);
+
+        if ($subject) {
+            if ($subject->tags()->count()) {
+                $this->availableTags = $subject->tags;
+
+            }
+        }
+    }
+
     public function addStudent($id): void
     {
         $student = $this->foundStudents->find($id);
@@ -78,6 +105,15 @@ class Create extends Component
             }
         }
 
+    }
+
+    public function addTag($id): void
+    {
+        if (!in_array($id, $this->selectedTagIds)) {
+            $this->selectedTagIds[] = $id;
+        } else {
+            $this->selectedTagIds = array_diff($this->selectedTagIds, [$id]);
+        }
     }
 
 
@@ -95,6 +131,7 @@ class Create extends Component
             ->orWhere('secondary_phone_number', 'LIKE', '%' . trim($this->studentSearchQuery) . '%')
             ->orWhere('email', 'LIKE', '%' . trim($this->studentSearchQuery) . '%')
             ->limit(5)
+            ->orderBy('first_name')
             ->get();
     }
 
@@ -107,6 +144,7 @@ class Create extends Component
                 $query->orderBy('name');
             }
         ])->where('model', Subject::class)
+            ->orderBy('name')
             ->get()
             ->filter(function ($group) {
                 if ($group->subjects->count()) {
@@ -118,7 +156,7 @@ class Create extends Component
         $this->availableTypes = Session::TYPES;
         $this->foundStudents = collect();
         $this->students = collect();
-
+        $this->availableTags = collect();
     }
 
     #[Layout('layouts.app')]

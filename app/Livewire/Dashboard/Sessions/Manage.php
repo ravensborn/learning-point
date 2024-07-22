@@ -51,21 +51,21 @@ class Manage extends Component
         $this->settings = Setting::find(1);
     }
 
-    public function getDiffForLP(): string
-    {
-        $hours = $this->session->time_out->diffInHours($this->session->time_in);
-        $minutes = $this->session->time_out->diffInMinutes($this->session->time_in) % 60;
-
-        if ($hours == 0) {
-            $formattedDiff = "{$minutes} min";
-        } elseif ($minutes == 0) {
-            $formattedDiff = "{$hours} h";
-        } else {
-            $formattedDiff = "{$hours} h {$minutes} min";
-        }
-
-        return $formattedDiff;
-    }
+//    public function getDiffForLP(): string
+//    {
+//        $hours = $this->session->time_out->diffInHours($this->session->time_in);
+//        $minutes = $this->session->time_out->diffInMinutes($this->session->time_in) % 60;
+//
+//        if ($hours == 0) {
+//            $formattedDiff = "{$minutes} min";
+//        } elseif ($minutes == 0) {
+//            $formattedDiff = "{$hours} h";
+//        } else {
+//            $formattedDiff = "{$hours} h {$minutes} min";
+//        }
+//
+//        return $formattedDiff;
+//    }
 
     public function calculateAttendeeChargeList($attendeeId): int
     {
@@ -184,7 +184,7 @@ class Manage extends Component
         if($attendeeId == 'all-cancellation') {
             $this->chargeModalTitle = 'Add Bulk Cancellation Charge';
         }
-        
+
         $this->attendeeToAddChargeId = $attendeeId;
         $this->dispatch('toggle-modal-charge-student');
     }
@@ -286,7 +286,7 @@ class Manage extends Component
         $this->attendeeChargeType = 'rated';
     }
 
-    public function toggleStudentAttending($attendeeId)
+    public function toggleStudentAttending($attendeeId): void
     {
         $this->removingChargeListAttendeeId = 0;
         $this->removingChargeListIndex = -1;
@@ -428,6 +428,7 @@ class Manage extends Component
                 ->orWhere('email', 'LIKE', '%' . trim($this->searchStudentQuery) . '%');
         })->whereNotIn('id', $existingStudentIds)
             ->limit(5)
+            ->orderBy('first_name')
             ->get();
     }
 

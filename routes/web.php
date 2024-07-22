@@ -12,9 +12,12 @@ use App\Livewire\Dashboard\Schools\Grades\Index as GradesIndex;
 use App\Livewire\Dashboard\Schools\Index as SchoolsIndex;
 use App\Livewire\Dashboard\Sessions\Create as SessionsCreate;
 use App\Livewire\Dashboard\Sessions\Edit as SessionsEdit;
+use App\Livewire\Dashboard\Sessions\Tags\Index as SessionsTagIndex;
 use App\Livewire\Dashboard\Sessions\Index as SessionsIndex;
 use App\Livewire\Dashboard\Sessions\Manage as SessionsManage;
+use App\Livewire\Dashboard\Sessions\AdvancedSearch as SessionsAdvancedSearch;
 use App\Livewire\Dashboard\Sessions\ShowCompleted as SessionsShowCompleted;
+use App\Livewire\Dashboard\Sessions\PrintSession as SessionsPrint;
 use App\Livewire\Dashboard\Settings\Index as SettingsIndex;
 use App\Livewire\Dashboard\Students\Create as StudentsCreate;
 use App\Livewire\Dashboard\Students\Index as StudentsIndex;
@@ -22,9 +25,10 @@ use App\Livewire\Dashboard\Students\Rates\Index as StudentsRateIndex;
 use App\Livewire\Dashboard\Students\Sessions\Index as StudentSessionsIndex;
 use App\Livewire\Dashboard\Students\Show as StudentsShow;
 use App\Livewire\Dashboard\Students\Transactions\Index as StudentTransactionsIndex;
-use App\Livewire\Dashboard\Subjects\BulkAssign as SubjectsBulkAssign;
 use App\Livewire\Dashboard\Subjects\Index as SubjectsIndex;
+use App\Livewire\Dashboard\Subjects\Rates\BulkAssign as SubjectsBulkAssign;
 use App\Livewire\Dashboard\Subjects\Rates\Index as SubjectsRateIndex;
+use App\Livewire\Dashboard\Subjects\Tags\Index as SubjectsTagIndex;
 use App\Livewire\Dashboard\Teachers\Index as TeachersIndex;
 use App\Livewire\Dashboard\Teachers\Sessions\Index as TeacherSessionsIndex;
 use App\Livewire\Dashboard\Teachers\Transactions\Index as TeacherTransactionsIndex;
@@ -72,7 +76,6 @@ Route::middleware(['auth'])->group(function () {
             ->middleware(['can:view reports'])
             ->name('reports.index');
 
-
         Route::get('/users', UsersIndex::class)->name('users.index')
             ->middleware(['can:manage users']);
 
@@ -83,6 +86,9 @@ Route::middleware(['auth'])->group(function () {
 
             Route::get('/subjects/{subject}/rates', SubjectsRateIndex::class)
                 ->name('subjects.rates.index');
+
+            Route::get('/subjects/{subject}/tags', SubjectsTagIndex::class)
+                ->name('subjects.tags.index');
 
             Route::get('/subjects/bulk-assign', SubjectsBulkAssign::class)
                 ->name('subjects.bulk-assign');
@@ -96,8 +102,11 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/sessions', SessionsIndex::class)->name('sessions.index');
             Route::get('/sessions/create', SessionsCreate::class)->name('sessions.create');
             Route::get('/sessions/{session}/edit', SessionsEdit::class)->name('sessions.edit');
+            Route::get('/sessions/{session}/tags', SessionsTagIndex::class)->name('sessions.tags');
             Route::get('/sessions/{session}/manage', SessionsManage::class)->name('sessions.manage');
+            Route::get('/sessions/advanced-search', SessionsAdvancedSearch::class)->name('sessions.advanced-search');
             Route::get('/sessions/{session}/show-completed', SessionsShowCompleted::class)->name('sessions.show-completed');
+            Route::get('/sessions/{session}/print', SessionsPrint::class)->name('sessions.print');
         });
 
         Route::middleware('can:manage teachers')->group(function () {

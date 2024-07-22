@@ -51,7 +51,7 @@ class Edit extends Component
 
         $this->session = $session;
 
-        if ($session->status == Session::STATUS_COMPLETED) {
+        if ($session->status != Session::STATUS_REJECTED) {
             $this->redirectRoute('teacher.dashboard.sessions.index');
         }
 

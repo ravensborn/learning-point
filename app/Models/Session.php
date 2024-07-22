@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,6 +21,7 @@ class Session extends Model
         'status_name',
         'status_color_class',
         'type_name',
+        'session_duration',
     ];
 
     const STATUSES = [
@@ -37,11 +39,11 @@ class Session extends Model
     const STATUS_REJECTED = 'rejected';
 
     const STATUS_COLOR_CLASSES = [
-        self::STATUS_PENDING => 'bg-yellow',
-        self::STATUS_PROCESSED => 'bg-primary',
-        self::STATUS_COMPLETED => 'bg-success',
-        self::STATUS_CANCELLED => 'bg-danger',
-        self::STATUS_REJECTED => 'bg-warning',
+        self::STATUS_PENDING => 'border-yellow',
+        self::STATUS_PROCESSED => 'border-primary',
+        self::STATUS_COMPLETED => 'border-success',
+        self::STATUS_CANCELLED => 'border-danger',
+        self::STATUS_REJECTED => 'border-warning',
     ];
 
     public function getStatusNameAttribute(): string
@@ -66,21 +68,35 @@ class Session extends Model
         return self::TYPES[$this->type];
     }
 
+    public function getSessionDurationAttribute()
+    {
+        $options = ['join' => ', ', 'parts' => 2, 'syntax' => CarbonInterface::DIFF_ABSOLUTE];
+        return $this->time_out->diffForHumans($this->time_in, $options);
+    }
+
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }
+
     public function teacher(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Teacher::class);
     }
+
     public function subject(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Subject::class);
     }
+
     public function attendees(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Attendee::class);
+    }
+
+    public function tags(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(SessionTag::class);
     }
 
     public function updateAttendeeSessionCharge($attendeeId, $createIfNotExist = true): void
@@ -88,23 +104,23 @@ class Session extends Model
 
         $attendee = Attendee::find($attendeeId);
 
-        if($attendee && $attendee->attending) {
+        if ($attendee && $attendee->attending) {
 
             $chargeList = $attendee->charge_list;
             $selectedChargeItemIndex = -1;
 
-            foreach($chargeList as $index => $item) {
-                if($item['managed']) {
+            foreach ($chargeList as $index => $item) {
+                if ($item['managed']) {
                     $selectedChargeItemIndex = $index;
                 }
             }
 
-            if($selectedChargeItemIndex >= 0) {
+            if ($selectedChargeItemIndex >= 0) {
                 unset($chargeList[$selectedChargeItemIndex]);
                 $createIfNotExist = true;
             }
 
-            if($createIfNotExist) {
+            if ($createIfNotExist) {
 
                 [$amount, $note] = Attendee::calculateStudentCharge($this->subject_id, $attendee->student->studentRates, $this->attendees
                     ->where('attending', true)
@@ -127,10 +143,9 @@ class Session extends Model
     }
 
 
-
     public static function generateNumber(): string
     {
-        $last =  self::orderBy('id', 'DESC')->first();
+        $last = self::orderBy('id', 'DESC')->first();
         $lastId = $last ? $last->id : 0;
 
         $prefix = 'SESH-';

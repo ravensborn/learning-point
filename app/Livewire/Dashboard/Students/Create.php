@@ -175,6 +175,10 @@ class Create extends Component
         $this->availableSchools = School::all();
         $this->availableFamilies = Family::orderBy('created_at', 'asc')->get();
 
+        $this->studentForm->primary_phone_number = '+964 ';
+        $this->studentForm->secondary_phone_number = '+964 ';
+        $this->studentContactForm->primary_phone_number = '+964 ';
+
     }
 
     #[Layout('layouts.app')]

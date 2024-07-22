@@ -5,7 +5,7 @@
                 <div class="row g-2 align-items-center">
                     <div class="col">
                         <h3>
-                           Print Transaction
+                           Print Session
                         </h3>
                     </div>
                     <!-- Page title actions -->
@@ -49,13 +49,13 @@
                             </div>
                             <div class="col-4 text-center">
                                 <div>
-                                    <p class="h2">{{ $name }}</p>
+                                    <p class="h2">Name</p>
                                     <address>
-                                        <span class="fw-bold">E-Mail:</span> {{ $email ?? '' }}
+                                        <span class="fw-bold">E-Mail:</span>
                                         <br>
-                                        <span class="fw-bold">Phone No.:</span> {{ $phone ?? '' }}
+                                        <span class="fw-bold">Phone No.:</span>
                                         <br>
-                                        <span class="fw-bold">Address:</span> {{ $address ?? '' }}
+                                        <span class="fw-bold">Address:</span>
                                     </address>
                                 </div>
                             </div>
@@ -64,30 +64,23 @@
                                      class="mb-2"
                                      style="width: 42px; height: auto;"
                                      alt="Invoice Logo">
-                                <p class="fw-bold mb-0">{{ $transaction->number }}</p>
-                                <div>{{ $transaction->created_at->format('Y-m-d / h:i A') }}</div>
+                                <p class="fw-bold mb-0">{{ $session->number }}</p>
+                                <div>{{ $session->created_at->format('Y-m-d / h:i A') }}</div>
                             </div>
 
                         </div>
                         <table class="table table-transparent table-responsive">
                             <thead>
                             <tr>
-                                <th>Series</th>
-                                <th class="text-center" style="width: 1%">Action</th>
-                                <th class="text-center">Amount</th>
-                                <th class="text-center" style="width: 1%">Current Wallet</th>
+                                <th>No Data</th>
+{{--                                <th>Series</th>--}}
+{{--                                <th class="text-center" style="width: 1%">Action</th>--}}
+{{--                                <th class="text-center">Amount</th>--}}
+{{--                                <th class="text-center" style="width: 1%">Current Wallet</th>--}}
                             </tr>
                             </thead>
                             <tr>
-                                <td>
-                                    <p class="strong mb-1">{{ $transaction->number }}</p>
-                                </td>
-                                <td>{{ $transaction->type_name }}</td>
-                                <td class="{{ $transaction->type_color_class }} text-center">
-                                    {{ $transaction->type_prefix_character }}
-                                    ${{ number_format($transaction->amount, 2) }}
-                                </td>
-                                <td @class(['text-danger' => ($wallet < 0), 'text-center' => true])>${{ number_format($wallet, 2) }}</td>
+                               <td>No Data</td>
                             </tr>
 
                         </table>

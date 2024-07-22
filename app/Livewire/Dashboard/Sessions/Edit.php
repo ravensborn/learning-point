@@ -30,8 +30,6 @@ class Edit extends Component
         $this->sessionForm->update();
 
         foreach ($this->session->attendees as $attendee) {
-//            Attendee::calculateStudentCharge($this->session->subject_id, $attendee->student->studentRates, $this->session->attendees
-//                ->where('attending', true)->count());
 
             $this->session->updateAttendeeSessionCharge($attendee->id, false);
 
@@ -65,6 +63,7 @@ class Edit extends Component
                 $query->orderBy('name');
             }
         ])->where('model', Subject::class)
+            ->orderBy('name')
             ->get()
             ->filter(function ($group) {
                 if ($group->subjects->count()) {

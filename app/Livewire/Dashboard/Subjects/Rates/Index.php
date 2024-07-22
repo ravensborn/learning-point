@@ -12,7 +12,6 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-
     use WithPagination, SubjectRateModalFunctions;
 
     public int $perPage = 10;

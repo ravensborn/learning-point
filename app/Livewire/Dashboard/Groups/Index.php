@@ -12,9 +12,7 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-
     use WithPagination, GroupModalFunctions;
-
 
     public int $perPage = 10;
     public string $search = '';
@@ -40,7 +38,7 @@ class Index extends Component
     #[Layout('layouts.app')]
     public function render()
     {
-        $groups = Group::query()->orderBy('created_at', 'desc');
+        $groups = Group::query()->orderBy('name');
 
         if ($this->search) {
 

@@ -5,7 +5,8 @@
             <div class="row g-2 align-items-center">
                 <div class="col">
                     <h2 class="page-title">
-                        Manage&nbsp;<a href="{{ route('dashboard.families.index') }}">{{ $family->number }} / {{ ucfirst($family->name) }}</a>&nbsp;Members
+                        Manage&nbsp;<a href="{{ route('dashboard.families.index') }}">{{ $family->number }}
+                            / {{ ucfirst($family->name) }}</a>&nbsp;Members
                     </h2>
                 </div>
                 <!-- Page title actions -->
@@ -155,7 +156,8 @@
                             <div class="col-12 col-md-12 mb-3 mb-md-0">
                                 <div>
                                     <label for="name" class="form-label">Name</label>
-                                    <input type="text" wire:model.live="memberSearchQuery" class="form-control" id="name"
+                                    <input type="text" wire:model.live="memberSearchQuery" class="form-control"
+                                           id="name"
                                            placeholder="Search student name">
                                     @error('form.name')
                                     <div class="text-danger mt-1">
@@ -168,7 +170,8 @@
                                     @forelse($searchedMemberList as $student)
 
                                         @if(in_array($student->id, $selectedMemberIds))
-                                            <div class="badge border-success">
+                                            <div class="badge border-success"
+                                                 wire:click.prevent="selectSearchedMember({{ $student->id }})">
                                                 <!--<editor-fold desc="SVG ICON">-->
                                                 <svg xmlns="http://www.w3.org/2000/svg"
                                                      class="icon icon-tabler icon-tabler-check" width="24" height="24"

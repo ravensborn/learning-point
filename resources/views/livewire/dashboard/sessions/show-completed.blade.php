@@ -54,6 +54,22 @@
                                         / {{ $session->subject->name }}</div>
                                 </div>
                                 <div class="datagrid-item">
+                                    <div class="datagrid-title">Tags</div>
+                                    <div class="datagrid-content">
+                                        @if($session->tags->count() > 0)
+                                            @foreach($session->tags as $tag)
+                                                <div class="badge text-body">
+                                                    {{ $tag->name }}
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            <div class="text-muted">
+                                                No tags
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="datagrid-item">
                                     <div class="datagrid-title">Time in</div>
                                     <div class="datagrid-content">{{ $session->time_in->format('Y-m-d / h:i A') }}</div>
                                 </div>
@@ -66,9 +82,7 @@
                                     <div class="datagrid-title">Duration</div>
                                     <div
                                         class="datagrid-content">
-                                        {{ $duration }}
-                                        /
-                                        {{ $this->getDiffForLP() }}
+                                        {{ $session->sessionDuration }}
                                     </div>
                                 </div>
                                 <div class="datagrid-item">

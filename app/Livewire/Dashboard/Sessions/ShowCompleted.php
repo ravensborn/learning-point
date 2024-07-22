@@ -27,21 +27,21 @@ class ShowCompleted extends Component
         $this->settings = Setting::find(1);
     }
 
-    public function getDiffForLP(): string
-    {
-        $hours = $this->session->time_out->diffInHours($this->session->time_in);
-        $minutes = $this->session->time_out->diffInMinutes($this->session->time_in) % 60;
-
-        if ($hours == 0) {
-            $formattedDiff = "{$minutes} min";
-        } elseif ($minutes == 0) {
-            $formattedDiff = "{$hours} h";
-        } else {
-            $formattedDiff = "{$hours} h {$minutes} min";
-        }
-
-        return $formattedDiff;
-    }
+//    public function getDiffForLP(): string
+//    {
+//        $hours = $this->session->time_out->diffInHours($this->session->time_in);
+//        $minutes = $this->session->time_out->diffInMinutes($this->session->time_in) % 60;
+//
+//        if ($hours == 0) {
+//            $formattedDiff = "{$minutes} min";
+//        } elseif ($minutes == 0) {
+//            $formattedDiff = "{$hours} h";
+//        } else {
+//            $formattedDiff = "{$hours} h {$minutes} min";
+//        }
+//
+//        return $formattedDiff;
+//    }
 
     public function calculateAttendeeChargeList($attendeeId): int
     {

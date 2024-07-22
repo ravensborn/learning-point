@@ -27,7 +27,11 @@ class Index extends Component
 
     public function selectSearchedMember($id): void
     {
-        $this->selectedMemberIds[] = $id;
+        if (!in_array($id, $this->selectedMemberIds)) {
+            $this->selectedMemberIds[] = $id;
+        } else {
+            $this->selectedMemberIds = array_diff($this->selectedMemberIds, [$id]);
+        }
     }
 
     public function updatedMemberSearchQuery(): void

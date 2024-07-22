@@ -12,27 +12,25 @@ use Livewire\WithPagination;
 
 class Index extends Component
 {
-
     use WithPagination, SubjectModalFunctions;
-
 
     public int $perPage = 10;
     public string $search = '';
 
     public Collection $groups;
-    public int $selectedGroupId = 0;
+    public string $selectedGroupId = '';
 
     public function mount()
     {
 
         $this->groups = Group::where('model', Subject::class)
-            ->orderBy('created_at', 'desc')->get();
+            ->orderBy('name')->get();
     }
 
     #[Layout('layouts.app')]
     public function render()
     {
-        $subjects = Subject::query()->orderBy('created_at', 'desc');
+        $subjects = Subject::query()->orderBy('name');
 
         if ($this->search) {
 

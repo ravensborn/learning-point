@@ -164,7 +164,6 @@
                                 <tr>
                                     <th>#</th>
                                     <th>Student</th>
-                                    <th>Wallet</th>
                                     <th>Attending</th>
                                     <th></th>
                                 </tr>
@@ -175,7 +174,6 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $student->full_name }}</td>
-                                        <td>${{ number_format($student->wallet, 2) }}</td>
                                         <td>
                                             <label class="form-check form-switch mb-0">
                                                 <input wire:change="toggleStudentAttending({{ $student->id }})"
@@ -194,7 +192,7 @@
                                     </tr>
                                 @empty
                                     <tr class="text-center">
-                                        <td colspan="4">No students at this time.</td>
+                                        <td colspan="3">No students at this time.</td>
                                     </tr>
                                 @endforelse
                                 </tbody>

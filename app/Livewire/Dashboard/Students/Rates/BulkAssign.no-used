@@ -1,0 +1,130 @@
+<?php
+
+namespace App\Livewire\Dashboard\Students\Rates;
+
+
+use App\Livewire\Forms\StudentRateForm;
+use App\Models\Student;
+use Livewire\Attributes\Layout;
+use Livewire\Component;
+use Livewire\WithPagination;
+
+class BulkAssign extends Component
+{
+
+    use WithPagination;
+
+    public StudentRateForm $studentRateForm;
+    public bool $success = false;
+
+    public $students;
+    public array $selectedStudentIds = [];
+
+    public array $ratings = [];
+    public string $rate = "0";
+    public string $numberOfStudents = "1";
+
+    public array $overlappedRatingStudents = [];
+
+    public function mount(): void
+    {
+        $this->students = Student::all();
+    }
+
+    public function selectStudent($id): void
+    {
+        if (!in_array($id, $this->selectedStudentIds)) {
+            $this->selectedStudentIds[] = $id;
+        } else {
+            $this->selectedStudentIds = array_diff($this->selectedStudentIds, [$id]);
+        }
+    }
+
+    public function addRate(): void
+    {
+
+        $this->validate([
+            'rate' => 'required|numeric|gt:0',
+            'numberOfStudents' => 'required|integer|gt:0',
+        ]);
+
+        if ($this->hasExistingNumberOfStudents($this->numberOfStudents)) {
+            $this->addError('numberOfStudents', 'Rating is already assigned for the selected number of students.');
+        } else {
+            $this->resetErrorBag('numberOfStudents');
+            $this->ratings[] = [
+                'numberOfStudents' => $this->numberOfStudents,
+                'rate' => $this->rate,
+            ];
+            $this->numberOfStudents = 1;
+            $this->rate = 0;
+        }
+    }
+
+    public function validateRatings(): void
+    {
+
+        $this->overlappedRatingStudents = [];
+
+        foreach ($this->selectedStudentIds as $selectedStudentId) {
+            $student = $this->students->find($selectedStudentId);
+            foreach ($student->studentRates as $studentRate) {
+                if ($this->hasExistingNumberOfStudents($studentRate->number_of_students)) {
+                    $this->overlappedRatingStudents[] = [
+                        'id' => $selectedStudentId,
+                        'name' => $student->name,
+                    ];
+                    break;
+                }
+            }
+        }
+    }
+
+    public function assignRatings(): void
+    {
+        foreach ($this->selectedStudentIds as $selectedStudentId) {
+            foreach ($this->ratings as $rating) {
+                $this->studentRateForm->subject_id = $selectedStudentId;
+                $this->studentRateForm->rate = $rating['rate'];
+                $this->studentRateForm->number_of_students = $rating['numberOfStudents'];
+                $this->studentRateForm->store();
+            }
+        }
+
+        $this->selectedSubjectIds = [];
+        $this->ratings = [];
+        $this->overlappedRatingSubject = [];
+        $this->rate = "0";
+        $this->numberOfStudents = "1";
+        $this->success = true;
+    }
+
+    public function removeRating($key): void
+    {
+        if (array_key_exists($key, $this->ratings)) {
+            unset($this->ratings[$key]);
+        }
+    }
+
+    public function refreshOverlaps(): void
+    {
+        $this->validateRatings();
+    }
+
+    public function hasExistingNumberOfStudents($numberOfStudents): bool
+    {
+        return !empty(array_filter($this->ratings, function ($rating) use ($numberOfStudents) {
+            return $rating['numberOfStudents'] == $numberOfStudents;
+        }));
+    }
+
+    #[Layout('layouts.app')]
+    public function render()
+    {
+
+        $this->validateRatings();
+        return view('livewire.dashboard.subjects.bulk-assign');
+    }
+
+
+}

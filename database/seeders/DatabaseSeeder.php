@@ -18,15 +18,15 @@ class DatabaseSeeder extends Seeder
             SettingSeeder::class,
             CitySeeder::class,
             UserSeeder::class,
-//            GroupSeeder::class, //Fake
-//            ExpenseSeeder::class, //Fake
-//            SubjectSeeder::class, //Fake
-//            SchoolSeeder::class, //Fake
-//            FamilySeeder::class, //Fake
-//            StudentSeeder::class, //Fake
-//            TeacherSeeder::class, //Fake
-//            EmployeeSeeder::class, //Fake
-//            SessionSeeder::class, //Fake
+            GroupSeeder::class, //Fake
+            ExpenseSeeder::class, //Fake
+            SubjectSeeder::class, //Fake
+            SchoolSeeder::class, //Fake
+            FamilySeeder::class, //Fake
+            StudentSeeder::class, //Fake
+            TeacherSeeder::class, //Fake
+            EmployeeSeeder::class, //Fake
+            SessionSeeder::class, //Fake
             LcDatabaseSeeder::class,
         ]);
     }

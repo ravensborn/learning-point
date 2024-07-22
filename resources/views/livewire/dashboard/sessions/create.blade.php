@@ -46,9 +46,9 @@
                         </div>
 
                         <div class="mb-3 row">
-                            <label for="teacher_id" class="col-sm-2 col-form-label required">Subject</label>
+                            <label for="subject_id" class="col-sm-2 col-form-label required">Subject</label>
                             <div class="col-sm-10">
-                                <select id="teacher_id" class="form-control" wire:model.live="sessionForm.subject_id">
+                                <select id="subject_id" class="form-control" wire:model.live="sessionForm.subject_id">
                                     <option value="">-- Select subject --</option>
                                     @foreach($availableSubjects as $indexGroup => $subjectGroup)
                                         <optgroup label="{{ $subjectGroup->name }}"
@@ -65,6 +65,25 @@
                                 @enderror
                             </div>
                         </div>
+
+                        @if($availableTags->count())
+                            <div class="mb-3 row">
+                                <label for="selectedTags" class="col-sm-2 col-form-label">Available Tags</label>
+                                <div class="col-sm-10">
+                                    @foreach($availableTags as $tag)
+                                        @if(in_array($tag->id, $selectedTagIds))
+                                            <button class="btn btn-primary" wire:click="addTag({{ $tag->id }})">
+                                                {{ $tag->name }}
+                                            </button>
+                                        @else
+                                            <button class="btn btn-outline-primary" wire:click="addTag({{ $tag->id }})">
+                                                {{ $tag->name }}
+                                            </button>
+                                        @endif
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
 
                         <div class="mb-3 row">
                             <label for="type" class="col-sm-2 col-form-label required">Type</label>
@@ -87,7 +106,8 @@
 
                             <label for="time-in" class="col-sm-2 col-form-label required">Time in</label>
                             <div class="col-sm-10">
-                                <input type="datetime-local" class="form-control" id="time-in" wire:model.live="sessionForm.time_in">
+                                <input type="datetime-local" class="form-control" id="time-in"
+                                       wire:model.live="sessionForm.time_in">
                                 @error('sessionForm.time_in')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
@@ -98,7 +118,8 @@
                         <div class="mb-3 row">
                             <label for="time-out" class="col-sm-2 col-form-label required">Time out</label>
                             <div class="col-sm-10">
-                                <input type="datetime-local" class="form-control" id="time-out" wire:model="sessionForm.time_out">
+                                <input type="datetime-local" class="form-control" id="time-out"
+                                       wire:model="sessionForm.time_out">
                                 @error('sessionForm.time_out')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
@@ -110,7 +131,7 @@
                             <div class="col-sm-10">
                                 <textarea id="note" class="form-control" wire:model="sessionForm.note"></textarea>
                                 @error('sessionForm.note')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
@@ -157,7 +178,12 @@
                                         </span>
                                     @endif
 
-                                    {{ $student->full_name }}
+                                    <div>
+                                        {{ $student->full_name }}
+                                    </div>
+                                    <div class="text-muted">
+                                        {{ $student?->school?->name ?? '' }} @if($student->grade) - @endif {{ $student?->grade?->name ?? '' }}
+                                    </div>
                                 </div>
                             @endforeach
                         </div>
@@ -214,7 +240,13 @@
                 <div class="col-12 d-flex justify-content-center">
                     <button class="btn btn-primary" style="width: 300px;"
                             wire:click="store" wire:target="store" wire:loading.attr="disabled">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-checks" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 12l5 5l10 -10" /><path d="M2 12l5 5m5 -5l5 -5" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-checks" width="24"
+                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M7 12l5 5l10 -10"/>
+                            <path d="M2 12l5 5m5 -5l5 -5"/>
+                        </svg>
                         Save
                     </button>
                 </div>

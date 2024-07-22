@@ -26,4 +26,9 @@ class Subject extends Model
     {
         return $this->hasMany(Session::class);
     }
+
+    public function tags(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(SubjectTag::class);
+    }
 }

@@ -1,5 +1,4 @@
 <div>
-
     <div class="page-header d-print-none">
         <div class="container-xl">
             <div class="row g-2 align-items-center">
@@ -11,6 +10,17 @@
                 <!-- Page title actions -->
                 <div class="col-auto ms-auto">
                     <div class="btn-list">
+                        <a href="{{ route('dashboard.sessions.advanced-search') }}" class="btn btn-primary">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 class="icon icon-tabler icons-tabler-outline icon-tabler-search">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"/>
+                                <path d="M21 21l-6 -6"/>
+                            </svg>
+                            Advanced Search
+                        </a>
                         <a href="{{ route('dashboard.sessions.create') }}" class="btn btn-primary">
                             <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24"
                                  viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
@@ -40,7 +50,7 @@
                             <div class="card-body">
                                 <div class="row align-items-center">
                                     <div class="col-auto">
-                                        <span class="{{ $card['class'] }} text-white avatar">
+                                        <span class="{{ $card['class'] }} avatar">
                                             <svg xmlns="http://www.w3.org/2000/svg"
                                                  class="icon icon-tabler icon-tabler-chart-arrows-vertical" width="24"
                                                  height="24"
@@ -107,12 +117,27 @@
                                     </div>
                                     entries
                                 </div>
-                                <div class="ms-auto text-secondary">
-                                    Search:
-                                    <div class="ms-2 d-inline-block">
-                                        <input wire:model.live="search" type="search"
-                                               class="form-control form-control-sm"
-                                               aria-label="Search items">
+                                <div class="ms-auto text-secondary d-flex">
+                                    <div class="me-2">
+                                        Type:
+                                        <div class="ms-2 d-inline-block">
+                                            <select id="sessionType" wire:model.live="sessionType"
+                                                    class="form-control form-control-sm"
+                                                    aria-label="Session type">
+                                                <option value="all">All</option>
+                                                @foreach(\App\Models\Session::TYPES as $key => $name)
+                                                    <option value="{{ $key }}">{{ $name }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="me-2">
+                                        Search:
+                                        <div class="ms-2 d-inline-block">
+                                            <input wire:model.live="search" type="search"
+                                                   class="form-control form-control-sm"
+                                                   aria-label="Search items">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -121,16 +146,20 @@
                             <table class="table card-table table-vcenter text-nowrap datatable">
                                 <thead>
                                 <tr>
-
-                                    <th class="w-1">No.</th>
+                                    <th class="w-1">
+                                        No.
+                                        <span class="cursor-pointer" wire:click="sortByColumn('id')">
+                                            {!! $this->getHeaderSortIcon('id') !!}
+                                        </span>
+                                    </th>
                                     <th>Teacher</th>
-                                    <th>Subject</th>
-                                    <th>Students</th>
-                                    <th>Total</th>
+                                    <th>Group / Subject</th>
                                     <th>Date</th>
+                                    <th>Students</th>
+                                    <th>Duration</th>
+                                    <th>Total</th>
                                     <th>Type</th>
                                     <th>Status</th>
-                                    <th>Created</th>
                                     <th></th>
                                 </tr>
                                 </thead>
@@ -138,17 +167,31 @@
                                 @forelse($sessions as $session)
                                     <tr wire:key="{{ $session->id }}">
 
-                                        <td><span
+                                        <td>
+                                            <span
                                                 class="text-secondary">{{ ($sessions->currentpage()-1) * $sessions->perpage() + $loop->index + 1 }}</span>
                                         </td>
                                         <td>
                                             {{ ucfirst($session->teacher?->name ?? '-') }}
                                         </td>
                                         <td>
+                                            {{ ucfirst($session->subject?->group?->name ?? '-') }}
+                                            /
                                             {{ ucfirst($session->subject?->name ?? '-') }}
                                         </td>
                                         <td>
+                                            <div>
+                                                {{ $session->time_in->format('d-M-y / h:i A') }}
+                                            </div>
+                                            <div>
+                                                {{ $session->time_out->format('d-M-y / h:i A') }}
+                                            </div>
+                                        </td>
+                                        <td>
                                             {{ $session->attendees->where('attending', true)->count() . '/' . $session->attendees->count() }}
+                                        </td>
+                                        <td>
+                                            {{ $session->sessionDuration  }}
                                         </td>
                                         <td>
                                             @if($session->status == \App\Models\Session::STATUS_COMPLETED)
@@ -158,29 +201,15 @@
                                             @endif
                                         </td>
                                         <td>
-                                            <div>
-                                                {{ $session->time_in->format('Y-m-d h:i A') }}
-                                            </div>
-                                            <div>
-                                                {{ $session->time_out->format('Y-m-d h:i A') }}
-                                            </div>
-                                            <div>
-                                                Duration: {{ round($session->time_out->floatDiffInRealHours($session->time_in), 2) }}
-                                                h
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <span class="badge text-body">
+                                            <span
+                                                class="badge text-body @if($session->type == \App\Models\Session::TYPE_THEORETICAL) border-pink @else border-primary  @endif">
                                                 {{ $session->type_name }}
                                             </span>
                                         </td>
                                         <td>
-                                            <span class="badge text-white {{ $session->status_color_class }}">
+                                            <span class="badge text-body {{ $session->status_color_class }}">
                                                 {{ $session->status_name }}
                                             </span>
-                                        </td>
-                                        <td>
-                                            {{ $session->created_at->format('Y-m-d') }}
                                         </td>
 
                                         <td class="text-end">
@@ -225,7 +254,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">
+                                        <td colspan="10" class="text-center">
                                             There are no items at the moment.
                                         </td>
                                     </tr>

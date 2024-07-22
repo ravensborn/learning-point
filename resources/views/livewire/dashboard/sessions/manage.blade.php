@@ -44,6 +44,10 @@
                                            wire:click="showAddChargeModal('all-cancellation')">
                                             Bulk Cancellation Charge
                                         </a>
+                                        <a class="dropdown-item"
+                                           href="{{ route('dashboard.sessions.tags', $session->id) }}">
+                                            Manage Session Tags
+                                        </a>
                                     </div>
                                 </div>
                                 <div class="dropdown me-2">
@@ -71,6 +75,7 @@
                                         </a>
                                     </div>
                                 </div>
+                                <a href="{{ route('dashboard.sessions.print', $this->session->id) }}" class="btn me-2">Print</a>
                             </div>
                         </div>
                         <div class="card-body">
@@ -80,64 +85,34 @@
                                     <div class="datagrid-content">{{ $session->number }}</div>
                                 </div>
                                 <div class="datagrid-item">
-                                    <div class="datagrid-title">Created By</div>
-                                    <div class="datagrid-content">{{ $session->user->name ?? '-' }}</div>
-                                </div>
-                                <div class="datagrid-item">
-                                    <div class="datagrid-title">Created At</div>
-                                    <div
-                                        class="datagrid-content">{{ $session->created_at->format('Y-m-d / h:i A') }}</div>
-                                </div>
-                                <div class="datagrid-item">
                                     <div class="datagrid-title">Teacher</div>
                                     <div class="datagrid-content">{{ $session->teacher->name }}</div>
                                 </div>
                                 <div class="datagrid-item">
-                                    <div class="datagrid-title">Subject</div>
+                                    <div class="datagrid-title">Group / Subject</div>
                                     <div class="datagrid-content">{{ $session->subject->group->name }}
                                         / {{ $session->subject->name }}</div>
                                 </div>
                                 <div class="datagrid-item">
-                                    <div class="datagrid-title">Time in</div>
-                                    <div class="datagrid-content">{{ $session->time_in->format('Y-m-d / h:i A') }}</div>
+                                    <div class="datagrid-title">Date</div>
+                                    <div class="datagrid-content">{{ $session->time_in->format('d-M-y') }}</div>
                                 </div>
                                 <div class="datagrid-item">
-                                    <div class="datagrid-title">Time out</div>
-                                    <div
-                                        class="datagrid-content">{{ $session->time_out->format('Y-m-d / h:i A') }}</div>
-                                </div>
-                                <div class="datagrid-item">
-                                    <div class="datagrid-title">Duration</div>
-                                    <div
-                                        class="datagrid-content">
-                                        {{ $duration }}
-                                        /
-                                        {{ $this->getDiffForLP() }}
-                                    </div>
-                                </div>
-                                <div class="datagrid-item">
-                                    <div class="datagrid-title">Cancellation Fee Limit</div>
-                                    <div
-                                        class="datagrid-content">
-                                        ${{ number_format($this->settings->maximum_session_cancellation_charge_limit, 2) }}
-                                    </div>
-                                </div>
-                                <div class="datagrid-item">
-                                    <div class="datagrid-title">Type</div>
-                                    <div class="datagrid-content">
-                                        <span class="badge text-body">
-                                            {{ $session->type_name }}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="datagrid-item">
-                                    <div class="datagrid-title">Attending</div>
+                                    <div class="datagrid-title">No. of Students</div>
                                     <div class="datagrid-content">
                                         <span class="badge text-body">
                                             {{ $session->attendees->where('attending', true)->count() }} / {{ $session->attendees->count() }}
                                         </span>
                                     </div>
                                 </div>
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Duration</div>
+                                    <div
+                                        class="datagrid-content">
+                                        {{ $session->sessionDuration }}
+                                    </div>
+                                </div>
+
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Total</div>
                                     <div class="datagrid-content">
@@ -154,6 +129,60 @@
                                         </span>
                                     </div>
                                 </div>
+
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Time in</div>
+                                    <div class="datagrid-content">{{ $session->time_in->format('h:i A') }}</div>
+                                </div>
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Time out</div>
+                                    <div
+                                        class="datagrid-content">{{ $session->time_out->format('h:i A') }}</div>
+                                </div>
+
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Created By</div>
+                                    <div class="datagrid-content">{{ $session->user->name ?? '-' }}</div>
+                                </div>
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Created At</div>
+                                    <div
+                                        class="datagrid-content">{{ $session->created_at->format('Y-m-d / h:i A') }}</div>
+                                </div>
+
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Tags</div>
+                                    <div class="datagrid-content">
+                                        @if($session->tags->count() > 0)
+                                            @foreach($session->tags as $tag)
+                                                <div class="badge text-body">
+                                                    {{ $tag->name }}
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            <div class="text-muted">
+                                                No tags
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Cancellation Fee Limit</div>
+                                    <div
+                                        class="datagrid-content">
+                                        ${{ number_format($this->settings->maximum_session_cancellation_charge_limit, 2) }}
+                                    </div>
+                                </div>
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Type</div>
+                                    <div class="datagrid-content">
+                                        <span class="badge text-body">
+                                            {{ $session->type_name }}
+                                        </span>
+                                    </div>
+                                </div>
+
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Approval Note</div>
                                     <div class="datagrid-content">
@@ -221,6 +250,9 @@
                                             <h3 class="card-title">
                                                 <a href="{{ route('dashboard.students.show', $attendee->student_id) }}"
                                                    target="_blank">{{ $attendee->student->full_name }}</a>
+                                                <div class="text-muted">
+                                                    {{ $attendee->student?->school?->name ?? '' }} @if($attendee->student->grade) - @endif {{ $attendee->student?->grade?->name ?? '' }}
+                                                </div>
                                             </h3>
                                         </div>
                                         <div class="me-3">

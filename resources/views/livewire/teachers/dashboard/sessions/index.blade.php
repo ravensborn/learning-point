@@ -82,8 +82,10 @@
 
                                     <th class="w-1">No.</th>
                                     <th>Subject</th>
+                                    <th>Attendees</th>
                                     <th>Students</th>
                                     <th>Date</th>
+                                    <th>Duration</th>
                                     <th>Type</th>
                                     <th>Status</th>
                                     <th>Note</th>
@@ -108,55 +110,70 @@
                                             {{ $session->attendees->where('attending', true)->count() . '/' . $session->attendees->count() }}
                                         </td>
                                         <td>
+                                            @foreach($session->attendees as $attendee)
+                                                <div class="border border-azure rounded p-1 mb-1">
+                                                    {{ $attendee->student->full_name }}
+                                                </div>
+                                            @endforeach
+                                        </td>
+                                        <td>
                                             <div>
-                                                {{ $session->time_in->format('Y-m-d h:i A') }}
+                                                {{ $session->time_in->format('d-M-y / h:i A') }}
                                             </div>
                                             <div>
-                                                {{ $session->time_out->format('Y-m-d h:i A') }}
-                                            </div>
-                                            <div>
-                                                Duration: {{ round($session->time_out->floatDiffInRealHours($session->time_in), 2) }}
-                                                h
+                                                {{ $session->time_out->format('d-M-y / h:i A') }}
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="badge text-body">
+                                            {{ $session->sessionDuration  }}
+                                        </td>
+                                        <td>
+                                            <span
+                                                class="badge text-body @if($session->type == \App\Models\Session::TYPE_THEORETICAL) border-pink @else border-primary  @endif">
                                                 {{ $session->type_name }}
                                             </span>
                                         </td>
                                         <td>
-                                            <span class="badge text-white {{ $session->status_color_class }}">
+                                             <span class="badge text-body {{ $session->status_color_class }}">
                                                 {{ $session->status_name }}
                                             </span>
                                         </td>
                                         <td>
-                                            {{ $session->approval_note }}
+                                            @if($session->approval_note)
+                                                <div x-data="{ show: false }">
+                                                    <div class="cursor-pointer text-primary" x-show="!show" @click="show = ! show">Show Note</div>
+                                                    <div x-show="show">
+                                                        {{ $session->approval_note }}
+                                                        <div class="cursor-pointer text-primary" @click="show = ! show">Hide Note</div>
+                                                    </div>
+                                                </div>
+                                            @endif
                                         </td>
                                         <td>
                                             {{ $session->created_at->format('Y-m-d') }}
                                         </td>
 
                                         <td class="text-end">
-{{--                                            @if($session->status != \App\Models\Session::STATUS_COMPLETED)--}}
-{{--                                                <a class="btn align-text-top"--}}
-{{--                                                   href="{{ route('teacher.dashboard.sessions.attendance', ['session' => $session->id]) }}">--}}
-{{--                                                    <!--<editor-fold desc="SVG ICON">-->--}}
-{{--                                                    <svg xmlns="http://www.w3.org/2000/svg"--}}
-{{--                                                         class="icon icon-tabler icon-tabler-notebook" width="24"--}}
-{{--                                                         height="24" viewBox="0 0 24 24" stroke-width="2"--}}
-{{--                                                         stroke="currentColor" fill="none" stroke-linecap="round"--}}
-{{--                                                         stroke-linejoin="round">--}}
-{{--                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>--}}
-{{--                                                        <path--}}
-{{--                                                            d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18"/>--}}
-{{--                                                        <path d="M13 8l2 0"/>--}}
-{{--                                                        <path d="M13 12l2 0"/>--}}
-{{--                                                    </svg>--}}
-{{--                                                    <!--</editor-fold>-->--}}
-{{--                                                    Manage Attendance--}}
-{{--                                                </a>--}}
-{{--                                            @endif--}}
-                                            @if($session->status != \App\Models\Session::STATUS_COMPLETED)
+                                            {{--                                            @if($session->status != \App\Models\Session::STATUS_COMPLETED)--}}
+                                            {{--                                                <a class="btn align-text-top"--}}
+                                            {{--                                                   href="{{ route('teacher.dashboard.sessions.attendance', ['session' => $session->id]) }}">--}}
+                                            {{--                                                    <!--<editor-fold desc="SVG ICON">-->--}}
+                                            {{--                                                    <svg xmlns="http://www.w3.org/2000/svg"--}}
+                                            {{--                                                         class="icon icon-tabler icon-tabler-notebook" width="24"--}}
+                                            {{--                                                         height="24" viewBox="0 0 24 24" stroke-width="2"--}}
+                                            {{--                                                         stroke="currentColor" fill="none" stroke-linecap="round"--}}
+                                            {{--                                                         stroke-linejoin="round">--}}
+                                            {{--                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>--}}
+                                            {{--                                                        <path--}}
+                                            {{--                                                            d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18"/>--}}
+                                            {{--                                                        <path d="M13 8l2 0"/>--}}
+                                            {{--                                                        <path d="M13 12l2 0"/>--}}
+                                            {{--                                                    </svg>--}}
+                                            {{--                                                    <!--</editor-fold>-->--}}
+                                            {{--                                                    Manage Attendance--}}
+                                            {{--                                                </a>--}}
+                                            {{--                                            @endif--}}
+                                            @if($session->status == \App\Models\Session::STATUS_REJECTED)
                                                 <a class="btn align-text-top"
                                                    href="{{ route('teacher.dashboard.sessions.edit', ['session' => $session->id]) }}">
                                                     <!--<editor-fold desc="SVG ICON">-->
@@ -174,6 +191,23 @@
                                                     <!--</editor-fold>-->
                                                     Edit
                                                 </a>
+                                            @else
+                                                <button class="btn align-text-top" disabled>
+                                                    <!--<editor-fold desc="SVG ICON">-->
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                         class="icon icon-tabler icon-tabler-notebook" width="24"
+                                                         height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                         stroke="currentColor" fill="none" stroke-linecap="round"
+                                                         stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                        <path
+                                                            d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18"/>
+                                                        <path d="M13 8l2 0"/>
+                                                        <path d="M13 12l2 0"/>
+                                                    </svg>
+                                                    <!--</editor-fold>-->
+                                                    Edit
+                                                </button>
                                             @endif
                                         </td>
                                     </tr>
