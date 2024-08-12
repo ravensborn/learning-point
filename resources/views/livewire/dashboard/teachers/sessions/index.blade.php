@@ -160,7 +160,7 @@
                                             </span>
                                         </td>
                                         <td>{{ ucfirst($session->user->name ?? '-') }}</td>
-                                        <td>{{ $session->created_at->format('Y-m-d / h:i A') }}</td>
+                                        <td>{{ $session->created_at->format('Y-m-d / H:i') }}</td>
 
                                         <td class="text-end">
                                             <a class="btn align-text-top"

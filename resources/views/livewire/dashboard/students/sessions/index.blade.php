@@ -60,6 +60,7 @@
                                     <th>Subject</th>
                                     <th>Attended</th>
                                     <th>Date</th>
+                                    <th>Duration</th>
                                     <th>Status</th>
                                     <th>User</th>
                                     <th>Created</th>
@@ -80,17 +81,24 @@
                                         <td>
                                             {{ $session->attendees->where('student_id', $student->id)->where('attending', true)->count() ? 'Yes' : 'No' }}
                                         </td>
+                                        <td style="width: 100px;" class="text-center">
+                                            <div>
+                                                <div>
+                                                    {{ $session->time_in->format('d-M-y') }}
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <div class="border border-success rounded mt-1">
+                                                    {{ $session->time_in->format('H:i') }}
+                                                </div>
+                                                <div class="border border-warning rounded mt-1">
+                                                    {{ $session->time_out->format('H:i') }}
+                                                </div>
+                                            </div>
+                                        </td>
                                         <td>
-                                            <div>
-                                                {{ $session->time_in->format('Y-m-d h:i A') }}
-                                            </div>
-                                            <div>
-                                                {{ $session->time_out->format('Y-m-d h:i A') }}
-                                            </div>
-                                            <div>
-                                                Duration: {{ round($session->time_out->floatDiffInRealHours($session->time_in), 2) }}
-                                                h
-                                            </div>
+                                            {{ $session->sessionDuration }}
                                         </td>
                                         <td>
                                             <span class="badge text-white {{ $session->status_color_class }}">
@@ -98,7 +106,7 @@
                                             </span>
                                         </td>
                                         <td>{{ ucfirst($session->user->name ?? '-') }}</td>
-                                        <td>{{ $session->created_at->format('Y-m-d / h:i A') }}</td>
+                                        <td>{{ $session->created_at->format('Y-m-d / H:i') }}</td>
 
                                         <td class="text-end">
                                             <a class="btn align-text-top"

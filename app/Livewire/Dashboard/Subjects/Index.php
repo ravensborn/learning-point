@@ -18,6 +18,7 @@ class Index extends Component
     public string $search = '';
 
     public Collection $groups;
+    public Collection $selectedGroups;
     public string $selectedGroupId = '';
 
     public function mount()
@@ -25,6 +26,38 @@ class Index extends Component
 
         $this->groups = Group::where('model', Subject::class)
             ->orderBy('name')->get();
+
+        $this->selectedGroups = collect();
+    }
+
+    public function updatedSelectedGroupId($id): void
+    {
+        $existingGroup = $this->selectedGroups->where('id', $id)->first();
+
+        if (!$existingGroup) {
+
+            $group = $this->groups->where('id', $id)->first();
+
+            if ($group) {
+                $this->selectedGroups->push($group);
+            }
+
+
+        }
+    }
+
+    public function removeGroup($id): void
+    {
+        $existingGroup = $this->selectedGroups->where('id', $id)->first();
+
+        if ($existingGroup) {
+
+            $this->selectedGroups = $this->selectedGroups->reject(function ($group) use ($existingGroup) {
+                return $group->id === $existingGroup->id;
+            });
+        }
+
+        $this->selectedGroupId = 'all';
     }
 
     #[Layout('layouts.app')]
@@ -38,10 +71,11 @@ class Index extends Component
             $subjects->where('name', 'LIKE', '%' . trim($this->search) . '%');
         }
 
-        if ($this->selectedGroupId) {
+        if ($this->selectedGroups->isNotEmpty()) {
 
             $this->resetPage();
-            $subjects->where('group_id', '=', $this->selectedGroupId);
+
+            $subjects->whereIn('group_id', $this->selectedGroups->pluck('id'));
         }
 
         $subjects = $subjects->paginate($this->perPage);

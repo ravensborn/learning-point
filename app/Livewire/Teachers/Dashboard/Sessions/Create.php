@@ -9,6 +9,7 @@ use App\Models\Session;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\Teacher;
+use Illuminate\Support\Carbon;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 
@@ -23,6 +24,10 @@ class Create extends Component
     public $foundStudents;
     public array $nonAttendingStudentIds = [];
     public $students;
+
+    public string $date;
+    public string $timeIn;
+    public string $timeOut;
 
     public function toggleStudentAttending($studentId): void
     {
@@ -41,6 +46,17 @@ class Create extends Component
     {
         $this->sessionForm->user_id = null;
         $this->sessionForm->teacher_id = auth()->guard('teacher')->user()->id;
+        $this->sessionForm->created_by = 'Teacher: ' . auth()->user()->name;
+
+        $this->validate([
+            'timeIn' => 'required',
+            'timeOut' => 'required',
+            'date' => 'required',
+        ]);
+
+        $this->sessionForm->time_in = Carbon::createFromFormat('Y-m-d H:i', $this->date . ' ' . $this->timeIn)->format('Y-m-d\TH:i:s');
+        $this->sessionForm->time_out = Carbon::createFromFormat('Y-m-d H:i', $this->date . ' ' . $this->timeOut)->format('Y-m-d\TH:i:s');
+
         $model = $this->sessionForm->store();
 
         $this->storeAttendees($model->id);

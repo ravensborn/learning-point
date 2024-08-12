@@ -120,7 +120,7 @@
                                         </td>
                                         <td class="text-wrap">{{ $transaction->description }}</td>
                                         <td>{{ ucfirst($transaction->user->name) }}</td>
-                                        <td>{{ $transaction->created_at->format('Y-m-d / h:i A') }}</td>
+                                        <td>{{ $transaction->created_at->format('Y-m-d / H:i') }}</td>
 
                                         <td class="text-end">
                                             <a class="btn align-text-top"

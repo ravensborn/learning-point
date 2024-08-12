@@ -181,7 +181,7 @@
                                             </span>
                                         </td>
                                         <td class="text-secondary">
-                                            {{ $session->created_at->format('Y-m-d / h:i A') }}
+                                            {{ $session->created_at->format('Y-m-d / H:i') }}
                                         </td>
                                     </tr>
                                 @endforeach
@@ -244,7 +244,7 @@
                                             {{ $transaction->user->name }}
                                         </td>
                                         <td class="text-secondary">
-                                            {{ $transaction->created_at->format('Y-m-d / h:i A') }}
+                                            {{ $transaction->created_at->format('Y-m-d / H:i') }}
                                         </td>
                                     </tr>
                                 @endforeach

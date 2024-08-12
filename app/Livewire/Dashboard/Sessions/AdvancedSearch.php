@@ -4,7 +4,6 @@ namespace App\Livewire\Dashboard\Sessions;
 
 use App\Models\Group;
 use App\Models\Session;
-use App\Models\Subject;
 use Jantinnerezo\LivewireAlert\LivewireAlert;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -28,9 +27,16 @@ class AdvancedSearch extends Component
     public string $sessionStatus = '';
     public string $sessionType = '';
 
+    public bool $showFilters = false;
+
     public function mount(): void
     {
         $this->availableSubjects = Group::with('subjects')->get();
+    }
+
+    public function toggleFilters()
+    {
+        $this->showFilters = !$this->showFilters;
     }
 
     #[Layout('layouts.app')]
@@ -40,7 +46,7 @@ class AdvancedSearch extends Component
         $sessions = Session::query();
 
         if ($this->sessionNumber) {
-            $sessions->where('session_number', trim($this->sessionNumber));
+            $sessions->where('number', 'LIKE',  '%' . trim($this->sessionNumber) . '%');
         }
 
         if ($this->teacher) {

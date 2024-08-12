@@ -143,7 +143,7 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table card-table table-vcenter text-nowrap datatable">
+                            <table class="table card-table table-vcenter datatable">
                                 <thead>
                                 <tr>
                                     <th class="w-1">
@@ -179,12 +179,20 @@
                                             /
                                             {{ ucfirst($session->subject?->name ?? '-') }}
                                         </td>
-                                        <td>
+                                        <td style="width: 100px;" class="text-center">
                                             <div>
-                                                {{ $session->time_in->format('d-M-y / h:i A') }}
+                                                <div>
+                                                    {{ $session->time_in->format('d-M-y') }}
+                                                </div>
                                             </div>
+
                                             <div>
-                                                {{ $session->time_out->format('d-M-y / h:i A') }}
+                                                <div class="border border-success rounded mt-1">
+                                                    {{ $session->time_in->format('H:i') }}
+                                                </div>
+                                                <div class="border border-warning rounded mt-1">
+                                                    {{ $session->time_out->format('H:i') }}
+                                                </div>
                                             </div>
                                         </td>
                                         <td>
@@ -213,24 +221,25 @@
                                         </td>
 
                                         <td class="text-end">
-                                            <a class="btn align-text-top"
-                                               href="{{ route('dashboard.sessions.manage', ['session' => $session->id]) }}">
-                                                <!--<editor-fold desc="SVG ICON">-->
-                                                <svg xmlns="http://www.w3.org/2000/svg"
-                                                     class="icon icon-tabler icon-tabler-notebook" width="24"
-                                                     height="24" viewBox="0 0 24 24" stroke-width="2"
-                                                     stroke="currentColor" fill="none" stroke-linecap="round"
-                                                     stroke-linejoin="round">
-                                                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-                                                    <path
-                                                        d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18"/>
-                                                    <path d="M13 8l2 0"/>
-                                                    <path d="M13 12l2 0"/>
-                                                </svg>
-                                                <!--</editor-fold>-->
-                                                Manage
-                                            </a>
-                                            <span class="dropdown">
+                                            <div class="d-flex justify-content-end gap-1">
+                                                <a class="btn align-text-top"
+                                                   href="{{ route('dashboard.sessions.manage', ['session' => $session->id]) }}">
+                                                    <!--<editor-fold desc="SVG ICON">-->
+                                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                                         class="icon icon-tabler icon-tabler-notebook" width="24"
+                                                         height="24" viewBox="0 0 24 24" stroke-width="2"
+                                                         stroke="currentColor" fill="none" stroke-linecap="round"
+                                                         stroke-linejoin="round">
+                                                        <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                                        <path
+                                                            d="M6 4h11a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-11a1 1 0 0 1 -1 -1v-14a1 1 0 0 1 1 -1m3 0v18"/>
+                                                        <path d="M13 8l2 0"/>
+                                                        <path d="M13 12l2 0"/>
+                                                    </svg>
+                                                    <!--</editor-fold>-->
+                                                    Manage
+                                                </a>
+                                                <span class="dropdown">
                                                   <button class="btn dropdown-toggle align-text-top"
                                                           data-bs-boundary="viewport"
                                                           data-bs-toggle="dropdown">Actions</button>
@@ -245,11 +254,25 @@
                                                           </button>
                                                       @endforeach
                                                         <div class="dropdown-divider"></div>
-                                                    <button class="dropdown-item"
-                                                            wire:click="prepareItemDeletion({{ $session->id }})">Delete</button>
-
+                                                    <button class="dropdown-item" wire:click="prepareItemDeletion({{ $session->id }})">
+                                                        Delete
+                                                    </button>
                                                   </div>
-                                                </span>
+                                            </span>
+                                                <span class="dropdown">
+                                                  <button class="btn dropdown-toggle align-text-top"
+                                                          data-bs-boundary="viewport"
+                                                          data-bs-toggle="dropdown">Members</button>
+                                                  <div class="dropdown-menu dropdown-menu-end">
+                                                      @foreach($session->attendees as $attendee)
+                                                          <button class="dropdown-item">
+                                                             {{ $attendee->student->full_name }}
+                                                         </button>
+                                                      @endforeach
+                                                  </div>
+                                            </span>
+                                            </div>
+
                                         </td>
                                     </tr>
                                 @empty

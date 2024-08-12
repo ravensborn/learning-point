@@ -116,12 +116,20 @@
                                                 </div>
                                             @endforeach
                                         </td>
-                                        <td>
+                                        <td style="width: 100px;" class="text-center">
                                             <div>
-                                                {{ $session->time_in->format('d-M-y / h:i A') }}
+                                                <div>
+                                                    {{ $session->time_in->format('d-M-y') }}
+                                                </div>
                                             </div>
+
                                             <div>
-                                                {{ $session->time_out->format('d-M-y / h:i A') }}
+                                                <div class="border border-success rounded mt-1">
+                                                    {{ $session->time_in->format('H:i') }}
+                                                </div>
+                                                <div class="border border-warning rounded mt-1">
+                                                    {{ $session->time_out->format('H:i') }}
+                                                </div>
                                             </div>
                                         </td>
                                         <td>

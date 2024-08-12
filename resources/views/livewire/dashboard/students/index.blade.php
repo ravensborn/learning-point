@@ -212,11 +212,17 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td @class(['text-danger' => ($student->wallet < 0)])>
-                                            ${{ number_format($student->wallet, 2) }}</td>
+
+                                        <td @class(['text-danger' => ($student->wallet < 0), 'text-success' => ($student->wallet > 0)])>
+                                            ${{ number_format($student->wallet, 2) }}
+                                        </td>
+
                                         <td @class(['text-danger' => ($student->getLinkedWallet() < 0), 'text-success' => ($student->getLinkedWallet() > 0)])>
-                                            ${{ number_format($student->getLinkedWallet(), 2) }}</td>
+                                            ${{ number_format($student->getLinkedWallet(), 2) }}
+                                        </td>
+
                                         <td>{{ $student->created_at->format('Y-m-d') }}</td>
+
                                         <td class="text-end">
                                             <a class="btn align-text-top"
                                                href="{{ route('dashboard.students.show', ['student' => $student->id]) }}">
@@ -237,7 +243,8 @@
                                                 <!--<editor-fold desc="SVG ICON">-->
                                                 <svg xmlns="http://www.w3.org/2000/svg"
                                                      class="icon icon-tabler icon-tabler-list" width="44" height="44"
-                                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" fill="none"
+                                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+                                                     fill="none"
                                                      stroke-linecap="round" stroke-linejoin="round">
                                                     <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
                                                     <path d="M9 6l11 0"/>

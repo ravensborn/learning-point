@@ -12,7 +12,18 @@
                 <div class="col-auto ms-auto">
                     <div class="btn-list">
                         <a href="{{ route('dashboard.subjects.bulk-assign') }}" class="btn btn-primary">
-                            <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-copy-check"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path stroke="none" d="M0 0h24v24H0z" /><path d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z" /><path d="M4.012 16.737a2 2 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1" /><path d="M11 14l2 2l4 -4" /></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 class="icon icon-tabler icons-tabler-outline icon-tabler-copy-check">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                                <path stroke="none" d="M0 0h24v24H0z"/>
+                                <path
+                                    d="M7 9.667a2.667 2.667 0 0 1 2.667 -2.667h8.666a2.667 2.667 0 0 1 2.667 2.667v8.666a2.667 2.667 0 0 1 -2.667 2.667h-8.666a2.667 2.667 0 0 1 -2.667 -2.667z"/>
+                                <path
+                                    d="M4.012 16.737a2 2 0 0 1 -1.012 -1.737v-10c0 -1.1 .9 -2 2 -2h10c.75 0 1.158 .385 1.5 1"/>
+                                <path d="M11 14l2 2l4 -4"/>
+                            </svg>
                             Bulk Assign Rates
                         </a>
                         <a href="#" class="btn btn-primary" data-bs-toggle="modal"
@@ -66,24 +77,28 @@
                                         </div>
                                     </div>
                                     <div class="ms-4">
-                                        Model:
+                                        Group:
                                         <div class="ms-2 d-inline-block">
-
-                                            <input list="availableSubjects" type="text"
-                                                   wire:model.live="selectedGroupId"
-                                                   class="form-control form-control-sm"
-                                                   aria-label="Search Group">
-
-                                            <datalist id="availableSubjects">
+                                            <select id="availableSubjects"
+                                                    class="form-control form-control-sm"
+                                                    wire:model.live="selectedGroupId"
+                                                    aria-label="Search Group">
+                                                <option value="all">All</option>
                                                 @foreach($groups as $group)
                                                     <option wire:key="subject-{{ $group->id }}"
                                                             value="{{ $group->id }}">
                                                         {{ $group->name }}
                                                     </option>
                                                 @endforeach
-                                            </datalist>
+                                            </select>
                                         </div>
-
+                                    </div>
+                                    <div class="ms-4">
+                                        <div>
+                                            @foreach($selectedGroups as $group)
+                                                <button wire:click.prevent="removeGroup({{ $group->id }})" class="btn btn-outline-info btn-sm">{{ $group->name }}</button>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -134,7 +149,7 @@
                                                href="{{ route('dashboard.subjects.tags.index', ['subject' => $subject->id]) }}">
                                                 Tags
                                             </a>
-                                                <span class="dropdown">
+                                            <span class="dropdown">
                                                   <button class="btn dropdown-toggle align-text-top"
                                                           data-bs-boundary="viewport"
                                                           data-bs-toggle="dropdown">Actions</button>

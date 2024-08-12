@@ -67,7 +67,7 @@ class Manage extends Component
 //        return $formattedDiff;
 //    }
 
-    public function calculateAttendeeChargeList($attendeeId): int
+    public function calculateAttendeeChargeList($attendeeId): float
     {
         $attendee = $this->session->attendees->find($attendeeId);
 
@@ -471,8 +471,6 @@ class Manage extends Component
                     $this->makeTransaction($attendee->student_id, 0, 'Free Session ' . $this->session->number . '.');
                 }
             }
-
-
         }
 
        if($complete) {

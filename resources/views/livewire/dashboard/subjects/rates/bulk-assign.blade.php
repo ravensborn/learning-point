@@ -98,7 +98,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="2" class="text-muted">
+                                        <td colspan="3" class="text-muted">
                                             No ratings at the moment.
                                         </td>
                                     </tr>
@@ -163,11 +163,21 @@
                 <div class="col-12 col-md-6">
                     <div class="card">
                         <div class="card-header">
-                            Overlapped Ratings
+                            <div class="d-flex w-100 justify-content-between">
+                                <div>
+                                    Overlapped Ratings
+                                </div>
+                                <div>
+                                    <label class="form-check form-switch">
+                                        <input class="form-check-input" wire:click="toggleOverride" type="checkbox">
+                                        <span class="form-check-label">Override</span>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
 
-                            @if(!empty($overlappedRatingSubjects))
+                            @if((!empty($overlappedRatingSubjects)) && !$override)
                                 <div class="text-warning">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -215,7 +225,7 @@
                             Complete
                         </div>
                         <div class="card-body">
-                            @if(!empty($overlappedRatingSubjects) || empty($selectedSubjectIds) || empty($this->ratings))
+                            @if(((!empty($overlappedRatingSubjects) && !$override) || empty($selectedSubjectIds) || empty($this->ratings)))
                                 <div class="text-warning">
                                     Please select the correct settings before proceeding.
                                 </div>

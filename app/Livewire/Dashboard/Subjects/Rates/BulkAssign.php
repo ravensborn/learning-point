@@ -5,6 +5,7 @@ namespace App\Livewire\Dashboard\Subjects\Rates;
 use App\Livewire\Forms\SubjectRateForm;
 use App\Models\Group;
 use App\Models\Subject;
+use App\Models\SubjectRate;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -26,6 +27,8 @@ class BulkAssign extends Component
 
     public array $overlappedRatingSubjects = [];
 
+    public bool $override = false;
+
     public function mount(): void
     {
         $this->subjects = Subject::orderBy('name')->get();
@@ -33,6 +36,11 @@ class BulkAssign extends Component
             ->has('subjects')
             ->orderBy('name')
             ->get();
+    }
+
+    public function toggleOverride(): void
+    {
+        $this->override = !$this->override;
     }
 
     public function selectSubject($id): void
@@ -87,7 +95,17 @@ class BulkAssign extends Component
     public function assignRatings(): void
     {
         foreach ($this->selectedSubjectIds as $selectedSubjectId) {
+
+
             foreach ($this->ratings as $rating) {
+
+                if($this->override) {
+                    $existingRating = SubjectRate::where('number_of_students', $rating['numberOfStudents'])
+                    ->where('subject_id', $selectedSubjectId);
+
+                    $existingRating?->delete();
+                }
+
                 $this->subjectRateForm->subject_id = $selectedSubjectId;
                 $this->subjectRateForm->rate = $rating['rate'];
                 $this->subjectRateForm->number_of_students = $rating['numberOfStudents'];

@@ -12,6 +12,7 @@ class SessionForm extends Form
     public $model;
 
     public string|null $user_id = '';
+    public string|null $created_by = '';
     public string $teacher_id = '';
     public string $subject_id = '';
     public string $type = '';
@@ -26,6 +27,7 @@ class SessionForm extends Form
     {
         return [
             'user_id' => ['nullable', 'string', 'exists:users,id'],
+            'created_by' => ['nullable', 'string'],
             'teacher_id' => ['required', 'string', 'exists:teachers,id'],
             'subject_id' => ['required', 'string', 'exists:subjects,id'],
             'type' => ['required', 'string', 'in:' . implode(',', array_keys(Session::TYPES))],
@@ -42,6 +44,7 @@ class SessionForm extends Form
     {
         return [
             'user_id' => 'user',
+            'created_by' => 'created by',
             'teacher_id' => 'teacher',
             'subject_id' => 'subject',
             'type' => 'type',
@@ -70,7 +73,7 @@ class SessionForm extends Form
     {
         $this->validate();
 
-        $data = $this->only(['user_id', 'teacher_id', 'subject_id', 'type', 'status', 'time_in', 'time_out', 'total', 'note', 'approval_note']);
+        $data = $this->only(['user_id', 'created_by', 'teacher_id', 'subject_id', 'type', 'status', 'time_in', 'time_out', 'total', 'note', 'approval_note']);
 
         $data['number'] = Session::generateNumber();
 

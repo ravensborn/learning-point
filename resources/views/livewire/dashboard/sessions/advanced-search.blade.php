@@ -10,7 +10,9 @@
                 </div>
 
                 <div class="col-auto ms-auto">
-
+                    <button class="btn btn-ghost-primary" wire:click="toggleFilters()">
+                        Toggle Filters
+                    </button>
                 </div>
             </div>
         </div>
@@ -19,71 +21,75 @@
     <div class="page-body">
         <div class="container-xl">
 
-            <div class="row row-cards">
+            @if($showFilters)
+                <div class="row row-cards">
 
-                <div class="col-12 col-md-4">
-                    <label class="form-label" for="sessionNumber">Session Number</label>
-                    <input type="text" class="form-control" placeholder="Session Number" id="sessionNumber"
-                           wire:model.live="sessionNumber">
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="sessionNumber">Session Number</label>
+                        <input type="text" class="form-control" placeholder="Session Number" id="sessionNumber"
+                               wire:model.live="sessionNumber">
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="teacher">Teacher</label>
+                        <input type="text" class="form-control" placeholder="Teacher Name or E-Mail" id="teacher"
+                               wire:model.live="teacher">
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="family">Family</label>
+                        <input type="text" class="form-control" placeholder="Family Name" id="family"
+                               wire:model.live="family">
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="student">Student</label>
+                        <input type="text" class="form-control" placeholder="Student Name, E-Mail, or Phone Number"
+                               id="student"
+                               wire:model.live="student">
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="subjectId">Subject</label>
+                        <select id="subjectId" class="form-control" wire:model.live="subjectId">
+                            <option value="">All</option>
+                            @foreach($availableSubjects as $indexGroup => $subjectGroup)
+                                <optgroup label="{{ $subjectGroup->name }}"
+                                          wire:key="subject-group-{{ $indexGroup }}">
+                                    @foreach($subjectGroup->subjects as $subject)
+                                        <option value="{{ $subject->id }}"
+                                                wire:key="subject-{{ $subject->id }}">{{ $subject->name }}</option>
+                                    @endforeach
+                                </optgroup>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="group">Group</label>
+                        <input type="text" class="form-control" placeholder="Group Name" id="group"
+                               wire:model.live="group">
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="sessionDate">Session Date</label>
+                        <input type="date" class="form-control" placeholder="SessionDate" id="sessionDate"
+                               wire:model.live="sessionDate">
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="sessionStatus">Session Status</label>
+                        <select id="status" wire:model.live="sessionStatus" class="form-control">
+                            <option value="all">All</option>
+                            @foreach(\App\Models\Session::STATUSES as $key => $name)
+                                <option value="{{ $key }}">{{ $name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <label class="form-label" for="sessionType">Session Type</label>
+                        <select id="sessionType" wire:model.live="sessionType" class="form-control">
+                            <option value="all">All</option>
+                            @foreach(\App\Models\Session::TYPES as $key => $name)
+                                <option value="{{ $key }}">{{ $name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-                <div class="col-12 col-md-4">
-                    <label class="form-label" for="teacher">Teacher</label>
-                    <input type="text" class="form-control" placeholder="Teacher Name or E-Mail" id="teacher"
-                           wire:model.live="teacher">
-                </div>
-                <div class="col-12 col-md-4">
-                    <label class="form-label" for="family">Family</label>
-                    <input type="text" class="form-control" placeholder="Family Name" id="family"
-                           wire:model.live="family">
-                </div>
-                <div class="col-12 col-md-4">
-                    <label class="form-label" for="student">Student</label>
-                    <input type="text" class="form-control" placeholder="Student Name, E-Mail, or Phone Number" id="student"
-                           wire:model.live="student">
-                </div>
-                <div class="col-12 col-md-4">
-                    <label class="form-label" for="subjectId">Subject</label>
-                    <select id="subjectId" class="form-control" wire:model.live="subjectId">
-                        <option value="">All</option>
-                        @foreach($availableSubjects as $indexGroup => $subjectGroup)
-                            <optgroup label="{{ $subjectGroup->name }}"
-                                      wire:key="subject-group-{{ $indexGroup }}">
-                                @foreach($subjectGroup->subjects as $subject)
-                                    <option value="{{ $subject->id }}"
-                                            wire:key="subject-{{ $subject->id }}">{{ $subject->name }}</option>
-                                @endforeach
-                            </optgroup>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-12 col-md-4">
-                    <label class="form-label" for="group">Group</label>
-                    <input type="text" class="form-control" placeholder="Group Name" id="group" wire:model.live="group">
-                </div>
-                <div class="col-12 col-md-4">
-                    <label class="form-label" for="sessionDate">Session Date</label>
-                    <input type="date" class="form-control" placeholder="SessionDate" id="sessionDate"
-                           wire:model.live="sessionDate">
-                </div>
-                <div class="col-12 col-md-4">
-                    <label class="form-label" for="sessionStatus">Session Status</label>
-                    <select id="status" wire:model.live="sessionStatus" class="form-control">
-                        <option value="all">All</option>
-                        @foreach(\App\Models\Session::STATUSES as $key => $name)
-                            <option value="{{ $key }}">{{ $name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-12 col-md-4">
-                    <label class="form-label" for="sessionType">Session Type</label>
-                    <select id="sessionType" wire:model.live="sessionType" class="form-control">
-                        <option value="all">All</option>
-                        @foreach(\App\Models\Session::TYPES as $key => $name)
-                            <option value="{{ $key }}">{{ $name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-            </div>
+            @endif
 
             <div class="row row-deck row-cards mt-3">
 
@@ -145,12 +151,20 @@
                                             /
                                             {{ ucfirst($session->subject?->name ?? '-') }}
                                         </td>
-                                        <td>
+                                        <td style="width: 100px;" class="text-center">
                                             <div>
-                                                {{ $session->time_in->format('d-M-y / h:i A') }}
+                                                <div>
+                                                    {{ $session->time_in->format('d-M-y') }}
+                                                </div>
                                             </div>
+
                                             <div>
-                                                {{ $session->time_out->format('d-M-y / h:i A') }}
+                                                <div class="border border-success rounded mt-1">
+                                                    {{ $session->time_in->format('H:i') }}
+                                                </div>
+                                                <div class="border border-warning rounded mt-1">
+                                                    {{ $session->time_out->format('H:i') }}
+                                                </div>
                                             </div>
                                         </td>
                                         <td>

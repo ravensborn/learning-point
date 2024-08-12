@@ -12,6 +12,7 @@ use App\Models\Subject;
 use App\Models\SubjectTag;
 use App\Models\Teacher;
 use Barryvdh\Reflection\DocBlock\Tag;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\Layout;
 use Livewire\Component;
@@ -31,9 +32,24 @@ class Create extends Component
     public $students;
     public array $selectedTagIds = [];
 
+    public string $date = '';
+    public string $timeIn = '';
+    public string $timeOut = '';
+
     public function store(): void
     {
         $this->sessionForm->user_id = auth()->user()->id;
+        $this->sessionForm->created_by = 'User: ' . auth()->user()->name;
+
+        $validated = $this->validate([
+            'timeIn' => 'required',
+            'timeOut' => 'required',
+            'date' => 'required',
+        ]);
+
+        $this->sessionForm->time_in = Carbon::createFromFormat('Y-m-d H:i', $this->date . ' ' . $this->timeIn)->format('Y-m-d\TH:i:s');
+        $this->sessionForm->time_out = Carbon::createFromFormat('Y-m-d H:i', $this->date . ' ' . $this->timeOut)->format('Y-m-d\TH:i:s');
+
         $model = $this->sessionForm->store();
 
         $this->storeAttendees($model->id);
@@ -78,9 +94,9 @@ class Create extends Component
     }
 
 
-    public function updatedSessionFormTimeIn(): void
+    public function updatedTimeIn(): void
     {
-        $this->sessionForm->time_out = $this->sessionForm->time_in;
+        $this->timeOut = $this->timeIn;
     }
 
     public function updatedSessionFormSubjectId(): void

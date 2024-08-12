@@ -132,22 +132,21 @@
 
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Time in</div>
-                                    <div class="datagrid-content">{{ $session->time_in->format('h:i A') }}</div>
+                                    <div class="datagrid-content">{{ $session->time_in->format('H:i') }}</div>
                                 </div>
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Time out</div>
                                     <div
-                                        class="datagrid-content">{{ $session->time_out->format('h:i A') }}</div>
+                                        class="datagrid-content">{{ $session->time_out->format('H:i') }}</div>
                                 </div>
-
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Created By</div>
-                                    <div class="datagrid-content">{{ $session->user->name ?? '-' }}</div>
+                                    <div class="datagrid-content">{{ $session->created_by ?? '-' }}</div>
                                 </div>
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Created At</div>
                                     <div
-                                        class="datagrid-content">{{ $session->created_at->format('Y-m-d / h:i A') }}</div>
+                                        class="datagrid-content">{{ $session->created_at->format('Y-m-d / H:i') }}</div>
                                 </div>
 
                                 <div class="datagrid-item">
