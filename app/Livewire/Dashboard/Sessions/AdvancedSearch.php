@@ -68,7 +68,7 @@ class AdvancedSearch extends Component
         if ($this->student) {
             $sessions->whereHas('attendees', function ($query) {
                 $query->whereHas('student', function ($query) {
-                    $query->whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($this->search) . "%' ")
+                    $query->whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($this->student) . "%' ")
                         ->orWhere('primary_phone_number', 'LIKE', '%' . trim($this->student) . '%')
                         ->orWhere('secondary_phone_number', 'LIKE', '%' . trim($this->student) . '%')
                         ->orWhere('email', 'LIKE', '%' . trim($this->student) . '%');
