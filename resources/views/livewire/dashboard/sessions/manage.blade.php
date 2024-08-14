@@ -85,70 +85,27 @@
                                     <div class="datagrid-content">{{ $session->number }}</div>
                                 </div>
                                 <div class="datagrid-item">
-                                    <div class="datagrid-title">Teacher</div>
-                                    <div class="datagrid-content">{{ $session->teacher->name }}</div>
-                                </div>
-                                <div class="datagrid-item">
-                                    <div class="datagrid-title">Group / Subject</div>
-                                    <div class="datagrid-content">{{ $session->subject->group->name }}
-                                        / {{ $session->subject->name }}</div>
-                                </div>
-                                <div class="datagrid-item">
-                                    <div class="datagrid-title">Date</div>
-                                    <div class="datagrid-content">{{ $session->time_in->format('d-M-y') }}</div>
-                                </div>
-                                <div class="datagrid-item">
-                                    <div class="datagrid-title">No. of Students</div>
-                                    <div class="datagrid-content">
-                                        <span class="badge text-body">
-                                            {{ $session->attendees->where('attending', true)->count() }} / {{ $session->attendees->count() }}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="datagrid-item">
-                                    <div class="datagrid-title">Duration</div>
-                                    <div
-                                        class="datagrid-content">
-                                        {{ $session->sessionDuration }}
-                                    </div>
-                                </div>
-
-                                <div class="datagrid-item">
-                                    <div class="datagrid-title">Total</div>
-                                    <div class="datagrid-content">
-                                        <span class="badge text-body">
-                                            ${{ number_format($sessionTotal, 2) }}
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="datagrid-item">
-                                    <div class="datagrid-title">Status</div>
-                                    <div class="datagrid-content">
-                                        <span class="badge text-white {{ $session->status_color_class }}">
-                                            {{ $session->status_name }}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div class="datagrid-item">
-                                    <div class="datagrid-title">Time in</div>
-                                    <div class="datagrid-content">{{ $session->time_in->format('H:i') }}</div>
-                                </div>
-                                <div class="datagrid-item">
-                                    <div class="datagrid-title">Time out</div>
-                                    <div
-                                        class="datagrid-content">{{ $session->time_out->format('H:i') }}</div>
-                                </div>
-                                <div class="datagrid-item">
                                     <div class="datagrid-title">Created By</div>
                                     <div class="datagrid-content">{{ $session->created_by ?? '-' }}</div>
+                                </div>
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Managed By</div>
+                                    <div class="datagrid-content">{{ $session->user->name ?? '-' }}</div>
                                 </div>
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Created At</div>
                                     <div
                                         class="datagrid-content">{{ $session->created_at->format('Y-m-d / H:i') }}</div>
                                 </div>
-
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Teacher</div>
+                                    <div class="datagrid-content">{{ $session->teacher->name }}</div>
+                                </div>
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Subject</div>
+                                    <div class="datagrid-content">{{ $session->subject->group->name }}
+                                        / {{ $session->subject->name }}</div>
+                                </div>
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Tags</div>
                                     <div class="datagrid-content">
@@ -165,12 +122,20 @@
                                         @endif
                                     </div>
                                 </div>
-
                                 <div class="datagrid-item">
-                                    <div class="datagrid-title">Cancellation Fee Limit</div>
+                                    <div class="datagrid-title">Time in</div>
+                                    <div class="datagrid-content">{{ $session->time_in->format('Y-m-d / H:i') }}</div>
+                                </div>
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Time out</div>
+                                    <div
+                                        class="datagrid-content">{{ $session->time_out->format('Y-m-d / H:i') }}</div>
+                                </div>
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Duration</div>
                                     <div
                                         class="datagrid-content">
-                                        ${{ number_format($this->settings->maximum_session_cancellation_charge_limit, 2) }}
+                                        {{ $session->sessionDuration }}
                                     </div>
                                 </div>
                                 <div class="datagrid-item">
@@ -181,7 +146,30 @@
                                         </span>
                                     </div>
                                 </div>
-
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Attended</div>
+                                    <div class="datagrid-content">
+                                        <span class="badge text-body">
+                                            {{ $session->attendees->where('attending', true)->count() }} / {{ $session->attendees->count() }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Total</div>
+                                    <div class="datagrid-content">
+                                        <span class="badge text-body">
+                                            ${{ number_format($session->total, 2) }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="datagrid-item">
+                                    <div class="datagrid-title">Status</div>
+                                    <div class="datagrid-content">
+                                        <span class="badge text-body {{ $session->status_color_class }}">
+                                            {{ $session->status_name }}
+                                        </span>
+                                    </div>
+                                </div>
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Approval Note</div>
                                     <div class="datagrid-content">

@@ -126,6 +126,7 @@ class Index extends Component
         }
     }
 
+
     #[Layout('layouts.app')]
     public function render()
     {
@@ -173,6 +174,19 @@ class Index extends Component
         ]);
     }
 
+    public $peekSession = null;
+
+    public function openShowSessionDetailsModal($id): void
+    {
+        $this->peekSession = Session::findOrFail($id);
+        $this->dispatch('toggle-modal-show-session');
+    }
+
+    public function closeShowSessionModal(): void
+    {
+        $this->peekSession = null;
+        $this->dispatch('toggle-modal-show-session');
+    }
 
 //    public function update(): void
 //    {

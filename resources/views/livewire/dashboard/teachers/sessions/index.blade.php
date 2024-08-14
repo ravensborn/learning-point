@@ -155,7 +155,7 @@
                                         <td>{{ ucfirst($session->teacher?->name ?? '-') }}</td>
                                         <td>{{ ucfirst($session->subject?->name ?? '-') }}</td>
                                         <td>
-                                            <span class="badge text-white {{ $session->status_color_class }}">
+                                            <span class="badge text-body {{ $session->status_color_class }}">
                                                 {{ $session->status_name }}
                                             </span>
                                         </td>

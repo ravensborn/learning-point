@@ -223,6 +223,14 @@
                                         <td class="text-end">
                                             <div class="d-flex justify-content-end gap-1">
                                                 <a class="btn align-text-top"
+                                                   href=""
+                                                   wire:click.prevent="openShowSessionDetailsModal({{ $session->id }})">
+                                                    <!--<editor-fold desc="SVG ICON">-->
+                                                    <svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-maximize"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 8v-2a2 2 0 0 1 2 -2h2" /><path d="M4 16v2a2 2 0 0 0 2 2h2" /><path d="M16 4h2a2 2 0 0 1 2 2v2" /><path d="M16 20h2a2 2 0 0 0 2 -2v-2" /></svg>
+                                                    <!--</editor-fold>-->
+                                                    Peek
+                                                </a>
+                                                <a class="btn align-text-top"
                                                    href="{{ route('dashboard.sessions.manage', ['session' => $session->id]) }}">
                                                     <!--<editor-fold desc="SVG ICON">-->
                                                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -254,23 +262,13 @@
                                                           </button>
                                                       @endforeach
                                                         <div class="dropdown-divider"></div>
-                                                    <button class="dropdown-item" wire:click="prepareItemDeletion({{ $session->id }})">
+                                                    <button class="dropdown-item"
+                                                            wire:click="prepareItemDeletion({{ $session->id }})">
                                                         Delete
                                                     </button>
                                                   </div>
                                             </span>
-                                                <span class="dropdown">
-                                                  <button class="btn dropdown-toggle align-text-top"
-                                                          data-bs-boundary="viewport"
-                                                          data-bs-toggle="dropdown">Members</button>
-                                                  <div class="dropdown-menu dropdown-menu-end">
-                                                      @foreach($session->attendees as $attendee)
-                                                          <button class="dropdown-item">
-                                                             {{ $attendee->student->full_name }}
-                                                         </button>
-                                                      @endforeach
-                                                  </div>
-                                            </span>
+
                                             </div>
 
                                         </td>
@@ -356,10 +354,41 @@
         </div>
     </div>
 
+    <div class="modal modal-blur fade" id="modal-show-session" tabindex="-1" style="display: none;" aria-hidden="true"
+         wire:ignore.self>
+        <div class="modal-dialog modal-full-width modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-status bg-danger"></div>
+                <div class="modal-body text-center py-4">
+
+                    @if($this->peekSession)
+                        <iframe height="700px" width="100%" src="{{ route('dashboard.sessions.manage', $this->peekSession->id) }}"></iframe>
+                    @endif
+
+
+                </div>
+                <div class="modal-footer">
+                    <div class="w-100">
+                        <div class="row">
+                            <div class="col">
+                                <a class="btn btn-ghost-primary w-100" data-bs-dismiss="modal"
+                                   wire:click.prevent="closeShowSessionModal()">
+                                    Close
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('livewire:initialized', () => {
 
             const deleteModal = new bootstrap.Modal('#modal-delete');
+            const showSessionModal = new bootstrap.Modal('#modal-show-session');
 
             @this.
             on('close-all-modals', (event) => {
@@ -369,6 +398,11 @@
             @this.
             on('toggle-modal-delete-confirmation', (event) => {
                 deleteModal.toggle();
+            });
+
+            @this.
+            on('toggle-modal-show-session', (event) => {
+                showSessionModal.toggle();
             });
         });
     </script>

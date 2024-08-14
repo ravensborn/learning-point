@@ -101,7 +101,7 @@
                                             {{ $session->sessionDuration }}
                                         </td>
                                         <td>
-                                            <span class="badge text-white {{ $session->status_color_class }}">
+                                            <span class="badge text-body {{ $session->status_color_class }}">
                                                 {{ $session->status_name }}
                                             </span>
                                         </td>

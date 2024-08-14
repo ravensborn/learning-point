@@ -68,26 +68,9 @@
 
                         <div class="mb-3 row">
 
-                            <label for="date" class="col-sm-2 col-form-label required">Date</label>
-                            <div class="col-sm-10">
-                                <input type="date" class="form-control" id="date"
-                                       wire:model.live="date">
-                                @error('date')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                        </div>
-
-                        <div class="mb-3 row">
-
                             <label for="time-in" class="col-sm-2 col-form-label required">Time in</label>
                             <div class="col-sm-10">
-                                <input type="time" class="form-control" id="time-in"
-                                       wire:model.live="timeIn">
-                                @error('timeIn')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
+                                <input type="datetime-local" class="form-control" id="time-in" wire:model.live="sessionForm.time_in">
                                 @error('sessionForm.time_in')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
@@ -98,11 +81,7 @@
                         <div class="mb-3 row">
                             <label for="time-out" class="col-sm-2 col-form-label required">Time out</label>
                             <div class="col-sm-10">
-                                <input type="time" class="form-control" id="time-out"
-                                       wire:model="timeOut">
-                                @error('timeOut')
-                                <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
+                                <input type="datetime-local" class="form-control" id="time-out" wire:model="sessionForm.time_out">
                                 @error('sessionForm.time_out')
                                 <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror

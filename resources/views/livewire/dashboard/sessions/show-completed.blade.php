@@ -116,7 +116,7 @@
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Status</div>
                                     <div class="datagrid-content">
-                                        <span class="badge text-white {{ $session->status_color_class }}">
+                                        <span class="badge text-body {{ $session->status_color_class }}">
                                             {{ $session->status_name }}
                                         </span>
                                     </div>

@@ -81,10 +81,11 @@
                                 <tr>
 
                                     <th class="w-1">No.</th>
-                                    <th>Subject</th>
+                                    <th>Group / Subject</th>
+                                    <th>Date</th>
                                     <th>Attendees</th>
                                     <th>Students</th>
-                                    <th>Date</th>
+
                                     <th>Duration</th>
                                     <th>Type</th>
                                     <th>Status</th>
@@ -104,17 +105,9 @@
                                             </span>
                                         </td>
                                         <td>
+                                            {{ ucfirst($session->subject?->group?->name ?? '-') }}
+                                            /
                                             {{ ucfirst($session->subject?->name ?? '-') }}
-                                        </td>
-                                        <td>
-                                            {{ $session->attendees->where('attending', true)->count() . '/' . $session->attendees->count() }}
-                                        </td>
-                                        <td>
-                                            @foreach($session->attendees as $attendee)
-                                                <div class="border border-azure rounded p-1 mb-1">
-                                                    {{ $attendee->student->full_name }}
-                                                </div>
-                                            @endforeach
                                         </td>
                                         <td style="width: 100px;" class="text-center">
                                             <div>
@@ -132,6 +125,17 @@
                                                 </div>
                                             </div>
                                         </td>
+                                        <td>
+                                            {{ $session->attendees->where('attending', true)->count() . '/' . $session->attendees->count() }}
+                                        </td>
+                                        <td>
+                                            @foreach($session->attendees as $attendee)
+                                                <div class="border border-azure rounded p-1 mb-1">
+                                                    {{ $attendee->student->full_name }}
+                                                </div>
+                                            @endforeach
+                                        </td>
+
                                         <td>
                                             {{ $session->sessionDuration  }}
                                         </td>
