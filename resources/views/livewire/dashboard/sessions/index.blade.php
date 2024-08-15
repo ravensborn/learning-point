@@ -363,7 +363,7 @@
                 <div class="modal-body text-center py-4">
 
                     @if($this->peekSession)
-                        <iframe height="700px" width="100%" src="{{ route('dashboard.sessions.manage', $this->peekSession->id) }}"></iframe>
+                        <iframe height="700px" width="100%" src="{{ route('dashboard.sessions.show-completed', $this->peekSession->id) . '?peek-iframe=enabled' }}"></iframe>
                     @endif
 
 

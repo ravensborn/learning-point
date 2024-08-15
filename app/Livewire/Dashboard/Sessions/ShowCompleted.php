@@ -18,9 +18,9 @@ class ShowCompleted extends Component
 
     public function mount(Session $session): void
     {
-        if($session->status != Session::STATUS_COMPLETED) {
-            $this->redirectRoute('dashboard.sessions.manage', $session->id);
-        }
+//        if($session->status != Session::STATUS_COMPLETED) {
+//            $this->redirectRoute('dashboard.sessions.manage', $session->id);
+//        }
         $this->session = $session;
 
         $this->duration = round($session->time_out->floatDiffInRealHours($session->time_in), 2);

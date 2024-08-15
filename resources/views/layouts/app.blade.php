@@ -20,6 +20,33 @@
         }
     </script>
 
+    @if(request()->has('peek-iframe'))
+        
+
+        <style>
+            header {
+                display: none !important;
+                margin-left: 0 !important;
+            }
+
+            header .container-xl {
+                display: none !important;
+
+            }
+            aside {
+                display: none !important;
+            }
+
+            .page-wrapper {
+                margin-left: 0 !important;
+            }
+
+            footer {
+                display: none !important;
+            }
+        </style>
+    @endif
+
     <!-- CSS files -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/core@latest/dist/css/tabler.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">

@@ -123,6 +123,14 @@
                                     </div>
                                 </div>
                                 <div class="datagrid-item">
+                                    <div class="datagrid-title">Type</div>
+                                    <div class="datagrid-content">
+                                        <span class="badge text-body">
+                                            {{ $session->type_name }}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="datagrid-item">
                                     <div class="datagrid-title">Time in</div>
                                     <div class="datagrid-content">{{ $session->time_in->format('Y-m-d / H:i') }}</div>
                                 </div>
@@ -138,14 +146,7 @@
                                         {{ $session->sessionDuration }}
                                     </div>
                                 </div>
-                                <div class="datagrid-item">
-                                    <div class="datagrid-title">Type</div>
-                                    <div class="datagrid-content">
-                                        <span class="badge text-body">
-                                            {{ $session->type_name }}
-                                        </span>
-                                    </div>
-                                </div>
+
                                 <div class="datagrid-item">
                                     <div class="datagrid-title">Attended</div>
                                     <div class="datagrid-content">
