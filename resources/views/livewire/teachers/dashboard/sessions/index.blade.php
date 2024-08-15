@@ -85,7 +85,6 @@
                                     <th>Date</th>
                                     <th>Attendees</th>
                                     <th>Students</th>
-
                                     <th>Duration</th>
                                     <th>Type</th>
                                     <th>Status</th>
@@ -97,7 +96,6 @@
                                 <tbody>
                                 @forelse($sessions as $session)
                                     <tr wire:key="{{ $session->id }}">
-
                                         <td>
                                             <span
                                                 class="text-secondary">
@@ -130,8 +128,13 @@
                                         </td>
                                         <td>
                                             @foreach($session->attendees as $attendee)
-                                                <div class="border border-azure rounded p-1 mb-1">
+                                                <div class="border border-azure rounded p-1 mb-1 d-flex justify-content-between" style="width: 300px;">
                                                     {{ $attendee->student->full_name }}
+                                                    @if($attendee->attending)
+                                                        <span class="badge bg-azure-lt">Attended</span>
+                                                    @else
+                                                        <span class="badge bg-red-lt">Not Attended</span>
+                                                    @endif
                                                 </div>
                                             @endforeach
                                         </td>
