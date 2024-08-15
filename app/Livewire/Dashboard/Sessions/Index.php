@@ -185,7 +185,7 @@ class Index extends Component
     public function closeShowSessionModal(): void
     {
         $this->peekSession = null;
-        $this->dispatch('toggle-modal-show-session');
+        $this->dispatch('close-all-modals');
     }
 
 //    public function update(): void
