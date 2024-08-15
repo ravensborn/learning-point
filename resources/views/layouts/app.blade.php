@@ -21,7 +21,7 @@
     </script>
 
     @if(request()->has('peek-iframe'))
-        
+
 
         <style>
             header {
