@@ -128,6 +128,7 @@ class Create extends Component
                 $query->orderBy('name');
             }
         ])->where('model', Subject::class)
+            ->orderBy('name')
             ->get()
             ->filter(function ($group) {
                 if ($group->subjects->count()) {
