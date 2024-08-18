@@ -28,10 +28,10 @@
                     </div>
                     <div class="card-body">
 
-                        <div class="mb-3 row" wire:ignore.self>
+                        <div class="mb-3 row">
                             <label for="teacher_id" class="col-sm-2 col-form-label required">Subject</label>
                             <div class="col-sm-10">
-                                <select id="teacher_id" class="form-control" wire:model.live="sessionForm.subject_id">
+                                <select id="teacher_id" class="form-control" wire:model.live="sessionForm.subject_id" wire:ignore>
                                     <option value="" wire:key="subject-group-main">-- Select subject --</option>
                                     @foreach($availableSubjects as $indexGroup => $subjectGroup)
                                         <optgroup label="{{ $subjectGroup->name }}"
