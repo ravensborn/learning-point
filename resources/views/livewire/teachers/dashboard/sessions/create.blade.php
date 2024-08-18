@@ -32,7 +32,7 @@
                             <label for="teacher_id" class="col-sm-2 col-form-label required">Subject</label>
                             <div class="col-sm-10">
                                 <select id="teacher_id" class="form-control" wire:model.live="sessionForm.subject_id">
-                                    <option value="">-- Select subject --</option>
+                                    <option value="" wire:key="subject-group-main">-- Select subject --</option>
                                     @foreach($availableSubjects as $indexGroup => $subjectGroup)
                                         <optgroup label="{{ $subjectGroup->name }}"
                                                   wire:key="subject-group-{{ $indexGroup }}">
