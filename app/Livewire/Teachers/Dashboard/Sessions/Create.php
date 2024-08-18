@@ -41,7 +41,7 @@ class Create extends Component
     {
         $this->sessionForm->user_id = null;
         $this->sessionForm->teacher_id = auth()->guard('teacher')->user()->id;
-        $this->sessionForm->created_by = 'Teacher: ' . auth()->user()->name;
+        $this->sessionForm->created_by = 'Teacher: ' . auth()->guard('teacher')->user()->name;
 
 
         $model = $this->sessionForm->store();
