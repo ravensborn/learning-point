@@ -28,7 +28,7 @@
                     </div>
                     <div class="card-body">
 
-                        <div class="mb-3 row">
+                        <div class="mb-3 row" wire:ignore>
                             <label for="teacher_id" class="col-sm-2 col-form-label required">Subject</label>
                             <div class="col-sm-10">
                                 <select id="teacher_id" class="form-control" wire:model.live="sessionForm.subject_id">
