@@ -64,19 +64,19 @@ Route::get('logout', function () {
 
 Route::get('reset-all', function () {
 
-    $sessions = Session::all();
+    $sessions = App\Models\Session::all();
 
     foreach($sessions as $session) {
         $session->delete();
     }
 
-    $transactions = Transaction::all();
+    $transactions = App\Models\Transaction::all();
     
     foreach($transactions as $transaction) {
         $transaction->delete();
     }
 
-    $students = Student::all();
+    $students = App\Models\Student::all();
 
     foreach($students as $student) {
         $student->update(['wallet' => 0]);
