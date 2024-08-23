@@ -62,6 +62,30 @@ Route::get('logout', function () {
 
 })->name('logout');
 
+Route::get('reset-all', function () {
+
+    $sessions = Session::all();
+
+    foreach($sessions as $session) {
+        $session->delete();
+    }
+
+    $transactions = Transaction::all();
+    
+    foreach($transactions as $transaction) {
+        $transaction->delete();
+    }
+
+    $students = Student::all();
+
+    foreach($students as $student) {
+        $student->update(['wallet' => 0]);
+    }
+
+    return 'done';
+
+});
+
 Route::middleware(['auth'])->group(function () {
 
     Route::get('/', Home::class)
