@@ -111,10 +111,11 @@ class Create extends Component
 
     public function updatedStudentSearchQuery(): void
     {
-        $this->foundStudents = Student::whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($this->studentSearchQuery) . "%' ")
-            ->orWhere('primary_phone_number', 'LIKE', '%' . trim($this->studentSearchQuery) . '%')
-            ->orWhere('secondary_phone_number', 'LIKE', '%' . trim($this->studentSearchQuery) . '%')
-            ->orWhere('email', 'LIKE', '%' . trim($this->studentSearchQuery) . '%')
+        $search = trim($this->studentSearchQuery);
+        $this->foundStudents = Student::whereRaw("concat(trim(first_name), ' ', trim(middle_name), ' ', trim(last_name)) like ?", ["%{$search}%"])
+            ->orWhere('primary_phone_number', 'LIKE', '%' . $search . '%')
+            ->orWhere('secondary_phone_number', 'LIKE', '%' . $search . '%')
+            ->orWhere('email', 'LIKE', '%' . $search . '%')
             ->limit(5)
             ->get();
     }

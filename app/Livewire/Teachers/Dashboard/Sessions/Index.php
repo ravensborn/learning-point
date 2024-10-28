@@ -41,14 +41,15 @@ class Index extends Component
             ->orderBy('id', 'desc');
 
         if ($this->search) {
-
+            $search = trim($this->search);
             $this->resetPage();
 
-            $sessions->whereHas('subject', function ($query) {
-                $query->where('name', 'LIKE', '%' . trim($this->search) . '%');
-            })->orWhereHas('attendees', function ($query) {
-                $query->whereHas('student', function ($q) {
-                    $q->whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($this->search) . "%' ");
+            $sessions->whereHas('subject', function ($query) use ($search) {
+                $query->where('name', 'LIKE', '%' . $search . '%');
+            })->orWhereHas('attendees', function ($query) use ($search) {
+                $query->whereHas('student', function ($q) use ($search) {
+
+                    $q->whereRaw("concat(trim(first_name), ' ', trim(middle_name), ' ', trim(last_name)) like ?", ["%{$search}%"]);
                 });
             });
         }

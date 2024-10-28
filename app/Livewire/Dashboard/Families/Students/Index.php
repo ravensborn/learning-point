@@ -38,10 +38,11 @@ class Index extends Component
     {
         if ($this->memberSearchQuery) {
             $this->searchedMemberList = Student::where('family_id', null)->where(function (Builder $query) {
-                $query->whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($this->memberSearchQuery) . "%' ")
-                    ->orWhere('primary_phone_number', 'LIKE', '%' . trim($this->memberSearchQuery) . '%')
-                    ->orWhere('secondary_phone_number', 'LIKE', '%' . trim($this->memberSearchQuery) . '%')
-                    ->orWhere('email', 'LIKE', '%' . trim($this->memberSearchQuery) . '%');
+                $search = trim($this->memberSearchQuery);
+                $query->whereRaw("concat(trim(first_name), ' ', trim(middle_name), ' ', trim(last_name)) like ?", ["%{$search}%"])
+                    ->orWhere('primary_phone_number', 'LIKE', '%' . $search . '%')
+                    ->orWhere('secondary_phone_number', 'LIKE', '%' . $search . '%')
+                    ->orWhere('email', 'LIKE', '%' . $search. '%');
             })->limit(10)->get();
         } else {
             $this->searchedMemberList = collect();
@@ -63,8 +64,10 @@ class Index extends Component
 
         if ($this->search) {
 
+            $search = trim($this->search);
+
             $this->resetPage();
-            $students->whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($this->search) . "%' ");
+            $students->whereRaw("concat(trim(first_name), ' ', trim(middle_name), ' ', trim(last_name)) like ?", ["%{$search}%"]);
 
         }
 

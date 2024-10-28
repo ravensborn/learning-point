@@ -29,10 +29,11 @@ class Index extends Component
             $this->resetPage();
             $families->where('name', 'LIKE', '%' . trim($this->search) . '%')
                 ->orWhereHas('students', function ($query) {
-                    $query->whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($this->search) . "%' ")
-                        ->orWhere('primary_phone_number', 'LIKE', '%' . trim($this->search) . '%')
-                        ->orWhere('secondary_phone_number', 'LIKE', '%' . trim($this->search) . '%')
-                        ->orWhere('email', 'LIKE', '%' . trim($this->search) . '%');
+                    $search = trim($this->search);
+                    $query->whereRaw("concat(trim(first_name), ' ', trim(middle_name), ' ', trim(last_name)) like ?", ["%{$search}%"])
+                        ->orWhere('primary_phone_number', 'LIKE', '%' . $search . '%')
+                        ->orWhere('secondary_phone_number', 'LIKE', '%' . $search . '%')
+                        ->orWhere('email', 'LIKE', '%' . $search                                            . '%');
             });
         }
 

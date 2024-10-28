@@ -29,10 +29,10 @@ trait TransactionModalFunctions
 
             $search = trim($this->transferToQuery);
 
-            $this->transferToList = Student::whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($search) . "%' ")
-                ->orWhere('primary_phone_number', 'LIKE', '%' . trim($search) . '%')
-                ->orWhere('secondary_phone_number', 'LIKE', '%' . trim($search) . '%')
-                ->orWhere('email', 'LIKE', '%' . trim($search) . '%')
+            $this->transferToList = Student::whereRaw("concat(trim(first_name), ' ', trim(middle_name), ' ', trim(last_name)) like ?", ["%{$search}%"])
+                ->orWhere('primary_phone_number', 'LIKE', '%' . $search . '%')
+                ->orWhere('secondary_phone_number', 'LIKE', '%' . $search . '%')
+                ->orWhere('email', 'LIKE', '%' . $search . '%')
                 ->limit(5)
                 ->get();
 

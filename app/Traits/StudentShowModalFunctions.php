@@ -113,10 +113,11 @@ trait StudentShowModalFunctions
             $this->availableFamilies = Family::where('name', 'LIKE', '%' . trim($this->searchFamilyQuery) . '%')
                 ->orWhere('number', 'LIKE', '%' . trim($this->searchFamilyQuery) . '%')
                 ->orWhereHas('students', function ($query) {
-                    $query->whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($this->searchFamilyQuery) . "%' ")
-                        ->orWhere('primary_phone_number', 'LIKE', '%' . trim($this->searchFamilyQuery) . '%')
-                        ->orWhere('secondary_phone_number', 'LIKE', '%' . trim($this->searchFamilyQuery) . '%')
-                        ->orWhere('email', 'LIKE', '%' . trim($this->searchFamilyQuery) . '%');
+                    $search = trim($this->searchFamilyQuery);
+                    $query->whereRaw("concat(trim(first_name), ' ', trim(middle_name), ' ', trim(last_name)) like ?", ["%{$search}%"])
+                        ->orWhere('primary_phone_number', 'LIKE', '%' . $search . '%')
+                        ->orWhere('secondary_phone_number', 'LIKE', '%' . $search . '%')
+                        ->orWhere('email', 'LIKE', '%' . $search . '%');
                 })->limit(10)->get();
 
         } else {

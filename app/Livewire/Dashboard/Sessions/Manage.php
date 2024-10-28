@@ -420,12 +420,12 @@ class Manage extends Component
     public function updatedSearchStudentQuery(): void
     {
         $existingStudentIds = $this->session->attendees->pluck('student_id');
-
-        $this->foundStudents = Student::where(function ($query) {
-            $query->whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($this->searchStudentQuery) . "%' ")
-                ->orWhere('primary_phone_number', 'LIKE', '%' . trim($this->searchStudentQuery) . '%')
-                ->orWhere('secondary_phone_number', 'LIKE', '%' . trim($this->searchStudentQuery) . '%')
-                ->orWhere('email', 'LIKE', '%' . trim($this->searchStudentQuery) . '%');
+        $search = trim($this->searchStudentQuery);
+        $this->foundStudents = Student::where(function ($query) use ($search) {
+            $query->whereRaw("concat(trim(first_name), ' ', trim(middle_name), ' ', trim(last_name)) like ?", ["%{$search}%"])
+                ->orWhere('primary_phone_number', 'LIKE', '%' . $search . '%')
+                ->orWhere('secondary_phone_number', 'LIKE', '%' . $search . '%')
+                ->orWhere('email', 'LIKE', '%' . $search . '%');
         })->whereNotIn('id', $existingStudentIds)
             ->limit(5)
             ->orderBy('first_name')

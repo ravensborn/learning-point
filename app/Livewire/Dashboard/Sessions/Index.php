@@ -150,7 +150,8 @@ class Index extends Component
                 $query->where('name', 'LIKE', '%' . trim($this->search) . '%');
             })->orWhereHas('attendees', function ($query) {
                 $query->whereHas('student', function ($q) {
-                    $q->whereRaw("concat(first_name, ' ', middle_name, ' ', last_name) like '%" . trim($this->search) . "%' ");
+                    $search = trim($this->search);
+                    $q->whereRaw("concat(trim(first_name), ' ', trim(middle_name), ' ', trim(last_name)) like ?", ["%{$search}%"]);
                 });
             });
         }
