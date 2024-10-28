@@ -159,7 +159,7 @@
                                     <div class="datagrid-title">Total</div>
                                     <div class="datagrid-content">
                                         <span class="badge text-body">
-                                            ${{ number_format($session->total, 2) }}
+                                            ${{ number_format($this->sessionTotal, 2) }}
                                         </span>
                                     </div>
                                 </div>

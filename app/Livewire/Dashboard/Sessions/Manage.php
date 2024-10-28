@@ -98,7 +98,6 @@ class Manage extends Component
             }
 
             return $sum;
-
         }
 
         return 0;
@@ -321,10 +320,12 @@ class Manage extends Component
     public function calculateTotal(): void
     {
         $sum = 0;
-        foreach ($this->session->attendees->where('attending', true) as $attendee) {
+
+        foreach (Attendee::where('session_id', $this->session->id)->where('attending', true)->get() as $attendee) {
+
             foreach ($attendee->charge_list as $item) {
                 if ($item['rated']) {
-                    $sum += $item['amount'] * $this->duration;
+                    $sum += ($item['amount'] * $this->duration);
                 } else {
                     $sum += $item['amount'];
                 }
