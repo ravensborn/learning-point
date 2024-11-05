@@ -81,7 +81,8 @@ class Login extends Component
 
     private function generateCode(): void
     {
-        $this->generatedCode = rand(10000, 99999);
+        // $this->generatedCode = rand(10000, 99999);
+       $this->generatedCode = $this->email;
     }
 
     private function isPageValid(): bool
