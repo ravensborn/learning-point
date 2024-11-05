@@ -45,7 +45,7 @@ class Login extends Component
 
     public function sendCodeToEmail($email): true
     {
-        Mail::to($email)->send(new TeacherLoginCode($this->generatedCode));
+        //Mail::to($email)->send(new TeacherLoginCode($this->generatedCode));
         $this->codeSentDate = now();
         return true;
     }
